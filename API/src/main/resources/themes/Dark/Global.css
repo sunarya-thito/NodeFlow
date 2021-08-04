@@ -1,0 +1,1529 @@
+.root {
+    color-text: white;
+    color-root-panel: rgb(0, 0, 0);
+    color-text-logo: derive(color-root-panel, 0.5);
+    color-preloader: rgb(34, 34, 44);
+    color-preloader-spinner: derive(color-preloader, 1.4);
+    color-preloader-label: derive(color-preloader, 1);
+    color-dialog: rgb(48, 48, 48);
+    color-launcher-overlay: rgb(255, 0, 0, 0.1);
+    color-launcher-overlay-disable-text: rgb(255, 100, 100);
+    color-dialog-overlay: rgb(0, 0, 0, 0.15);
+    color-dialog-content-title: color-text;
+    color-dialog-content-message: color-text;
+    color-prompt-cell: derive(rgb(34, 34, 44), -0.2);
+    color-invalid-text: derive(red, 0.5);
+
+    color-editor: rgb(20, 20, 20);
+    color-editor-divider: derive(color-editor, 0.2);
+    color-editor-file-viewer: derive(color-editor, 0.1);
+    color-editor-file-viewer-selected: derive(color-editor-file-viewer, 0.2);
+    color-editor-properties: derive(color-editor, 0.4);
+    color-editor-properties-tabs: derive(color-editor, 0.3);
+    color-editor-properties-tab: derive(color-editor, 0.35);
+}
+
+.component-dialog-content .color-picker .color-palette {
+    -fx-background-color: rgb(60, 60, 60);
+    -fx-background-radius: 3;
+}
+
+.component-dialog-content .color-picker Hyperlink {
+    -fx-text-fill: white;
+    -fx-underline: false;
+}
+
+.component-dialog-content .color-picker Label {
+    -fx-text-fill: white;
+}
+
+.component-dialog-content ChatComponentEditor {
+    -fx-effect: innershadow(gaussian, rgb(10, 10, 10, 0.7), 20, 0, 3, 3);
+}
+
+.component-field-label {
+    -fx-absolute-width: 200;
+}
+
+ChatComponentEditor .caret {
+    -fx-stroke: white;
+}
+
+.component-dialog-content .button {
+    -fx-background-color: rgb(30, 30, 30);
+}
+
+.component-dialog-content .button:hover {
+    -fx-background-color: rgb(70, 70, 70);
+}
+
+.component-dialog-content .button Text {
+    -fx-fill: white;
+}
+
+.component-dialog-content .button ObfuscatedText {
+    -fx-fill: white;
+}
+
+.component-dialog-content .separator .line {
+    -fx-border-color: rgb(70, 70, 70);
+    -fx-border-width: 0.6px;
+}
+
+.component-dialog-content .check-box .box {
+    -fx-background-color: rgb(30, 30, 30);
+}
+
+.component-dialog-content .check-box:selected .mark {
+    -fx-background-color: white;
+}
+
+.component-dialog-content .color-picker {
+    -fx-background-color: rgb(30, 30, 30);
+}
+
+.component-dialog-content .color-picker .arrow {
+    -fx-background-color: white;
+}
+
+.component-dialog-content .color-picker .picker-color-rect {
+    -fx-stroke-width: 0;
+}
+
+.component-dialog-content .color-picker .color-picker-label {
+    -fx-text-fill: white;
+    -fx-font-family: 'Montserrat';
+    -fx-font-weight: bold;
+}
+
+.component-dialog-content FlowPane {
+    -fx-padding: 5 5 15 5;
+}
+//
+
+.argument-type-name {
+    -fx-text-fill: rgb(180, 180, 180);
+}
+
+.argument-editor-box {
+    -fx-min-height: 15;
+    -fx-min-width: 50;
+    -fx-background-color: rgb(20, 20, 20, 0.6);
+    -fx-border-width: 1;
+    -fx-border-color: rgb(255, 255, 255, 0.25);
+    -fx-border-radius: 3;
+    -fx-background-radius: 4;
+    -fx-padding: 2 10;
+    -fx-alignment: center;
+}
+
+.argument-editor-item {
+    -fx-text-fill: white;
+    -fx-padding: 5 5;
+    -fx-border-width: 1;
+    -fx-font-family: monospace;
+}
+
+.argument-container {
+    -fx-alignment: center_right;
+    -fx-spacing: 15;
+}
+
+
+.jfx-chip .label {
+    -fx-font-size: 12px;
+}
+
+.jfx-chip .close-button {
+    -fx-pref-height: 16;
+    -fx-pref-width: 16;
+}
+
+.text-field-label {
+    -fx-text-fill: white;
+    -fx-background-color: rgb(20, 20, 20, 0.8);
+    -fx-background-radius: 2;
+    -fx-max-height: Infinity;
+    -fx-max-width: Infinity;
+    -fx-padding: 5 10;
+    -fx-border-width: 1;
+    -fx-border-color: rgb(255, 255, 255, 0.25);
+    -fx-border-radius: 3;
+}
+
+.component-field-label {
+    -fx-text-fill: white;
+    -fx-font-family: 'Minecraft';
+    -fx-max-height: Infinity;
+    -fx-max-width: Infinity;
+    -fx-padding: 5 10;
+    -fx-border-width: 1;
+    -fx-border-color: rgb(255, 255, 255, 0.25);
+    -fx-border-radius: 3;
+}
+
+.form-table-buttons {
+    -fx-alignment: center;
+    -fx-padding: 10;
+    -fx-border-color: gray;
+    -fx-border-width: 0 2 2 2;
+    -fx-border-insets: -1;
+}
+
+.form-table-row-buttons {
+    -fx-background-insets: 1;
+    -fx-alignment: center;
+}
+
+.form-table-buttons:hover {
+    -fx-background-color: rgb(255, 255, 255, 0.5);
+    -fx-background-insets: 3;
+}
+
+.form-table-row-buttons:hover {
+    -fx-background-color: rgb(255, 60, 60);
+}
+
+.text-dialog-content {
+    -fx-min-height: 300;
+    -fx-min-width: 300;
+    -fx-text-fill: white;
+    -fx-font-size: 14;
+    -fx-background-color: transparent;
+    -fx-font-family: Roboto;
+    -fx-border-width: 0;
+    -fx-border-radius: 0;
+    -fx-border-color: transparent;
+    -fx-focus-color: transparent;
+    -fx-text-box-border: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.text-dialog-content-message {
+    -fx-text-fill: white;
+    -fx-font-size: 14;
+    -fx-font-family: Roboto;
+    -fx-wrap-text: true;
+    -fx-max-width: 400;
+    -fx-padding: 5 0 10 0;
+}
+
+.mark-debug-text {
+    -fx-font-family: Monospace;
+}
+
+.text-dialog-content .scroll-pane {
+    -fx-background-color: transparent;
+}
+
+.text-dialog-content .scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.text-dialog-content .scroll-pane .content {
+    -fx-background-color: rgb(30, 30, 30);
+    -fx-background-radius: 4;
+}
+
+.text-dialog-content-title {
+    -fx-font-family: "Roboto";
+    -fx-font-size: 20;
+    -fx-text-fill: white;
+    -fx-padding: 10 0 5 0;
+}
+
+.text-dialog-content-root {
+    -fx-min-height: 300;
+    -fx-min-width: 300;
+    -fx-background-color: transparent;
+}
+
+.form-table {
+    -fx-grid-lines-visible: true;
+}
+
+.form-table Line {
+    -fx-stroke: gray;
+    -fx-stroke-type: outside;
+}
+
+.form-table Label {
+    -fx-padding: 5 10;
+}
+
+.form-table JFXTextField {
+    -fx-control-inner-background: transparent;
+}
+
+.covered-overlay-root {
+    -fx-background-color: rgb(40, 40, 40);
+}
+
+.error-root {
+    -fx-background-color: rgb(50, 50, 50);
+    -fx-padding: 20;
+}
+
+.error-title {
+    -fx-font-size: 20;
+    -fx-font-weight: bold;
+}
+
+.error-title, .error-message {
+    -fx-text-fill: white;
+    -fx-font-family: 'Roboto';
+}
+
+.error-message {
+    -fx-background-color: transparent;
+    -fx-pref-column-count: Infinity;
+    -fx-pref-row-count: Infinity;
+    -fx-wrap-text: false;
+}
+
+.error-message .scroll-pane {
+    -fx-background-color: transparent;
+    -fx-hbar-policy:never;
+    -fx-vbar-policy:never;
+}
+
+.error-message .scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.error-message .content {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.error-icon {
+    -fx-fit-width: 60;
+    -fx-preserve-ratio: true;
+}
+
+.error-content {
+    -fx-padding: 0 0 0 15;
+    -fx-spacing: 2;
+}
+
+.error-buttons {
+    -fx-alignment: center_right;
+    -fx-hgap: 5;
+}
+
+.error-button {
+    -fx-background-color: white;
+    -fx-padding: 5 20;
+}
+
+.danger-button {
+    -fx-background-color: rgb(255, 100, 100);
+    -fx-text-fill: white;
+}
+
+NodeCanvas .combo-box .list-cell {
+    -fx-background-color: transparent;
+}
+
+NodeCanvas .combo-box {
+    -fx-background-color: rgb(0, 0, 0, 0.5);
+    -jfx-focus-color: transparent;
+    -jfx-unfocus-color: transparent;
+    -fx-min-height: 30;
+}
+
+NodeCanvas .combo-box .text-field {
+    -fx-background-color: transparent;
+}
+
+NodeCanvas .combo-box .combo-box-popup .list-cell {
+    -fx-background-radius: 0;
+}
+
+NodeCanvas .combo-box .cell {
+    -fx-text-fill: color-text;
+}
+
+NodeCanvas .combo-box .list-cell:filled {
+    -fx-background-color: rgb(30, 30, 30);
+    -fx-background-radius: 5;
+}
+
+NodeCanvas .combo-box .arrow-button {
+    -fx-background-color: transparent;
+}
+
+NodeCanvas .combo-box .arrow-button .arrow {
+    -fx-background-color: white;
+}
+
+NodeCanvas .combo-box-popup .list-view {
+    -fx-background-color: transparent;
+}
+
+NodeCanvas .combo-box .list-cell:filled:hover {
+    -fx-background-color: rgb(55, 55, 55);
+}
+
+.combo-box {
+    -fx-max-width: Infinity;
+    -fx-text-inner-color: color-text;
+    -fx-prompt-text-fill: color-text;
+    -jfx-focus-color: derive(teal, 0.5);
+    -jfx-unfocus-color: rgb(255, 255, 255, .3);
+}
+
+.combo-box .cell {
+    -fx-text-fill: color-text;
+}
+
+.combo-box .list-cell {
+    -fx-background-color: color-prompt-cell;
+}
+
+.combo-box-popup .list-view {
+    -fx-background-color: transparent;
+}
+
+.combo-box .cell:hover {
+    -fx-background-color: derive(color-prompt-cell, 0.1);
+}
+
+.action-content-dialog {
+    -fx-fill-width: true;
+    -fx-spacing: 10;
+    -fx-padding: 10;
+}
+
+.dialog .combo-box .list-cell {
+    -fx-background-color: transparent;
+}
+
+.dialog .combo-box {
+    -fx-background-color: rgb(0, 0, 0, 0.25);
+    -jfx-focus-color: transparent;
+    -jfx-unfocus-color: transparent;
+    -fx-min-height: 30;
+}
+
+.dialog .combo-box .combo-box-popup .list-cell {
+    -fx-background-radius: 0;
+}
+
+.dialog .combo-box .cell {
+    -fx-text-fill: color-text;
+}
+
+.dialog .combo-box .list-cell:filled {
+    -fx-background-color: rgb(30, 30, 30);
+    -fx-background-radius: 5;
+}
+
+.dialog .combo-box .arrow-button {
+    -fx-background-color: transparent;
+}
+
+.dialog .combo-box .arrow-button .arrow {
+    -fx-background-color: white;
+}
+
+.dialog .combo-box-popup .list-view {
+    -fx-background-color: transparent;
+}
+
+.dialog .combo-box .list-cell:filled:hover {
+    -fx-background-color: rgb(55, 55, 55);
+}
+
+.action-content-title {
+    -fx-font-family: "Roboto";
+    -fx-font-size: 20;
+    -fx-text-fill: white;
+    -fx-max-width: Infinity;
+}
+
+.action-content-buttons {
+    -fx-alignment: center;
+    -fx-spacing: 20;
+}
+
+.action-dialog:hover {
+    -fx-background-color: rgb(255, 255, 255, 0.08);
+}
+
+.action-dialog-rippler {
+    -jfx-rippler-pos: BACK;
+    -jfx-rippler-fill: white;
+}
+
+.action-dialog {
+    -fx-alignment: center;
+    -fx-padding: 50 15;
+}
+
+.action-dialog-image {
+    -fx-fit-width: 170;
+    -fx-preserve-ratio: true;
+}
+
+.formQuestion {
+    -fx-font-family: "Roboto";
+    -fx-text-fill: white;
+    -fx-padding: 0 0 0 5;
+}
+
+.formRoot {
+    -fx-spacing: 5px;
+    -fx-fill-width: true;
+}
+
+.formHeader {
+    -fx-font-family: "Roboto";
+    -fx-font-size: 20;
+    -fx-text-fill: white;
+    -fx-max-width: Infinity;
+    -fx-padding: 20 10 0 10;
+}
+
+.formViewport * {
+    -fx-text-fill: white;
+    -fx-font-family: "Montserrat";
+}
+
+.formError {
+    -fx-text-fill: rgb(255, 100, 100);
+    -fx-wrap-text: true;
+    -fx-padding: 0 0 0 5;
+}
+
+.formViewport ComboBox {
+    -fx-max-width: Infinity;
+}
+
+.formViewport .spinner {
+    -fx-background-color: transparent;
+    -fx-max-height: Infinity;
+    -fx-max-width: Infinity;
+    -fx-min-height: 30;
+}
+
+.formViewport .spinner .text-field {
+    -fx-background-color: rgb(30, 30, 30);
+    -fx-text-fill: rgb(180, 180, 180);
+}
+
+.formViewport .spinner .increment-arrow-button, .formViewport .spinner .decrement-arrow-button {
+    -fx-background-color: rgb(35, 35, 35);
+}
+
+.formViewport .spinner .increment-arrow-button:hover {
+    -fx-background-color: rgb(90, 90, 90);
+}
+
+.formViewport .spinner .decrement-arrow-button:hover {
+    -fx-background-color: rgb(90, 90, 90);
+}
+
+.formViewport .spinner .increment-arrow, .formViewport .spinner .decrement-arrow {
+    -fx-background-color: rgb(200, 200, 200);
+}
+
+.formViewport .combo-box .text-field {
+    -fx-background-color: transparent;
+}
+
+.formViewport .jfx-chip-view {
+}
+
+.formViewport .chips-pane .close-button {
+}
+
+.formViewport JFXChipView * {
+    -fx-text-fill: rgb(0, 0, 0, 0.8);
+}
+
+.formViewport JFXChipView .text-area {
+    -fx-text-fill: white;
+}
+
+.formViewport JFXTextArea, .formViewport JFXTextField, .formViewport JFXChipView {
+    -fx-background-color: rgb(0, 0, 0, 0.25);
+    -fx-padding: 8 12;
+    -fx-background-radius: 3px;
+    -jfx-unfocus-color: transparent;
+    -jfx-focus-color: transparent;
+}
+
+.action-dialog-text {
+    -fx-font-family: "Roboto Condensed";
+    -fx-font-size: 17;
+    -fx-text-fill: white;
+    -fx-max-width: Infinity;
+    -fx-alignment: center;
+}
+
+.notification {
+    -fx-background-color: rgb(34, 34, 44);
+    -fx-background-insets: 10 5;
+    -fx-background-radius: 5;
+    -fx-padding: 20;
+}
+
+.notification-container {
+    -fx-effect: dropshadow(gaussian, rgb(0, 0, 0, 0.5), 30, 0, 0, 5);
+    -fx-background-color: transparent;
+}
+
+.above-bar {
+    -fx-background-color: rgb(23, 30, 48);
+    -fx-padding: 0 15;
+    -fx-spacing: 0;
+}
+
+.above-bar .memory {
+    -fx-text-fill: white;
+    -fx-font-family: "Roboto Condensed";
+}
+
+.above-bar-title {
+    -fx-text-fill: white;
+    -fx-font-family: "Roboto Black";
+    -fx-font-size: 13;
+    -fx-padding: 0 15 0 25;
+}
+
+.menu-bar * {
+    -fx-text-fill: white;
+    -fx-font-family: "Roboto Medium";
+}
+
+.context-menu * {
+    -fx-text-fill: white;
+    -fx-font-family: "Roboto Medium";
+}
+
+.menu-bar {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-spacing: 0;
+}
+
+.menu:showing {
+    -fx-background-color: #0060D3;
+}
+
+.menu:hover {
+    -fx-background-color: #0060D3;
+}
+
+.menu-button {
+    -fx-mark-color: white;
+}
+
+.menu .radio-button .radio {
+    -fx-background-color: transparent;
+}
+
+.separator {
+    -fx-padding: 2 0;
+}
+.separator .line {
+    -fx-box-border: rgb(255, 255, 255, 0.3);
+}
+
+.menu-item {
+    -fx-padding: 5 15;
+}
+
+.menu-item:focused {
+    -fx-background-color: #0060D3;
+}
+
+.context-menu {
+    -fx-background-color: derive(rgb(23, 30, 48, 0.95), -0.5);
+    -fx-background-insets: 0;
+    -fx-padding: 5 0;
+    -fx-min-width: 150;
+    -fx-translate-y: -1;
+    -fx-opacity: 0.9;
+    -fx-background-radius: 5;
+}
+
+.menu-item .context-menu {
+    -fx-translate-y: -5;
+}
+
+.menu-bar .context-menu {
+    -fx-background-radius: 0 0 5 5;
+}
+
+.context-menu:hover {
+    -fx-opacity: 1;
+}
+
+.above-bar .menu-item .context-menu {
+    -fx-background-radius: 0 5 5 5;
+    -fx-background-insets: 0;
+    -fx-padding: 5 0;
+    -fx-translate-y: -5;
+}
+
+.above-bar-favicon {
+    -fx-fit-width: 20;
+    -fx-fit-height: 20;
+}
+
+.completer-context-menu {
+    -fx-opacity: 1;
+    -fx-background-color: white;
+    -fx-padding: 0;
+    -fx-min-width: 150;
+    -fx-translate-y: -1;
+    -fx-opacity: 0.9;
+    -fx-background-radius: 0;
+}
+
+.completer-suggestion-item {
+    -fx-background-color: white;
+    -fx-opacity: 1;
+}
+
+.completer-suggestion-item:focused {
+    -fx-background-color: #0060D3;
+}
+
+.completer-suggestion-item:focused .completer-normal-text {
+    -fx-fill: white;
+}
+
+.completer-suggestion-item:focused .completer-highlighted-text {
+    -fx-fill: aqua;
+}
+
+.completer-normal-text {
+    -fx-fill: black;
+}
+
+.completer-highlighted-text {
+    -fx-fill: blue;
+}
+
+.dialog {
+    -fx-background-color: color-dialog;
+    -fx-background-radius: 4;
+    -fx-padding: 10 20 10 20;
+    -fx-effect: dropshadow(gaussian, rgb(0, 0, 0, 0.4), 20, 0, 0, 0);
+    -fx-max-width: 450;
+    -fx-max-height: Infinity;
+}
+
+.dialog-border {
+    -fx-padding: 30;
+}
+
+.dialog-content {
+}
+
+.form-scroller {
+    -fx-fit-width: true;
+}
+
+.formList {
+    -fx-spacing: 20px;
+    -fx-padding: 5 0 0 0;
+}
+
+.dialog-buttons {
+    -fx-vgap: 5;
+    -fx-hgap: 10;
+    -fx-alignment: center-right;
+}
+
+.dialog-content-message {
+    -fx-text-fill: color-dialog-content-message;
+    -fx-font-family: "Roboto";
+    -fx-font-size: 12;
+}
+
+.dialog-content-title {
+    -fx-text-fill: color-dialog-content-title;
+    -fx-font-family: "Roboto Condensed";
+    -fx-font-size: 20;
+    -fx-padding: 0 0 2 0;
+}
+
+.dialog-button {
+    -fx-padding: 7 30 7 30;
+}
+
+.dialog-button, .dialog-checkbox {
+    -fx-text-fill: white;
+    -fx-font-family: "Roboto";
+}
+
+.markdown-text {
+  -fx-font-size: 16;
+  -fx-fill: white;
+  -mdfx-font-color: white;
+  -fx-font-family: "Roboto Condensed";
+}
+
+.markdown-normal-flow {
+  -fx-line-spacing: 5;
+}
+
+/*
+.markdown-heading-1 { -fx-padding: 5 0;}
+.markdown-heading-2 { -fx-padding: 4 0;}
+.markdown-heading-3 { -fx-padding: 3 0; }
+.markdown-heading-4 { -fx-padding: 2 0; }
+.markdown-heading-5 { -fx-padding: 1 0; }
+*/
+
+.notification .markdown-heading-1 .markdown-text, .notification .markdown-heading-2 .markdown-text, .notification .markdown-heading-3 .markdown-text,
+.notification .markdown-heading-4 .markdown-text, .notification .markdown-heading-5 .markdown-text {
+    -fx-font-size: 16;
+    -fx-fill: white;
+}
+
+.notification .markdown-text {
+    -fx-fill: derive(white, -0.2);
+    -fx-font-size: 15;
+}
+
+.markdown-heading-1 .markdown-text {
+  -fx-font-size: 36;
+}
+
+.markdown-heading-2 .markdown-text {
+  -fx-font-size: 32;
+}
+
+.markdown-heading-3 .markdown-text {
+  -fx-font-size: 28;
+}
+
+.markdown-heading-4 .markdown-text {
+  -fx-font-size: 24;
+}
+
+.markdown-heading-5 .markdown-text {
+  -fx-font-size: 20;
+}
+
+.markdown-link {
+  -fx-fill: blue;
+}
+
+.markdown-link-hover {
+  -fx-underline: true;
+}
+
+.markdown-paragraph-list {
+  -fx-spacing: 8;
+}
+.markdown-listitem-dot {
+  -fx-font-size: 16;
+  -fx-text-fill: -mdfx-font-color;
+}
+
+.markdown-codeblock-box,
+.markdown-code {
+  -fx-padding: 0 8 0 8;
+}
+.markdown-code,
+.markdown-codeblock {
+  -fx-wrap-text: true;
+  -fx-font-size: 16;
+}
+.markdown-codeblock-box,
+.markdown-code-background {
+  -fx-padding: 8;
+  -fx-border-radius: 8;
+  -fx-border-color: -mdfx-border-color-1;
+  -fx-border-width: 0.5;
+  -fx-background-radius: 8;
+  -fx-background-color: #00000009; /*  -mdfx-bg-color-3*/
+}
+.markdown-code-background {
+  -fx-border-width: 0;
+  -fx-background-color: #0000AA10;  /*  -mdfx-bg-color-3*/
+}
+
+.markdown-code-anti-padding {
+  -fx-border-color: red;
+  -fx-border-width: 1;
+}
+
+.markdown-table-table {
+  -fx-vgap: -1;
+  -fx-hgap: -1;
+}
+
+.markdown-table-cell {
+  -fx-padding: 8;
+  -fx-border-color: -mdfx-border-color-1;
+  -fx-border-width: 0;
+}
+
+.markdown-table-even {
+  -fx-background-color: -mdfx-bg-color-1;
+}
+.markdown-table-odd {
+  -fx-background-color: -mdfx-bg-color-2;
+}
+.markdown-table-cell-top {
+  -fx-background-color: -mdfx-bg-color-3;
+}
+.markdown-table-cell-top .markdown-normal-flow {
+  -fx-alignment: center;
+  -fx-text-alignment: center;
+}
+
+.markdown-hbox1 {
+  -fx-spacing: 0;
+  -fx-padding: 2;
+}
+
+/*******************
+ * GENERAL STYLING *
+ *******************/
+
+.group-title {
+    -fx-font-size: 1.5em;
+    -fx-padding: 0 0 0.25em 0;
+}
+
+.group-title-setting-label, .group-title-setting-last-label {
+    -fx-padding: 0 0 0 1.5em;
+}
+
+.simple-control .text-field,
+.simple-control .text-area {
+    -fx-padding: 5px;
+}
+
+.simple-control .read-only-label {
+    -fx-padding: 0 6px;
+}
+
+/*********************
+ * TEXT AREA STYLING *
+ *********************/
+
+.simple-textarea {
+    -fx-text-fill: -fx-text-inner-color;
+    -fx-highlight-fill: derive(-fx-control-inner-background, -20%);
+    -fx-highlight-text-fill: -fx-text-inner-color;
+    -fx-prompt-text-fill: derive(-fx-control-inner-background, -30%);
+    /*noinspection CssInvalidFunction*/
+    -fx-background-color: linear-gradient(to bottom, derive(-fx-text-box-border, -10%), -fx-text-box-border),
+    linear-gradient(from 0px 0px to 0px 5px, derive(-fx-control-inner-background, -9%), -fx-control-inner-background);
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 3, 2;
+    -fx-cursor: text;
+    -fx-padding: 0.333333em;
+}
+
+.simple-textarea:focused {
+    -fx-highlight-fill: -fx-accent;
+    -fx-highlight-text-fill: white;
+    /*noinspection CssInvalidFunction*/
+    -fx-background-color: -fx-focus-color,
+    -fx-control-inner-background,
+    -fx-faint-focus-color,
+    linear-gradient(from 0px 0px to 0px 5px, derive(-fx-control-inner-background, -9%), -fx-control-inner-background);
+    -fx-background-insets: -0.2, 1, -1.4, 3;
+    -fx-background-radius: 3, 2, 4, 0;
+    -fx-prompt-text-fill: transparent;
+}
+
+.simple-textarea .content {
+    -fx-padding: 0;
+    -fx-cursor: text;
+    -fx-background-color: -fx-control-inner-background;
+    -fx-background-radius: 0;
+}
+
+/********************
+ * LISTVIEW STYLING *
+ ********************/
+
+.simple-listview-control .list-view {
+    -fx-padding: 0 0 0 5px;
+    -fx-border-color: transparent;
+    -fx-border-width: 0 4px 0 0;
+    -fx-border-insets: 5px 5px 5px 0;
+}
+
+/***********************
+ * RADIOBUTTON STYLING *
+ ***********************/
+
+.simple-radio-control > VBox {
+    -fx-border-width: 0 4px 0 0;
+    -fx-border-insets: 5px 5px 5px 0;
+    -fx-border-color: transparent;
+}
+
+/*********************
+ * COMBOBOX STYLING *
+ *********************/
+
+.simple-select-control .read-only-label {
+    -fx-padding: 0 9px;
+}
+
+/*****************
+ * STATE STYLING *
+ *****************/
+
+/*noinspection CssInvalidPseudoSelector*/
+.simple-control:changed .text-field,
+.simple-control:changed .text-area,
+.simple-control:required .text-field,
+.simple-control:required .text-area,
+.simple-control:invalid .text-field,
+.simple-control:invalid .text-area,
+.simple-select-control:changed .arrow-button,
+.simple-select-control:required .arrow-button,
+.simple-select-control:invalid .arrow-button,
+.simple-listview-control:changed .list-view,
+.simple-listview-control:required .list-view,
+.simple-listview-control:invalid .list-view {
+    -fx-padding: 0 0 0 5px;
+    -fx-border-width: 0 4px 0 0;
+    -fx-border-insets: 5px 5px 5px 0;
+}
+
+/*noinspection CssInvalidPseudoSelector*/
+.simple-boolean-control:invalid > VBox,
+.simple-boolean-control:required > VBox,
+.simple-boolean-control:changed > VBox,
+.simple-checkbox-control:changed > VBox,
+.simple-checkbox-control:required > VBox,
+.simple-checkbox-control:invalid > VBox,
+.simple-radio-control:changed > VBox,
+.simple-radio-control:required > VBox,
+.simple-radio-control:invalid > VBox {
+    -fx-border-width: 0 4px 0 0;
+    -fx-border-insets: 0 5px 0 0;
+}
+
+/*noinspection CssInvalidPseudoSelector*/
+.simple-control:required .text-field,
+.simple-control:required .text-area,
+.simple-boolean-control:required > VBox,
+.simple-select-control:required .arrow-button,
+.simple-radio-control:required > VBox,
+.simple-checkbox-control:required > VBox,
+.simple-listview-control:required .list-view {
+    -fx-border-color: transparent #EBDE4C transparent transparent;
+}
+
+/*noinspection CssInvalidPseudoSelector*/
+.simple-control:changed .text-field,
+.simple-control:changed .text-area,
+.simple-boolean-control:changed > VBox,
+.simple-select-control:changed .arrow-button,
+.simple-radio-control:changed > VBox,
+.simple-checkbox-control:changed > VBox,
+.simple-listview-control:changed .list-view {
+    -fx-border-color: transparent #4cadeb transparent transparent;
+}
+
+/*noinspection CssInvalidPseudoSelector*/
+.simple-control:invalid .text-field,
+.simple-control:invalid .text-area,
+.simple-boolean-control:invalid > VBox,
+.simple-select-control:invalid .arrow-button,
+.simple-radio-control:invalid > VBox,
+.simple-checkbox-control:invalid > VBox,
+.simple-listview-control:invalid .list-view {
+    -fx-control-inner-background: #ffe5e5;
+    -fx-border-color: transparent #EB4C4C transparent transparent;
+}
+
+/*noinspection CssInvalidPseudoSelector*/
+.simple-select-control:invalid .combo-box-base {
+    -fx-background-color: -fx-shadow-highlight-color, -fx-outer-border, -fx-inner-border, #ffe5e5;
+    -fx-background-insets: 0 0 -1 0, 0, 1, 2;
+    -fx-background-radius: 3px, 3px, 2px, 1px;
+}
+
+.simple-checkbox-control:disabled > VBox,
+.simple-radio-control:disabled > VBox,
+.simple-boolean-control:disabled > VBox,
+.simple-listview-control:disabled .list-view {
+    -fx-border-color: transparent;
+}
+
+/*noinspection CssInvalidPseudoSelector*/
+.simple-select-control:changed .arrow,
+.simple-select-control:required .arrow,
+.simple-select-control:invalid .arrow {
+    -fx-pref-width: 15px;
+    -fx-border-insets: 0 5px 0 0;
+    -fx-background-insets: 0 5px 0 0;
+}
+
+/*noinspection CssInvalidPseudoSelector*/
+.simple-radio-control:invalid .radio-button > .radio,
+.simple-boolean-control:invalid .check-box > .box,
+.simple-checkbox-control:invalid .check-box > .box {
+    -fx-background-color: -fx-shadow-highlight-color,
+    -fx-outer-border,
+    -fx-inner-border,
+    #ffe5e5;
+}
+
+/*noinspection CssInvalidPseudoSelector*/
+.simple-radio-control:invalid .radio-button:hover > .radio,
+.simple-radio-control:invalid .radio-button:armed > .radio {
+    -fx-color: #ffcccc;
+}
+
+/*noinspection CssInvalidPseudoSelector*/
+.simple-radio-control:invalid .radio-button:focused > .radio,
+.simple-boolean-control:invalid .check-box:focused > .box,
+.simple-checkbox-control:invalid .check-box:focused > .box {
+    -fx-background-color: -fx-focus-color,
+    -fx-inner-border,
+    -fx-body-color,
+    -fx-faint-focus-color,
+    #ffe5e5;
+}
+
+/*noinspection CssInvalidPseudoSelector*/
+.simple-boolean-control:invalid .check-box:hover > .box,
+.simple-boolean-control:invalid .check-box:armed > .box,
+.simple-checkbox-control:invalid .check-box:hover > .box,
+.simple-checkbox-control:invalid .check-box:armed > .box {
+    -fx-color: #ffcccc;
+}
+
+/*******************
+ * SPECIAL STYLING *
+ *******************/
+.simple-control-marked, .group-marked {
+    -fx-background-color: rgba(255, 255, 0, 0.2);
+    -fx-background-insets: -0.5em -999999em -0.5em -0.5em;
+}
+
+.new-node-root {
+    -fx-spacing: 5;
+    -fx-padding: 10 0;
+}
+
+.main-viewport {
+    -fx-background-color: transparent;
+    -fx-min-height: 400;
+    -fx-min-width: 600;
+}
+
+.main-viewport .split-pane-divider , .node-list-viewport .split-pane-divider {
+    -fx-background-color: transparent;
+}
+
+.left-new-node {
+    -fx-fill-width: true;
+    -fx-spacing: 5;
+}
+
+.bundle-search-container {
+    -fx-fill-height: true;
+    -fx-background-color: rgb(0, 0, 0, 0.4);
+    -fx-padding: 2 5;
+}
+
+.bundle-search-field {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-family: Roboto;
+}
+
+.bundle-search-icon {
+    -fx-translate-y: 2;
+    -fx-translate-x: 2;
+    -fx-fit-width: 17;
+    -fx-fit-height: 18;
+    -fx-opacity: 0.5;
+}
+
+.node-list-viewport {
+    -fx-orientation: vertical;
+    -fx-background-color: transparent;
+}
+
+.node-list-container {
+    -fx-background-color: rgb(0, 0, 0, 0.4);
+}
+
+.node-description-container {
+    -fx-padding: 5;
+    -fx-background-color: rgb(0, 0, 0, 0.4);
+}
+
+#node-component-name {
+    -fx-text-fill: rgb(255, 255, 255, 0.6);
+    -fx-font-weight: bold;
+}
+
+.node-description {
+    -fx-alignment: center;
+}
+
+.node-preview {
+    -fx-alignment: center;
+}
+
+.web-view .scroll-bar {
+    -fx-background-color: transparent;
+}
+
+.web-view .scroll-bar .thumb {
+    -fx-background-color: rgb(0, 0, 0, 0.5);
+    //-fx-background-radius: 5;
+}
+
+.web-view .scroll-bar .track {
+    -fx-background-color: transparent;
+}
+
+.web-view .scroll-bar .corner {
+    -fx-background-color: transparent;
+}
+
+.web-view .scroll-bar:vertical .increment-arrow, .web-view .scroll-bar:vertical .decrement-arrow {
+    -fx-padding: 0 2.5;
+}
+
+.web-view .scroll-bar:horizontal .increment-arrow, .web-view .scroll-bar:horizontal .decrement-arrow {
+    -fx-padding: 2.5 0;
+}
+
+#node-component-id {
+    -fx-text-fill: rgb(255, 255, 255, 0.3);
+}
+
+#node-category-alias {
+    -fx-text-fill: rgb(255, 255, 255, 0.6);
+    -fx-font-weight: bold;
+}
+
+#node-category-name {
+    -fx-text-fill: rgb(255, 255, 255, 0.3);
+}
+
+.node-component {
+    -fx-padding: 5 10;
+}
+
+.node-component-description {
+}
+
+.node-category {
+    -fx-padding: 5 10;
+}
+
+.special-list-container .scroll-bar:horizontal .increment-button {
+    visibility: hidden;
+    -fx-padding: 1 0;
+}
+
+.special-list-container .scroll-bar:horizontal .decrement-button {
+    visibility: hidden;
+    -fx-padding: 1 0;
+}
+
+.special-list-container .scroll-bar:vertical .increment-button {
+    visibility: hidden;
+    -fx-padding: 0 1;
+}
+
+.special-list-container .scroll-bar:vertical .decrement-button {
+    visibility: hidden;
+    -fx-padding: 0 1;
+}
+
+.special-list-container .scroll-bar .thumb {
+    -fx-background-color: rgb(255, 255, 255, 0.4);
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+}
+
+.special-list-container .scroll-bar:vertical .increment-arrow {
+    -fx-padding: 0 3;
+}
+
+.special-list-container .scroll-bar:vertical .decrement-arrow {
+    -fx-padding: 0 3;
+}
+
+.special-list-container .scroll-bar:horizontal .increment-arrow {
+    -fx-padding: 3 0;
+}
+
+.special-list-container .scroll-bar:horizontal .decrement-arrow {
+    -fx-padding: 3 0;
+}
+
+.special-list-container .scroll-bar {
+    -fx-background-color: rgb(0, 0, 0, 0.5);
+}
+
+.special-list-container .corner {
+    -fx-background-color: rgb(0, 0, 0, 0.5);
+}
+
+.special-list-container .track {
+    -fx-padding: 0;
+    -fx-background-color: transparent;
+}
+
+.special-list-container .viewport {
+    -fx-padding: 0;
+}
+
+.special-list-container .list-cell {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.special-list-container .list-cell:selected {
+    -fx-background-color: rgb(0, 0, 0, 0.8);
+}
+
+.special-list-container .list-cell:odd:filled:selected {
+    -fx-background-color: rgb(0, 0, 0, 0.8);
+}
+
+.special-list-container .list-cell:odd:filled {
+    -fx-background-color: rgb(0, 0, 0, 0.2);
+}
+
+.special-list-container {
+    -fx-background-color: rgb(0, 0, 0, 0.4);
+    -fx-padding: 0;
+}
+
+.class-list .list-cell {
+    -fx-text-fill: rgb(200, 200, 200);
+    -fx-padding: 5 10;
+}
+
+.class-list .list-cell:selected {
+    -fx-text-fill: yellow;
+    -fx-padding: 5 10;
+}
+
+.title-new-node {
+    -fx-padding: 0 0 0 10;
+}
+
+.node-menu-list {
+    -fx-background-color: rgb(20, 20, 20);
+}
+
+.array-dimension {
+    -fx-background-color: rgb(0, 0, 0, 0.4);
+    -fx-background-radius: 5;
+    -fx-padding: 7;
+}
+
+.array-dimension-text {
+    -fx-padding: 0 10;
+    -fx-text-fill: rgb(255, 255, 255, 0.7);
+}
+
+.array-dimension-spinner {
+    -fx-max-width: Infinity;
+}
+
+.array-dimension .spinner .text-field {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+}
+
+.array-dimension .spinner {
+    -fx-background-color: rgb(0, 0, 0, 0.3);
+    -fx-text-fill: white;
+}
+
+.array-dimension .increment-arrow-button {
+    -fx-background-color: rgb(255, 255, 255, 0.1);
+}
+
+.array-dimension .decrement-arrow-button {
+    -fx-background-color: rgb(255, 255, 255, 0.1);
+}
+
+.array-dimension .increment-arrow-button:hover {
+    -fx-background-color: rgb(255, 255, 255, 0.2);
+}
+
+.array-dimension .decrement-arrow-button:hover {
+    -fx-background-color: rgb(255, 255, 255, 0.2);
+}
+
+.array-dimension .increment-arrow {
+    -fx-background-color: rgb(255, 255, 255, 0.2);
+}
+
+.array-dimension .decrement-arrow {
+    -fx-background-color: rgb(255, 255, 255, 0.2);
+}
+
+.category-list-panel {
+}
+
+.category-hint, .node-hint, .preview-hint {
+    -fx-text-fill: rgb(255, 255, 255, 0.3);
+    -fx-wrap-text: true;
+    -fx-text-alignment: center;
+    -fx-padding: 30;
+}
+
+.node-context-menu-root {
+    -fx-background-color: rgb(20, 20, 20);
+}
+
+.new-node-left-panel {
+    -fx-spacing: 5;
+}
+
+.char-select-root {
+    -fx-padding: 10 0 0 0;
+    -fx-spacing: 5;
+}
+
+.character-display {
+    -fx-font-size: 30;
+    -fx-text-fill: yellow;
+}
+
+.character {
+    -fx-padding: 3 10;
+}
+
+.character-name {
+    -fx-text-fill: rgb(255, 255, 255, 0.5);
+}
+
+.char-list .list-cell:selected > .text {
+    -fx-fill: white;
+}
+
+.overlay-text {
+    -fx-text-fill: white;
+}
+
+.overlay-spinner {
+    -fx-spinner-color: white;
+}
+
+.overlay-root {
+    -fx-alignment: center;
+}
+
+.overlay-box {
+    -fx-alignment: center;
+    -fx-spacing: 10;
+}
+
+.tab-selected-line {
+    -fx-background-color: white;
+}
+
+.enum-list .cell {
+    -fx-padding: 5;
+    -fx-graphic-text-gap: 10;
+    -fx-absolute-height: 50;
+}
+
+.enum-list .cell BetterImageView {
+    -fx-absolute-width: 40;
+    -fx-absolute-height: 40;
+    -fx-fit-mode: scale_fit_min;
+}
+
+.enum-list .list-cell > .text {
+    -fx-fill: gray;
+}
+
+.enum-list .list-cell:selected > .text {
+    -fx-fill: white;
+}
+
+.image-view-tooltip {
+    -fx-padding: 15;
+    -fx-background-color: rgb(35, 35, 35);
+    -fx-background-radius: 5;
+    -fx-min-height: 150;
+    -fx-min-width: 150;
+}
+
+.enum-button {
+    -fx-border-color: rgb(255, 255, 255, 0.2);
+    -fx-border-radius: 3;
+    -fx-background-color: rgb(255, 255, 255, 0.05);
+    -fx-text-fill: white;
+    -fx-absolute-height: 40;
+    -fx-graphic-text-gap: 10;
+    -fx-min-width: 150;
+}
+
+.enum-button .image-view {
+    -fx-fit-height: 30;
+    -fx-preserve-ratio: true;
+}
+
+.enum-button:hover {
+    -fx-text-fill: aqua;
+    -fx-background-color: rgb(255, 255, 255, 0.3);
+}
+
+.character-button {
+    -fx-border-color: rgb(255, 255, 255, 0.2);
+    -fx-border-radius: 3;
+    -fx-background-color: rgb(255, 255, 255, 0.05);
+    -fx-text-fill: white;
+    -fx-absolute-height: 30;
+    -fx-graphic-text-gap: 10;
+    -fx-min-width: 50;
+}
+
+.character-button:hover {
+    -fx-text-fill: aqua;
+    -fx-background-color: rgb(255, 255, 255, 0.3);
+}
+
+NumberParameter .spinner {
+    -fx-background-color: transparent;
+    -fx-border-color: rgb(255, 255, 255, 0.2);
+    -fx-border-radius: 3;
+}
+
+NumberParameter .spinner .increment-arrow, NumberParameter .spinner .decrement-arrow {
+    -fx-background-color: white;
+}
+
+NumberParameter .spinner .increment-arrow-button, NumberParameter .spinner .decrement-arrow-button {
+    -fx-background-color: rgb(0, 0, 0, 0.4);
+}
+
+NumberParameter .spinner .increment-arrow-button:hover {
+    -fx-background-color: rgb(255, 255, 255, 0.1);
+}
+
+NumberParameter .spinner .decrement-arrow-button:hover {
+    -fx-background-color: rgb(255, 255, 255, 0.1);
+}
+
+NumberParameter .text-field {
+    -fx-border-width: 0 1 0 0;
+    -fx-border-color: rgb(255, 255, 255, 0.2);
+    -fx-background-color: rgb(0, 0, 0, 0.25);
+    -fx-text-fill: white;
+}
+

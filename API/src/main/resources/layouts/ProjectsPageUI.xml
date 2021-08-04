@@ -1,0 +1,68 @@
+<NodeFlow>
+    <components>
+        <VBox>javafx.scene.layout.VBox</VBox>
+        <HBox>javafx.scene.layout.HBox</HBox>
+        <StackPane>javafx.scene.layout.StackPane</StackPane>
+        <BorderPane>javafx.scene.layout.BorderPane</BorderPane>
+        <Label>javafx.scene.control.Label</Label>
+        <ImagePane>thito.nodeflow.library.ui.ImagePane</ImagePane>
+        <FlowPane>javafx.scene.layout.FlowPane</FlowPane>
+        <JFXButton>com.jfoenix.controls.JFXButton</JFXButton>
+        <JFXTextField>com.jfoenix.controls.JFXTextField</JFXTextField>
+        <BetterImageView>thito.nodeflow.library.ui.BetterImageView</BetterImageView>
+        <ModernScrollPane>thito.nodeflow.library.ui.ModernScrollPane</ModernScrollPane>
+        <JFXRippler>com.jfoenix.controls.JFXRippler</JFXRippler>
+        <ImageView>javafx.scene.image.ImageView</ImageView>
+    </components>
+    <layout>
+        <HBox class="projects-page-root">
+            <VBox class="projects-page-header" HBox.hgrow="always">
+                <HBox class="project-list-header">
+                    <StackPane HBox.hgrow="always" clip-arc="10" class="project-search" id="header">
+                        <HBox class="projects-search-container">
+                            <BetterImageView class="projects-search-icon" BorderPane.position="left">!projects-search</BetterImageView>
+                            <JFXTextField JFXTextField.promptText="Search" id="search" class="projects-search" BorderPane.position="center" HBox.hgrow="ALWAYS"/>
+                        </HBox>
+                    </StackPane>
+                    <JFXRippler class="project-create-rippler">
+                        <StackPane class="project-create-root" id="create-button">
+                            <ImagePane>
+                                !create-button-box
+                            </ImagePane>
+                        </StackPane>
+                    </JFXRippler>
+                </HBox>
+                <ModernScrollPane clip-arc="10" VBox.vgrow="always" class="project-list" id="content">
+                    <VBox class="project-prop-list" id="project-list">
+                    </VBox>
+                </ModernScrollPane>
+            </VBox>
+            <StackPane clip-arc="10" class="props-viewport">
+                <VBox id="props-overlay" class="props-overlay">
+                    <Label class="props-project-overlay-pre">Nothing Selected</Label>
+                    <Label class="props-project-overlay-text">Select a Project</Label>
+                </VBox>
+                <BorderPane id="props-project" class="props-project">
+                    <BorderPane class="thumbnail-container" BorderPane.position="top">
+                        <ImagePane class="props-thumbnail" id="props-thumbnail" BorderPane.position="center">
+                            project/default-thumbnail
+                        </ImagePane>
+                    </BorderPane>
+                    <VBox class="props-project-details" BorderPane.position="center">
+                        <Label id="props-author" class="props-project props-project-author">Septogeddon</Label>
+                        <Label id="props-name" class="props-project props-project-name">Project #1</Label>
+                        <Label id="props-time" class="props-project props-project-time">9 January 2020</Label>
+                        <Label id="props-desc" VBox.vgrow="always" class="props-project props-project-desc">
+                            This is a simple project generated default by the application!
+                        </Label>
+                    </VBox>
+                    <FlowPane FlowPane.prefWrapLength="0" class="props-button-viewport" BorderPane.position="bottom">
+                        <JFXButton class="props-button" id="delete-button">Delete</JFXButton>
+                        <JFXButton class="props-button" id="edit-button">Edit</JFXButton>
+                        <JFXButton class="props-button" id="open-button">Open</JFXButton>
+                    </FlowPane>
+                </BorderPane>
+            </StackPane>
+        </HBox>
+    </layout>
+</NodeFlow>

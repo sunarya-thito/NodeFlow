@@ -1,0 +1,17 @@
+<NodeFlow>
+    <components>
+        <JFXCheckBox>com.jfoenix.controls.JFXCheckBox</JFXCheckBox>
+        <Label>javafx.scene.control.Label</Label>
+        <ModernScrollPane>thito.nodeflow.library.ui.ModernScrollPane</ModernScrollPane>
+        <VBox>javafx.scene.layout.VBox</VBox>
+        <BorderPane>javafx.scene.layout.BorderPane</BorderPane>
+    </components>
+    <layouts>
+        <BorderPane>
+            <JFXCheckBox class="user-editable" id="editable" BorderPane.position="top">${user-editable}</JFXCheckBox>
+            <ModernScrollPane class="config-list" BorderPane.position="center">
+                <VBox class="config-list-container" id="list"></VBox>
+            </ModernScrollPane>
+        </BorderPane>
+    </layouts>
+</NodeFlow>

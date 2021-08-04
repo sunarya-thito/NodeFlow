@@ -1,0 +1,15 @@
+<NodeFlow>
+    <components>
+        <HBox>javafx.scene.layout.HBox</HBox>
+        <Label>javafx.scene.control.Label</Label>
+        <Group>javafx.scene.Group</Group>
+        <ImageView>javafx.scene.image.ImageView</ImageView>
+        <Pane>javafx.scene.layout.Pane</Pane>
+    </components>
+    <layout>
+        <HBox id="launcher-button" class="launcher-button">
+            <ImageView id="launcher-button-icon" class="launcher-button-icon"/>
+            <Label id="launcher-button-text" class="launcher-button-text"/>
+        </HBox>
+    </layout>
+</NodeFlow>

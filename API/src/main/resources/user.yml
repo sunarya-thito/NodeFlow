@@ -1,0 +1,5 @@
+application:
+  initial-export-directory: D:\Test
+Spigot:
+  initial-export-directory: D:\Spigot Test Server\plugins
+uuid: cc6b8a8e-9ed1-463c-aadb-59301e98743c

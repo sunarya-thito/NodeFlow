@@ -1,0 +1,27 @@
+<NodeFlow>
+    <components>
+        <BorderPane>javafx.scene.layout.BorderPane</BorderPane>
+        <Label>javafx.scene.control.Label</Label>
+        <HBox>javafx.scene.layout.HBox</HBox>
+        <VBox>javafx.scene.layout.VBox</VBox>
+        <AlignedPane>thito.nodeflow.library.ui.AlignedPane</AlignedPane>
+        <AnchorPane>javafx.scene.layout.AnchorPane</AnchorPane>
+        <StackPane>javafx.scene.layout.StackPane</StackPane>
+    </components>
+    <layout>
+        <VBox class="launcher-page">
+            <HBox id="launcher-page-header" class="launcher-page-header"></HBox>
+            <BorderPane id="launcher-page-viewport" class="launcher-page-viewport" clip-arc="10" VBox.vgrow="ALWAYS"/>
+            <BorderPane id="launcher-page-footer" class="launcher-page-footer" clip-arc="10">
+                <Label id="launcher-page-foot-note" class="launcher-page-foot-note" BorderPane.position="left" BorderPane.alignment="center"/>
+                <StackPane id="launcher-page-foot-buttons" class="launcher-page-foot-buttons" BorderPane.position="right" BorderPane.alignment="center"/>
+            </BorderPane>
+        </VBox>
+        <AnchorPane id="launcher-overlay" class="launcher-overlay">
+            <VBox AnchorPane.top="30" AnchorPane.left="30">
+                <Label id="launcher-overlay-disable-title" class="launcher-overlay-disable-title"/>
+                <Label id="launcher-overlay-disable-message" class="launcher-overlay-disable-message"/>
+            </VBox>
+        </AnchorPane>
+    </layout>
+</NodeFlow>

@@ -1,0 +1,35 @@
+<NodeFlow>
+    <components>
+        <BorderPane>javafx.scene.layout.BorderPane</BorderPane>
+        <TextField>com.jfoenix.controls.JFXTextField</TextField>
+        <RibbonButton>thito.nodeflow.library.ui.RibbonButton</RibbonButton>
+        <FileExplorer>thito.nodeflow.library.ui.FileExplorer</FileExplorer>
+<!--        <SplitPane>javafx.scene.control.SplitPane</SplitPane>-->
+        <StackPane>javafx.scene.layout.StackPane</StackPane>
+        <BetterSplitPane>thito.nodeflow.library.ui.BetterSplitPane</BetterSplitPane>
+        <Docker>thito.nodeflow.library.ui.docker.Docker</Docker>
+        <CheckBox>com.jfoenix.controls.JFXCheckBox</CheckBox>
+        <JFXTabPane>com.jfoenix.controls.JFXTabPane</JFXTabPane>
+        <Tab>javafx.scene.control.Tab</Tab>
+        <HBox>javafx.scene.layout.HBox</HBox>
+        <VBox>javafx.scene.layout.VBox</VBox>
+    </components>
+    <layout>
+        <BorderPane class="project-editor">
+            <HBox class="toolbar" id="toolbar" BorderPane.position="top"></HBox>
+            <BetterSplitPane class="editor-viewport" BorderPane.position="center">
+                <JFXTabPane id="left" side="LEFT" class="left-panel" SplitPane.divider="0.3" SplitPane.resizeWithParent="false">
+                    <Tab text="Project Files">
+                        <FileExplorer id="explorer" class="file-viewer"/>
+                    </Tab>
+                    <Tab text="Components">
+                        <VBox id="property_list" class="component-properties"></VBox>
+                    </Tab>
+                </JFXTabPane>
+                <JFXTabPane id="center" side="TOP" class="viewport-panel" SplitPane.divider="0.7">
+                </JFXTabPane>
+            </BetterSplitPane>
+            <HBox class="status-bar" id="status" BorderPane.position="bottom"></HBox>
+        </BorderPane>
+    </layout>
+</NodeFlow>

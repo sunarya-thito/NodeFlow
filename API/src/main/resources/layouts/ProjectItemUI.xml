@@ -1,0 +1,15 @@
+<NodeFlow>
+    <components>
+        <JFXRippler>com.jfoenix.controls.JFXRippler</JFXRippler>
+        <BorderPane>javafx.scene.layout.BorderPane</BorderPane>
+        <Label>javafx.scene.control.Label</Label>
+    </components>
+    <layout>
+        <JFXRippler class="project-prop-rippler">
+            <BorderPane class="project-prop" id="root">
+                <Label BorderPane.position="left" class="project-prop-title" id="title"></Label>
+                <Label BorderPane.margin="0 0 0 10" BorderPane.position="right" class="project-prop-location" id="location"></Label>
+            </BorderPane>
+        </JFXRippler>
+    </layout>
+</NodeFlow>

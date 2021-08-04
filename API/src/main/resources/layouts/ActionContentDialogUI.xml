@@ -1,0 +1,13 @@
+<NodeFlow>
+    <components>
+        <VBox>javafx.scene.layout.VBox</VBox>
+        <HBox>javafx.scene.layout.HBox</HBox>
+        <Label>javafx.scene.control.Label</Label>
+    </components>
+    <layout>
+        <VBox class="action-content-dialog">
+            <Label id="title" class="action-content-title"></Label>
+            <HBox id="buttons" class="action-content-buttons"></HBox>
+        </VBox>
+    </layout>
+</NodeFlow>

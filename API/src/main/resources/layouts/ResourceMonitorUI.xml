@@ -1,0 +1,40 @@
+<NodeFlow>
+    <components>
+        <BorderPane>javafx.scene.layout.BorderPane</BorderPane>
+        <VBox>javafx.scene.layout.VBox</VBox>
+        <ScrollPane>thito.nodeflow.library.ui.ModernScrollPane</ScrollPane>
+        <StackPane>javafx.scene.layout.StackPane</StackPane>
+        <LineChart>thito.nodeflow.library.ui.chart.AnimatedLineChart</LineChart>
+        <FlowPane>javafx.scene.layout.FlowPane</FlowPane>
+        <HBox>javafx.scene.layout.HBox</HBox>
+        <Label>javafx.scene.control.Label</Label>
+    </components>
+    <layout>
+        <BorderPane class="root-rmw">
+            <BorderPane BorderPane.position="center">
+                <StackPane class="usage-chart" BorderPane.position="center">
+                    <LineChart id="chart"></LineChart>
+                </StackPane>
+                <FlowPane class="flow-desc" BorderPane.position="bottom">
+                    <HBox class="desc">
+                        <StackPane class="cpu-line"></StackPane>
+                        <Label class="cpu-text">CPU</Label>
+                    </HBox>
+                    <HBox class="desc">
+                        <StackPane class="ram-line"></StackPane>
+                        <Label class="cpu-text">RAM</Label>
+                    </HBox>
+                    <HBox class="desc">
+                        <StackPane class="all-cpu-line"></StackPane>
+                        <Label class="cpu-text">System</Label>
+                    </HBox>
+                </FlowPane>
+            </BorderPane>
+<!--            <VBox BorderPane.position="left" class="task-list">-->
+<!--                <ScrollPane>-->
+<!--                    <Vbox id="task-list"></Vbox>-->
+<!--                </ScrollPane>-->
+<!--            </VBox>-->
+        </BorderPane>
+    </layout>
+</NodeFlow>

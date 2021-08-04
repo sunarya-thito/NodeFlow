@@ -1,0 +1,17 @@
+<NodeFlow>
+    <components>
+        <ImageView>javafx.scene.image.ImageView</ImageView>
+        <HBox>javafx.scene.layout.HBox</HBox>
+        <VBox>javafx.scene.layout.VBox</VBox>
+        <Label>javafx.scene.control.Label</Label>
+    </components>
+    <layout>
+        <HBox class="node-component">
+            <ImageView class="node-node-icon"/>
+            <VBox class="node-component-description">
+                <Label id="node-component-name"/>
+                <Label id="node-component-id"/>
+            </VBox>
+        </HBox>
+    </layout>
+</NodeFlow>

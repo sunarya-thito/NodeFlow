@@ -1,0 +1,16 @@
+<NodeFlow>
+    <components>
+        <VBox>javafx.scene.layout.VBox</VBox>
+        <Label>javafx.scene.control.Label</Label>
+        <BorderPane>javafx.scene.layout.BorderPane</BorderPane>
+        <ScrollPane>thito.nodeflow.library.ui.ModernScrollPane</ScrollPane>
+    </components>
+    <layout>
+        <BorderPane class="formContentRoot">
+            <Label BorderPane.position="top" id="header" class="formHeader"/>
+            <ScrollPane class="form-scroller" BorderPane.position="center" BorderPane.margin="10 0 0 0">
+                <VBox BorderPane.margin="15 0 20 0" id="formList" class="formList"/>
+            </ScrollPane>
+        </BorderPane>
+    </layout>
+</NodeFlow>

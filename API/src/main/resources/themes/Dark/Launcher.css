@@ -1,0 +1,679 @@
+.window-root {
+    -fx-background-color: transparent;
+}
+.window-content {
+    -fx-background-color: rgba(55, 53, 75, .9);
+    -fx-font-family: "Roboto";
+}
+
+.jfx-slider .animated-thumb {
+    -fx-background-color: teal;
+}
+
+.jfx-slider .thumb {
+    -fx-background-color: derive(teal, 0.5);
+}
+
+.jfx-slider .colored-track {
+    -fx-background-color: teal;
+}
+
+.window-glass {
+    -fx-background-color: radial-gradient(radius 150%, rgb(255, 255, 255, 0.18), rgb(0, 0, 0, 0.2));
+}
+
+.window-title-bar {
+    -fx-padding: 5 20;
+    -fx-alignment: center;
+}
+
+.window-icon {
+}
+
+.window-title {
+    -fx-text-fill: white;
+    -fx-font-family: "Roboto";
+    -fx-font-size: 13;
+    -fx-opacity: 1;
+    -fx-effect: dropshadow(gaussian, rgb(0, 0, 0, 0.7), 10, 0, 0, 0);
+}
+
+.window-control {
+    -fx-spacing: 10;
+    -fx-padding: 0 15;
+}
+
+.window-button-icon {
+    -fx-radius: 8;
+}
+
+.window-button-viewport {
+    -fx-padding: 7 0;
+}
+
+#window-button-close {
+    base-button-color: #FF605C;
+    -fx-opacity: 0.9;
+    -fx-fill:
+        radial-gradient(center 50% 20%, radius 100%, derive(base-button-color, 0) 10%, base-button-color 30%, derive(base-button-color, 0.1) 90%);
+    //-fx-effect: innershadow(gaussian, rgb(0, 0, 0, 0.5), 10, 0.2, 0, 3);
+}
+
+#window-button-close:hovered {
+    -fx-opacity: 1;
+    -fx-effect: dropshadow(gaussian, base-button-color, 10, 0.2, 0, 0);
+}
+
+#window-button-maximize {
+    base-button-color: #00CA4E;
+    -fx-opacity: 0.9;
+    -fx-fill:
+            radial-gradient(center 50% 20%, radius 100%, derive(base-button-color, 0) 10%, base-button-color 30%, derive(base-button-color, 0.1) 90%);
+    //-fx-effect: innershadow(gaussian, rgb(0, 0, 0, 0.5), 10, 0.2, 0, 2);
+}
+
+#window-button-maximize:hovered {
+    -fx-opacity: 1;
+    -fx-effect: dropshadow(gaussian, base-button-color, 10, 0.2, 0, 0);
+}
+
+#window-button-minimize {
+    base-button-color: #FFBD44;
+    -fx-opacity: 0.9;
+    -fx-fill:
+           radial-gradient(center 50% 20%, radius 100%, derive(base-button-color, 0) 10%, base-button-color 30%, derive(base-button-color, 0.1) 90%);
+    //-fx-effect: innershadow(gaussian, rgb(0, 0, 0, 0.5), 10, 0.2, 0, 2);
+}
+
+#window-button-minimize:hovered {
+    -fx-opacity: 1;
+    -fx-effect: dropshadow(gaussian, base-button-color, 10, 0.2, 0, 0);
+}
+
+.credit-text-role, .credit-text-name, .credit-text-role-boss,
+.credit-text-name-boss, .credit-text-score, .credit-text-game-over {
+    -fx-text-fill: white;
+    -fx-font-family: "Minecraftia";
+}
+
+.credit-text-role {
+    -fx-font-size: 12;
+}
+
+.credit-text-name {
+    -fx-font-size: 17;
+}
+
+.credit-text-role-boss {
+    -fx-font-size: 20;
+}
+
+.credit-text-name-boss {
+    -fx-font-size: 30;
+}
+
+.credit-text-score {
+    -fx-font-size: 12;
+}
+
+.credit-text-game-over {
+    -fx-font-size: 34;
+}
+
+.launcher-navigation-panel {
+    -fx-min-width: 200;
+    -fx-padding: 150 0 0 10;
+}
+
+.preloader {
+    -fx-background-color: color-preloader;
+    -fx-alignment: center;
+}
+
+.preloader-viewport {
+    -fx-spacing: 20;
+}
+
+.preloader-spinner {
+    -fx-spinner-color: color-preloader-spinner;
+}
+
+.preloader-text {
+    -fx-text-fill: color-preloader-label;
+    -fx-font-family: "Roboto Condensed";
+    -fx-font-size: 12;
+}
+
+.launcher-page {
+    -fx-padding: 10 20 20 0;
+    -fx-spacing: 10;
+}
+
+.launcher-page-viewport {
+    -fx-background-color: rgb(34, 34, 44);
+}
+
+.launcher-page-viewport .particle-parallax {
+    -fx-opacity: 0.25;
+}
+
+.launcher-page-header {
+    -fx-background-color: rgb(34, 34, 44);
+    -fx-background-radius: 5;
+    -fx-spacing: 5;
+    -fx-min-height: 25;
+    -fx-alignment: center;
+}
+
+.launcher-overlay {
+    -fx-background-color: color-launcher-overlay;
+}
+
+.launcher-overlay-disable-title, .launcher-overlay-disable-message {
+    -fx-text-fill: color-launcher-overlay-disable-text;
+}
+
+.launcher-overlay-disable-title {
+    -fx-font-family: "Youtube Sans";
+    -fx-font-size: 25;
+}
+
+.launcher-overlay-disable-message {
+    -fx-font-family: "Roboto";
+    -fx-font-size: 15;
+}
+
+.launcher-button {
+    -fx-padding: 8 20 8 20;
+    -fx-max-height: 5;
+    -fx-spacing: 15;
+    -fx-fill-height: true;
+    -fx-alignment: center-left;
+    -fx-opacity: 0.25;
+}
+
+.launcher-button-text, .launcher-button-icon {
+    -fx-effect: dropshadow(gaussian, rgb(0, 0, 0, 0.5) , 10, 0, 0, 0);
+}
+
+.launcher-button-icon {
+    -fx-fit-width: 20;
+    -fx-fit-height: 20;
+}
+
+.launcher-button-text {
+    -fx-text-fill: white;
+    -fx-font-family: "Roboto Condensed";
+    -fx-font-size: 18;
+}
+
+.launcher-button:hovered {
+    -fx-opacity: 0.5;
+    -fx-effect: dropshadow(gaussian, white, 7, 0, 0, 0);
+}
+
+.launcher-button:selected, .launcher-button:selected:hovered {
+    -fx-opacity: 1;
+    -fx-effect: dropshadow(gaussian, white, 7, 0, 0, 0);
+}
+
+.launcher-page-footer {
+    -fx-background-color: rgb(34, 34, 44);
+    -fx-padding: 5 5;
+}
+
+.launcher-page-foot-note {
+    -fx-text-fill: white;
+    -fx-opacity: 0.5;
+    -fx-font-family: "Roboto Condensed Italic";
+    -fx-font-size: 12;
+    -fx-padding: 0 0 0 10;
+}
+
+.updates-page-version-header {
+    -fx-background-color: rgb(255, 255, 255, 0.5);
+    -fx-background-radius: 2px;
+}
+
+.updates-page-version-header-text-latest {
+    -fx-text-fill: lime;
+}
+
+.updates-page-version-header-text-current {
+    -fx-text-fill: yellow;
+}
+
+.updates-page-version-header-text-old {
+    -fx-text-fill: white;
+}
+
+.updates-page-version-header-text {
+    -fx-font-family: "Roboto Condensed";
+    -fx-font-size: 20;
+}
+
+.updates-page-version-text, .markdown-text {
+    -fx-font-family: "Roboto Condensed Italic";
+}
+
+.updates-page-version {
+    -fx-spacing: 5;
+}
+
+.updates-page-content {
+    -fx-padding: 40;
+    -fx-spacing: 40;
+}
+
+.updates-page-version-text * {
+    -mdfx-font-color: white;
+    -fx-text-fill: white;
+}
+
+.updates-page-scroll-pane {
+    -fx-fit-width: true;
+    -fx-fit-height: false;
+    -fx-fill-width: true;
+    -fx-fill-height: true;
+}
+
+.settings-item {
+    -fx-min-height: 40;
+    -fx-padding: 0 30 0 30;
+}
+
+.settings-foot-button-apply {
+    -fx-text-fill: color-text;
+    -fx-background-color: teal;
+    -fx-padding: 5 20 5 20;
+    -fx-font-family: "Roboto";
+}
+
+.settings-foot-button-reset {
+    -fx-text-fill: color-text;
+    -fx-background-color: teal;
+    -fx-padding: 5 20 5 20;
+    -fx-font-family: "Roboto";
+}
+
+.settings-foot-button-apply:disabled {
+    -fx-background-color: derive(teal, -0.2);
+    -fx-text-fill: derive(color-text, -0.2);
+}
+
+.settings-foot-button-reset:disabled {
+    -fx-background-color: derive(teal, -0.2);
+    -fx-text-fill: derive(color-text, -0.2);
+}
+
+.settings-foot {
+    -fx-alignment: center-right;
+    -fx-hgap: 5;
+}
+
+.settings-item-odd {
+    -fx-background-color: rgb(255, 255, 255, 0.05);
+}
+
+.settings-item-even {
+}
+
+.integer-settings-editor Label {
+    -fx-padding: 0 0 0 20;
+    -fx-text-fill: color-text;
+}
+
+.settings-item:invalid {
+    -fx-background-color: linear-gradient(to right, rgb(255, 0, 40, 0.1), transparent, rgb(255, 0, 40, 0.1));
+}
+
+.settings-item-label {
+    -fx-text-fill: color-text;
+}
+
+.settings-item-validator {
+    -fx-text-fill: color-invalid-text;
+}
+
+.settings-editor {
+    -fx-padding: 10;
+}
+
+.settings-editor-container {
+    -fx-min-width: 300;
+}
+
+.settings-editor .jfx-toggle-button {
+    -fx-max-height: 10;
+    -fx-min-height: 10;
+}
+
+.file-settings-editor {
+}
+
+.jfx-text-field {
+    -jfx-focus-color: derive(teal, 0.5);
+    -jfx-unfocus-color: rgb(255, 255, 255, .3);
+}
+
+.combo-box-popup .list-view {
+    -fx-background-color: transparent;
+}
+
+.settings-item .jfx-combo-box .cell:hover {
+    -fx-background-color: derive(color-prompt-cell, 0.1);
+}
+
+.file-settings-editor-browse {
+    -fx-padding: 5 15 5 15;
+    -fx-background-color: teal;
+    -fx-text-fill: color-text;
+}
+
+#ProjectsPageImpl .launcher-page-viewport {
+    -fx-background-color: none;
+}
+
+.project-create-icon {
+    -fx-fit-width: 36;
+    -fx-fit-height: 36;
+}
+
+.project-create-label {
+    -fx-text-fill: white;
+    -fx-font-family: "Roboto Light";
+    -fx-font-size: 17;
+    -fx-wrap-text: true;
+    -fx-text-alignment: center;
+    -fx-max-width: 100;
+}
+
+.project-create {
+    -fx-padding: 30 20;
+    -fx-background-color: rgb(34, 34, 44);
+    -fx-background-radius: 5;
+}
+
+.project-create-viewport {
+    -fx-alignment: center;
+    -fx-spacing: 10;
+}
+
+.project-rippler {
+    -jfx-rippler-fill: white;
+    -jfx-mask-type: FIT;
+}
+
+.projects-search {
+    -fx-text-fill: white;
+    -fx-font-family: "Montserrat Medium";
+    -fx-font-size: 12;
+}
+
+.projects-search-container .input-focused-line {
+    -fx-translate-y: 2;
+    //-fx-translate-x: -14;
+    //-fx-scale-x: 1.3;
+}
+
+.projects-search-container .input-line {
+    -fx-opacity: 0;
+}
+
+.projects-search-container {
+    -fx-alignment: center;
+    -fx-padding: 6 15;
+    -fx-spacing: 10;
+}
+
+.projects-search-icon {
+    -fx-fit-mode: SCALE;
+    size: 18;
+    -fx-max-width: size;
+    -fx-max-height: size;
+    -fx-min-width: size;
+    -fx-min-height: size;
+}
+
+.project-props-viewport {
+    -fx-alignment: center_left;
+}
+
+.project-props-author {
+    -fx-font-family: "Roboto Light";
+    -fx-text-fill: white;
+    -fx-font-size: 16;
+}
+
+.project-props-title {
+    -fx-font-family: "Roboto Condensed";
+    -fx-text-fill: white;
+    -fx-font-size: 36;
+}
+
+.project-props-date {
+    -fx-font-family: "Roboto Light";
+    -fx-text-fill: white;
+    -fx-font-size: 12;
+}
+
+.project-props {
+    -fx-background-color: rgb(34, 34, 44);
+    -fx-background-radius: 5;
+    -fx-padding: 20;
+    -fx-min-height: 100;
+    -fx-min-width: 100;
+    -fx-max-height: Infinity;
+    -fx-max-width: Infinity;
+}
+
+.project-props-buttons {
+    -fx-alignment: center;
+    -fx-spacing: 5;
+    -fx-padding: 0 30;
+    -fx-opacity: 0;
+    -fx-fill-width: true;
+}
+
+.project-props-button {
+    -fx-text-fill: white;
+    -fx-border-color: rgb(255, 255, 255, 0.5);
+    -fx-border-radius: 5;
+    -fx-background-color: rgb(255, 255, 255, 0.2);
+    -fx-padding: 10 20;
+    -fx-max-width: Infinity;
+    -fx-max-height: Infinity;
+    -fx-graphic-text-gap: 15;
+}
+
+#project-delete-button {
+    -fx-background-color: rgb(255, 0, 0, 0.2);
+    -fx-border-color: rgb(255, 0, 0, 0.5);
+}
+
+.project-buttons-title {
+    -fx-text-fill: white;
+    -fx-font-size: 22;
+    -fx-font-family: "Roboto Condensed";
+    -fx-padding: 0 0 20 0;
+}
+
+.project-props-button ImageView {
+    -fx-fit-width: 15;
+    -fx-fit-height: 15;
+}
+
+.props-project {
+    -fx-text-fill: white;
+    -fx-font-family: "Roboto Condensed";
+}
+
+.props-project-name {
+    -fx-font-size: 25;
+}
+
+.props-project-time {
+    -fx-font-family: "Roboto Condensed Italic";
+    -fx-font-size: 12;
+    -fx-opacity: 0.5;
+}
+
+.props-project-author {
+    -fx-font-family: "Roboto Condensed";
+    -fx-font-size: 16;
+    -fx-opacity: 0.8;
+}
+
+.props-project-desc {
+    -fx-font-size: 14;
+    -fx-padding: 10 0 0 0;
+    -fx-wrap-text: true;
+    -fx-opacity: 0.7;
+}
+
+.props-viewport {
+    -fx-max-width: 260;
+}
+
+.thumbnail-container {
+    -fx-absolute-height: 180;
+}
+
+.props-viewport, .project-search, .project-list {
+    -fx-background-color: rgb(34, 34, 44);
+}
+
+.projects-page-root {
+    -fx-spacing: 10;
+}
+
+.projects-page-header {
+    -fx-spacing: 10;
+}
+
+.project-search {
+    -fx-min-height: 30;
+}
+
+.props-button-viewport {
+    -fx-alignment: CENTER_RIGHT;
+}
+
+.props-button {
+    -fx-text-fill: white;
+}
+
+.props-project-overlay-text {
+    -fx-text-fill: white;
+    -fx-font-family: "Roboto Condensed";
+    -fx-font-size: 20;
+}
+
+.props-project-overlay-pre {
+    -fx-text-fill: white;
+    -fx-font-family: "Roboto Condensed";
+    -fx-font-size: 14;
+    -fx-opacity: 0.5;
+}
+
+.props-overlay {
+    -fx-min-width: 260;
+    -fx-alignment: center;
+}
+
+.props-project {
+    -fx-min-width: 200;
+}
+
+.props-project-details {
+    -fx-padding: 20 10;
+}
+
+.props-button-viewport {
+    -fx-hgap: 8;
+    -fx-padding: 10;
+}
+
+.props-button {
+    -fx-padding: 10 20;
+}
+
+
+.props-button-viewport #open-button:hover {
+    -fx-background-color: rgb(0,123,123, 0.5);
+}
+
+.props-button-viewport #edit-button:hover {
+    -fx-background-color: rgb(255, 255, 255, 0.2);
+}
+
+.props-button-viewport #delete-button:hover {
+    -fx-background-color: rgb(255, 100, 100, 0.2);
+}
+
+.props-button-viewport #delete-button {
+    -fx-text-fill: rgb(255, 100, 100);
+}
+
+.props-button-viewport #open-button .jfx-rippler {
+    -jfx-rippler-fill: rgb(0,160,160);
+}
+
+.project-prop {
+    -fx-padding: 10 20;
+}
+
+.project-prop:hover {
+    -fx-background-color: rgb(255, 255, 255, 0.05);
+}
+
+.project-prop-rippler {
+    -jfx-rippler-fill: rgb(0, 0, 0, 0.5);
+    -jfx-rippler-pos: back;
+}
+
+.project-prop:selected {
+    -fx-background-color: rgb(0, 0, 0, 0.5);
+}
+
+.project-prop-list {
+}
+
+.project-prop-title, .project-prop-location {
+    -fx-text-fill: white;
+    -fx-font-family: "Roboto";
+}
+
+.project-list-header {
+    -fx-spacing: 10;
+}
+
+.project-create-root {
+    -fx-min-width: 30;
+    -fx-background-color: rgb(34, 34, 44);
+    -fx-background-radius: 5;
+}
+
+.project-create-root:hover {
+    -fx-background-color: derive(rgb(34, 34, 44), 0.1);
+}
+
+.project-create-rippler {
+    -jfx-mask-type: FIT;
+    -jfx-rippler-fill: white;
+}
+
+.project-prop-title {
+}
+
+.project-prop-location {
+    -fx-opacity: 0.5;
+}
+
+.project-list {
+    -fx-fit-width: true;
+}
+
+.parallax {
+    -fx-opacity: 0.2;
+}

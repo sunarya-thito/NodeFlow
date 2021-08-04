@@ -1,0 +1,19 @@
+<NodeFlow>
+    <components>
+        <Label>javafx.scene.control.Label</Label>
+        <BorderPane>javafx.scene.layout.BorderPane</BorderPane>
+        <VBox>javafx.scene.layout.VBox</VBox>
+        <StackPane>javafx.scene.layout.StackPane</StackPane>
+        <ViewportPane>thito.nodeflow.library.ui.ViewportPane</ViewportPane>
+        <Parallax>thito.nodeflow.library.ui.decoration.ParticleParallax</Parallax>
+    </components>
+    <layout>
+        <Parallax class="parallax"></Parallax>
+        <BorderPane class="launcher-root">
+            <BorderPane class="launcher-navigation-panel" BorderPane.position="left">
+                <VBox id="launcher-button-panel" class="launcher-button-panel" BorderPane.position="center"/>
+            </BorderPane>
+            <ViewportPane clip-arc="10" id="launcher-viewport" class="launcher-viewport" BorderPane.position="center"/>
+        </BorderPane>
+    </layout>
+</NodeFlow>

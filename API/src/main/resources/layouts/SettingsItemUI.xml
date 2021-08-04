@@ -1,0 +1,17 @@
+<NodeFlow>
+    <components>
+        <BorderPane>javafx.scene.layout.BorderPane</BorderPane>
+        <Label>javafx.scene.control.Label</Label>
+        <StackPane>javafx.scene.layout.StackPane</StackPane>
+        <VBox>javafx.scene.layout.VBox</VBox>
+    </components>
+    <layout>
+        <BorderPane id="root" class="settings-item">
+            <Label id="label" class="settings-item-label" BorderPane.position="left" BorderPane.alignment="center"/>
+            <BorderPane BorderPane.position="right" BorderPane.alignment="center" class="settings-editor">
+                <StackPane id="editor" class="settings-editor-container" BorderPane.position="center"/>
+                <Label id="validator" class="settings-item-validator" BorderPane.position="bottom" BorderPane.margin="5 0 0 0"/>
+            </BorderPane>
+        </BorderPane>
+    </layout>
+</NodeFlow>

@@ -1,0 +1,14 @@
+<NodeFlow>
+    <components>
+        <VBox>javafx.scene.layout.VBox</VBox>
+        <Label>javafx.scene.control.Label</Label>
+        <StackPane>javafx.scene.layout.StackPane</StackPane>
+    </components>
+    <layout>
+        <VBox class="formRoot">
+            <Label id="question" class="formQuestion"/>
+            <StackPane id="viewport" class="formViewport"/>
+            <Label VBox.vgrow="always" id="error" class="formError"/>
+        </VBox>
+    </layout>
+</NodeFlow>

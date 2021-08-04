@@ -1,0 +1,26 @@
+<NodeFlow>
+    <components>
+        <BorderPane>javafx.scene.layout.BorderPane</BorderPane>
+        <VBox>javafx.scene.layout.VBox</VBox>
+        <HBox>javafx.scene.layout.HBox</HBox>
+        <Label>javafx.scene.control.Label</Label>
+        <JFXButton>com.jfoenix.controls.JFXButton</JFXButton>
+        <StackPane>javafx.scene.layout.StackPane</StackPane>
+    </components>
+    <layout>
+        <BorderPane>
+            <StackPane class="project-props" clip-arc="7.5" BorderPane.position="center">
+                <VBox id="viewport" class="project-props-viewport">
+                    <Label id="author" class="project-props-author">Author</Label>
+                    <Label id="title" class="project-props-title">Project #1</Label>
+                    <Label id="last-modified" class="project-props-date">29 January 2020</Label>
+                </VBox>
+                <VBox id="buttons" class="project-props-buttons">
+                    <Label id="title-popup" class="project-buttons-title">Project #1</Label>
+                    <JFXButton id="project-open-button" icon="!project-launch" class="project-props-button">Open</JFXButton>
+                    <JFXButton id="project-delete-button" icon="!project-delete" class="project-props-button">Delete</JFXButton>
+                </VBox>
+            </StackPane>
+        </BorderPane>
+    </layout>
+</NodeFlow>

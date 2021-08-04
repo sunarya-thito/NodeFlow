@@ -1,0 +1,8 @@
+<NodeFlow>
+    <components>
+        <BorderPane>javafx.scene.layout.BorderPane</BorderPane>
+    </components>
+    <layout>
+        <BorderPane id="viewport"/>
+    </layout>
+</NodeFlow>

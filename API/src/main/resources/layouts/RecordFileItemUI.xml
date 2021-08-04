@@ -1,0 +1,17 @@
+<NodeFlow>
+    <components>
+        <TextField>javafx.scene.control.TextField</TextField>
+        <BorderPane>javafx.scene.layout.BorderPane</BorderPane>
+        <HBox>javafx.scene.layout.HBox</HBox>
+        <ImageView>javafx.scene.image.ImageView</ImageView>
+    </components>
+    <layout>
+        <HBox class="config-file-item">
+            <TextField id="name" class="config-file-item-name"></TextField>
+            <BorderPane HBox.hgrow="always" id="viewport" class="config-file-item-viewport"></BorderPane>
+            <BorderPane class="config-file-delete-container" id="delete">
+                <ImageView BorderPane.position="center" BorderPane.alignment="center" class="config-file-item-delete-button">!delete-object</ImageView>
+            </BorderPane>
+        </HBox>
+    </layout>
+</NodeFlow>

@@ -1,0 +1,9 @@
+<NodeFlow>
+    <components>
+        <JFXTextField>com.jfoenix.controls.JFXTextField</JFXTextField>
+        <BetterImageView>thito.nodeflow.library.ui.BetterImageView</BetterImageView>
+        <HBox>javafx.scene.layout.HBox</HBox>
+    </components>
+    <layout>
+    </layout>
+</NodeFlow>

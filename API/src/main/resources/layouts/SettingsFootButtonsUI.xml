@@ -1,0 +1,12 @@
+<NodeFlow>
+    <components>
+        <FlowPane>javafx.scene.layout.FlowPane</FlowPane>
+        <JFXButton>com.jfoenix.controls.JFXButton</JFXButton>
+    </components>
+    <layout>
+        <FlowPane class="settings-foot">
+            <JFXButton id="apply" class="settings-foot-button-apply">${button-apply}</JFXButton>
+            <JFXButton id="reset" class="settings-foot-button-reset">${button-reset}</JFXButton>
+        </FlowPane>
+    </layout>
+</NodeFlow>

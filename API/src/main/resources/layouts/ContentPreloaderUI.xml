@@ -1,0 +1,16 @@
+<NodeFlow>
+    <components>
+        <BetterSpinner>thito.nodeflow.library.ui.BetterSpinner</BetterSpinner>
+        <Label>javafx.scene.control.Label</Label>
+        <VBox>javafx.scene.layout.VBox</VBox>
+        <AlignedPane>thito.nodeflow.library.ui.AlignedPane</AlignedPane>
+    </components>
+    <layout>
+        <AlignedPane class="preloader">
+            <VBox id="viewport" class="preloader-viewport">
+                <BetterSpinner id="spinner" class="preloader-spinner"/>
+                <Label class="preloader-text">${preloader-loading}</Label>
+            </VBox>
+        </AlignedPane>
+    </layout>
+</NodeFlow>

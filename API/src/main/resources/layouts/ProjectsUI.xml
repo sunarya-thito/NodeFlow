@@ -1,0 +1,25 @@
+<NodeFlow>
+    <components>
+        <MasonryPane>thito.nodeflow.library.ui.BetterMasonryPane</MasonryPane>
+        <ModernScrollPane>thito.nodeflow.library.ui.ModernScrollPane</ModernScrollPane>
+        <BorderPane>javafx.scene.layout.BorderPane</BorderPane>
+        <VBox>javafx.scene.layout.VBox</VBox>
+        <ImageView>javafx.scene.image.ImageView</ImageView>
+        <Label>javafx.scene.control.Label</Label>
+        <JFXRippler>com.jfoenix.controls.JFXRippler</JFXRippler>
+    </components>
+    <layout>
+        <ModernScrollPane>
+            <MasonryPane id="project-list" BetterMasonryPane.layoutMode="MASONRY">
+                <JFXRippler class="project-rippler">
+                    <BorderPane class="project-create">
+                        <VBox BorderPane.position="center" BorderPane.alignment="center" class="project-create-viewport">
+                            <ImageView class="project-create-icon">!create-button</ImageView>
+                            <Label class="project-create-label">${projects-create}</Label>
+                        </VBox>
+                    </BorderPane>
+                </JFXRippler>
+            </MasonryPane>
+        </ModernScrollPane>
+    </layout>
+</NodeFlow>
