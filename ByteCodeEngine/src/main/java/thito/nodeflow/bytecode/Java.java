@@ -21,6 +21,14 @@ public class Java {
     public static IClass ArrayClass(IClass componentType, int dimensions) {
         return new ArrayClass(componentType, dimensions);
     }
+    public static Reference Type(IClass clazz) {
+        return new Reference(Class.class) {
+            @Override
+            public void write() {
+                MethodContext.getContext().pushNode(new LdcInsnNode(BCHelper.getASMType(clazz)));
+            }
+        };
+    }
     public static IClass Class(Type type) {
         String name = type.getTypeName();
         Context context = Context.getContext();

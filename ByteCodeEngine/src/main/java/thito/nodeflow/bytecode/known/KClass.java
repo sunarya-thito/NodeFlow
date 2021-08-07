@@ -22,7 +22,7 @@ public class KClass extends AbstractClass {
 
     @Override
     public IClass getComponentType() {
-        return null;
+        return Java.Class(wrapped.getComponentType());
     }
 
     @Override

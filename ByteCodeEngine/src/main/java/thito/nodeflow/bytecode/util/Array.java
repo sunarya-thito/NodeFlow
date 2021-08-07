@@ -21,6 +21,11 @@ public class Array {
         };
     }
     public static void set(Object array, Object index, Object value) {
+        MethodContext context = MethodContext.getContext();
+        BCHelper.writeToContext(Java.Class(Object.class), array);
+        BCHelper.writeToContext(Java.Class(int.class), index);
+        BCHelper.writeToContext(BCHelper.getType(array).getComponentType(), value);
+        context.pushNode(new InsnNode(Opcodes.AASTORE));
     }
     public static Reference getLength(Object array) {
         return null;
@@ -28,16 +33,27 @@ public class Array {
     public static Reference newInstance(IClass type, Object...dimensions) {
         if (dimensions.length == 1) {
             MethodContext context = MethodContext.getContext();
-            BCHelper.writeToContext(Java.Class(int.class), dimensions[0]);
-            LField field = context.getAccessor().createLocal(Java.ArrayClass(type, dimensions.length));
+            LField field = context.getAccessor().createLocal(Java.ArrayClass(type, 1));
             field.set(new Reference(field.getType()) {
                 @Override
                 public void write() {
-
+                    BCHelper.writeToContext(Java.Class(int.class), dimensions[0]);
+                    context.pushNode(new TypeInsnNode(Opcodes.ANEWARRAY, BCHelper.getClassPath(type)));
                 }
             });
             return field.get();
         }
-        return null;
+        MethodContext context = MethodContext.getContext();
+        LField field = context.getAccessor().createLocal(Java.ArrayClass(type, dimensions.length));
+        field.set(new Reference(field.getType()) {
+            @Override
+            public void write() {
+                for (Object dim : dimensions) {
+                    BCHelper.writeToContext(Java.Class(int.class), dim);
+                }
+                context.pushNode(new MultiANewArrayInsnNode(BCHelper.getArrayPrefix(dimensions.length)+BCHelper.getDescriptor(type), dimensions.length));
+            }
+        });
+        return field.get();
     }
 }

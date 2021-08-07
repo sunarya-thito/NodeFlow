@@ -104,29 +104,26 @@ public class BCHelper {
         }
         return "L"+getClassPath(type)+";";
     }
-//    public static Class<?> getRawType(Object object) {
-//        if (object instanceof Reference) return getRawClass(((Reference) object).getType());
-//        return object.getClass();
-//    }
-//    public static Class<?> getRawClass(Type type) {
-//        if (type instanceof Class) return (Class<?>) type;
-//        if (type instanceof ParameterizedType) return getRawClass(((ParameterizedType) type).getRawType());
-//        if (type instanceof KClass) return ((KClass) type).getWrapped();
-//        try {
-//            return Class.forName(type.getTypeName());
-//        } catch (Throwable t) {
-//        }
-//        return Object.class;
-//    }
-//    public static int getModifiers(IClass type) {
-//        if (type instanceof Member) return ((Member) type).getModifiers();
-//        if (type instanceof IMember) return ((IMember) type).getModifiers();
-////        Class<?> raw = getRawClass(type);
-////        return raw.getModifiers();
-//        return 0;
-//    }
     public static Reference toReference(Object object) {
+        if (object == null) return Java.Null();
         if (object instanceof Reference) return (Reference) object;
+        if (object instanceof Boolean) {
+            if ((Boolean) object) {
+                return new Reference(boolean.class) {
+                    @Override
+                    public void write() {
+                        MethodContext.getContext().pushNode(new InsnNode(Opcodes.ICONST_1));
+                    }
+                };
+            } else {
+                return new Reference(boolean.class) {
+                    @Override
+                    public void write() {
+                        MethodContext.getContext().pushNode(new InsnNode(Opcodes.ICONST_0));
+                    }
+                };
+            }
+        }
         if (object instanceof Integer || object instanceof Byte || object instanceof Short) {
             IClass primitive = wrapperToPrimitive(Java.Class(object.getClass()));
             int value = ((Number) object).intValue();
