@@ -9,6 +9,8 @@
         <module name="Launcher" />
         <module name="API" />
         <module name="Installer" />
+        <module name="ByteCodeEngine" />
+        <module name="Engine" />
         <module name="Internal" />
       </profile>
     </annotationProcessing>
