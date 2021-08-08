@@ -67,7 +67,8 @@ public class BCHelper {
     }
     public static IClass getType(Object object) {
         if (object instanceof Reference) return ((Reference) object).getType();
-        return Java.Class(object.getClass());
+        // forces written constant to be primitive values
+        return wrapperToPrimitive(Java.Class(object.getClass()));
     }
     public static String getArrayPrefix(int dimensions) {
         char[] chars = new char[dimensions];
@@ -171,6 +172,8 @@ public class BCHelper {
         return -1;
     }
     public static IClass getPrioritized(IClass a, IClass b) {
+        a = wrapperToPrimitive(a);
+        b = wrapperToPrimitive(b);
         int indexA = indexOf(PRIMITIVE_PRIORITY, a.getName());
         int indexB = indexOf(PRIMITIVE_PRIORITY, b.getName());
         return indexA < 0 || indexB < indexA ? a : b;

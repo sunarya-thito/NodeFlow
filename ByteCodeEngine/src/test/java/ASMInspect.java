@@ -8,8 +8,11 @@ public class ASMInspect {
 
         boolean test = Double.valueOf("421") <= Integer.valueOf("129");
 
-        if (test) {
+        if (Boolean.parseBoolean("true")) {
             System.out.println("test");
         }
+
+        System.out.println(123 & Long.parseLong("12"));
+        System.out.println(!Boolean.valueOf("true") && Boolean.valueOf("false"));
     }
 }
