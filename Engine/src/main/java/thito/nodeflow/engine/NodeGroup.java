@@ -6,7 +6,7 @@ import thito.nodeflow.engine.state.*;
 
 import java.util.*;
 
-public class NodeGroup {
+public class NodeGroup extends CanvasElement {
     private NodeCanvas canvas;
     private UUID id;
     private StringProperty name = new SimpleStringProperty("");
@@ -16,13 +16,19 @@ public class NodeGroup {
     private DoubleProperty height = new SimpleDoubleProperty();
     private NodeGroupSkin skin;
 
+    private BooleanProperty selected = new SimpleBooleanProperty();
+
     public NodeGroup() {
+    }
+
+    public BooleanProperty selectedProperty() {
+        return selected;
     }
 
     protected void initialize(NodeCanvas canvas) {
         this.canvas = canvas;
-        this.id = id;
-        this.skin = canvas.getHandler().createGroupSkin();
+        this.id = UUID.randomUUID();
+        this.skin = canvas.getHandler().createGroupSkin(this);
     }
 
     public NodeGroup(NodeCanvas canvas, NodeGroupState state) {
@@ -33,7 +39,7 @@ public class NodeGroup {
         y.set(state.y);
         width.set(state.width);
         height.set(state.height);
-        skin = canvas.getHandler().createGroupSkin();
+        skin = canvas.getHandler().createGroupSkin(this);
     }
 
     public NodeGroupSkin getSkin() {

@@ -1,0 +1,22 @@
+NodeParameterSkin {
+    -fx-min-height: 30px;
+}
+
+NodeParameterSkin > HBox {
+    -fx-padding: 5 15;
+    -fx-fill-height: true;
+}
+
+NodeSkin:selected NodeParameterSkin > HBox > .NodeParameterTitle {
+    -fx-text-fill: rgb(237, 136, 54);
+}
+
+NodeParameterSkin:selected > HBox > .NodeParameterTitle {
+    -fx-text-fill: white;
+}
+
+NodeParameterSkin > HBox > .NodeParameterTitle {
+    -fx-font-family: Roboto;
+    -fx-font-weight: bold;
+    -fx-text-fill: #666e7c;
+}

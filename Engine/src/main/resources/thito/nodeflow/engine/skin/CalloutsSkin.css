@@ -1,0 +1,22 @@
+.CalloutsPointer {
+    -fx-fill: #1b202c;
+}
+
+.CalloutsContent {
+    -fx-min-width: 200;
+    -fx-background-color: #1b202c;
+    -fx-background-radius: 15;
+    -fx-padding: 10 15;
+}
+
+CalloutsSkin {
+    -fx-padding: 20;
+    -fx-effect: dropshadow(gaussian, rgb(0, 0, 0, 0.35), 20, 0, 0, 0);
+}
+
+.NodePopUpTitle {
+    -fx-text-fill: white;
+    -fx-font-family: Roboto;
+    -fx-font-size: 15;
+    -fx-font-weight: bold;
+}

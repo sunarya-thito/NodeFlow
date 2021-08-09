@@ -8,6 +8,7 @@ import thito.nodeflow.engine.skin.*;
 import thito.nodeflow.engine.state.*;
 
 import java.util.*;
+import java.util.stream.*;
 
 public class NodeCanvas {
     private DoubleProperty offsetX = new SimpleDoubleProperty();
@@ -21,15 +22,34 @@ public class NodeCanvas {
     private NodeCanvasHandler handler;
     private NodeCanvasSkin skin;
 
-    private ObjectProperty<NodeLinkStyle> linkStyle = new SimpleObjectProperty<>();
+    private ObjectProperty<LinkStyle> linkStyle = new SimpleObjectProperty<>(LinkStyle.CABLE);
+    private BooleanProperty snapToGrid = new SimpleBooleanProperty();
 
     public NodeCanvas(NodeCanvasHandler handler) {
         this.handler = handler;
-        skin = handler.createCanvasSkin();
+        skin = handler.createCanvasSkin(this);
 
         nodeList.addListener(new NodeCanvasNodeListListener());
         nodeLinkedList.addListener(new NodeCanvasNodeLinkedListListener());
         groupList.addListener(new NodeCanvasNodeGroupListListener());
+        linkStyle.addListener(new NodeCanvasLinkStyleListener());
+    }
+
+    public Collection<? extends NodeParameter> getPairings(NodeParameter parameter, boolean asInput) {
+        return nodeLinkedList.stream().filter(x -> asInput ? x.getTarget() == parameter : x.getSource() == parameter).map(x -> {
+            if (x.getSource() == parameter) {
+                return x.getTarget();
+            } else {
+                return x.getSource();
+            }
+        }).collect(Collectors.toList());
+    }
+
+    public Collection<? extends CanvasElement> getSelectedElements() {
+        List<CanvasElement> elements = new ArrayList<>();
+        elements.addAll(nodeList.stream().filter(node -> node.selectedProperty().get()).collect(Collectors.toList()));
+        elements.addAll(groupList.stream().filter(group -> group.selectedProperty().get()).collect(Collectors.toList()));
+        return elements;
     }
 
     public boolean disconnect(NodeParameter a, NodeParameter b) {
@@ -44,7 +64,16 @@ public class NodeCanvas {
         return false;
     }
 
+    public BooleanProperty snapToGridProperty() {
+        return snapToGrid;
+    }
+
+    public NodeCanvasSkin getSkin() {
+        return skin;
+    }
+
     public boolean connect(NodeParameter source, NodeParameter target, boolean force) {
+        if (source.getNode() == target.getNode()) return false;
         NodeLinked linked = new NodeLinked(this, source, target);
         if (nodeLinkedList.contains(linked)) return false;
         if (!force) {
@@ -69,7 +98,7 @@ public class NodeCanvas {
         return null;
     }
 
-    public ObjectProperty<NodeLinkStyle> linkStyleProperty() {
+    public ObjectProperty<LinkStyle> linkStyleProperty() {
         return linkStyle;
     }
 
@@ -83,6 +112,13 @@ public class NodeCanvas {
 
     public ObservableList<Node> getNodeList() {
         return nodeList;
+    }
+
+    public Collection<? extends CanvasElement> getElements() {
+        List<CanvasElement> e = new ArrayList<>();
+        e.addAll(nodeList);
+        e.addAll(groupList);
+        return e;
     }
 
     public NodeCanvasHandler getHandler() {
@@ -167,11 +203,11 @@ public class NodeCanvas {
         }
     }
 
-    public class NodeCanvasLinkStyleListener implements ChangeListener<NodeLinkStyle> {
+    public class NodeCanvasLinkStyleListener implements ChangeListener<LinkStyle> {
         @Override
-        public void changed(ObservableValue<? extends NodeLinkStyle> observable, NodeLinkStyle oldValue, NodeLinkStyle newValue) {
+        public void changed(ObservableValue<? extends LinkStyle> observable, LinkStyle oldValue, LinkStyle newValue) {
             nodeLinkedList.forEach(nodeLinked -> {
-                nodeLinked.styleHandlerProperty().set(newValue.createHandler());
+                nodeLinked.styleHandlerProperty().set(newValue.createHandler(nodeLinked));
             });
         }
     }

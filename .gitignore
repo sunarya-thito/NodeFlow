@@ -3,4 +3,5 @@
 /Installer/target/
 /Internal/target/
 /Launcher/target/
-/ByteCodeEngine/target/
+/Engine/target/
+/ByteCodeEngine/target

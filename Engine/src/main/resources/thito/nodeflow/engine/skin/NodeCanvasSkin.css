@@ -1,0 +1,15 @@
+NodeCanvasSkin {
+    -fx-bg-color: #202b3c;
+    -fx-thin-line-color: #263041;
+    -fx-thick-line-color: #2b3547;
+}
+
+NodeCanvasSkin .SelectionPane {
+    -fx-fill: rgb(100, 100, 255, 0.5);
+    -fx-stroke: rgb(100, 100, 255);
+    -fx-stroke-width: 1.5;
+}
+
+.NodeLink:highlighted {
+    -fx-stroke-width: 3;
+}

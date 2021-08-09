@@ -8,12 +8,16 @@ import thito.nodeflow.engine.state.*;
 
 import java.util.*;
 
-public class Node {
+public class Node extends CanvasElement {
     private NodeCanvas canvas;
     private UUID id;
 
     private DoubleProperty x = new SimpleDoubleProperty();
     private DoubleProperty y = new SimpleDoubleProperty();
+
+    // editor
+    private BooleanProperty selected = new SimpleBooleanProperty();
+    // end editor
 
     private NodeHandler handler;
 
@@ -21,12 +25,23 @@ public class Node {
 
     private NodeSkin skin;
 
+    {
+        parameters.addListener(new NodeParameterListListener());
+        x.addListener((obs, old, val) -> {
+            x.set(Math.max(0, val.doubleValue()));
+        });
+        y.addListener((obs, old, val) -> {
+            y.set(Math.max(0, val.doubleValue()));
+        });
+    }
+
     public Node() {
     }
 
     protected void initialize(NodeCanvas canvas) {
         this.canvas = canvas;
         id = UUID.randomUUID();
+        handler = canvas.getHandler().createHandler(this, null);
         skin = handler.createSkin();
     }
 
@@ -40,6 +55,14 @@ public class Node {
             parameters.add(new NodeParameter(this, parameterState));
         });
         skin = handler.createSkin();
+    }
+
+    public NodeHandler getHandler() {
+        return handler;
+    }
+
+    public BooleanProperty selectedProperty() {
+        return selected;
     }
 
     public NodeSkin getSkin() {
@@ -74,5 +97,24 @@ public class Node {
         state.y = y.get();
         parameters.stream().map(NodeParameter::saveState).forEach(state.nodeParameterStateList::add);
         return state;
+    }
+
+    public class NodeParameterListListener implements ListChangeListener<NodeParameter> {
+        @Override
+        public void onChanged(Change<? extends NodeParameter> c) {
+            while (c.next()) {
+                if (c.wasAdded()) {
+                    for (NodeParameter a : c.getAddedSubList()) {
+                        a.initialize(Node.this);
+                        skin.onParameterAdded(a);
+                    }
+                }
+                if (c.wasRemoved()) {
+                    for (NodeParameter r : c.getRemoved()) {
+                        skin.onParameterRemoved(r);
+                    }
+                }
+            }
+        }
     }
 }

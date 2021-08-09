@@ -1,5 +1,6 @@
 package thito.nodeflow.engine.style;
 
+import javafx.beans.*;
 import javafx.beans.binding.*;
 import javafx.beans.property.*;
 import javafx.collections.*;
@@ -11,7 +12,7 @@ import javafx.scene.shape.*;
 import thito.nodeflow.engine.*;
 import thito.nodeflow.engine.util.*;
 
-public class PipeLinkStyle implements LinkStyle {
+public class PathLinkStyle implements LinkStyle {
     @Override
     public Handler createHandler(NodeLink link) {
         return new Handler() {
@@ -27,12 +28,12 @@ public class PipeLinkStyle implements LinkStyle {
             private LineTo endVerticalLine = new LineTo();
             private MoveTo endLine = new MoveTo();
             private LineTo endEndLine = new LineTo();
-            private ObservableSet<Object> requestHighlight = FXCollections.observableSet();
             private ActiveLinkHelper helper;
+            private ObservableSet<Object> requestHighlight = FXCollections.observableSet();
 
             {
                 line.getElements().addAll(startLine, endStartLine, verticalLine, endVerticalLine, endLine, endEndLine);
-                line.getStyleClass().addAll("NodeLink", "NodeLinkPipe");
+                line.getStyleClass().addAll("NodeLink", "NodeLinkPath");
                 sourceX.addListener(o -> update());
                 sourceY.addListener(o -> update());
                 targetX.addListener(o -> update());
@@ -85,13 +86,17 @@ public class PipeLinkStyle implements LinkStyle {
                 double x2 = target.getX();
                 double y2 = target.getY();
                 double x = x2 - x1;
+                NodeParameter any = link.getSource() == null || link.getTarget() == null ? null : link.getSource();
+                double index = any == null ? 0 : Math.max(0, any.getNode().getParameters().indexOf(any)) - any.getNode().getParameters().size() / 2d;
+                double scale = any == null ? 0 : index / (double) any.getNode().getParameters().size();
                 startLine.setX(x1);
                 startLine.setY(y1);
-                endStartLine.setX(x1 + x / 4);
+                double increment = scale * (x / 2);
+                endStartLine.setX(x1 + x / 2 - increment);
                 endStartLine.setY(y1);
                 verticalLine.setX(endStartLine.getX());
                 verticalLine.setY(endStartLine.getY());
-                endVerticalLine.setX(x2 - x / 4);
+                endVerticalLine.setX(x2 - x / 2 - increment);
                 endVerticalLine.setY(y2);
                 endLine.setX(endVerticalLine.getX());
                 endLine.setY(endVerticalLine.getY());
