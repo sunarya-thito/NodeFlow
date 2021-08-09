@@ -6,13 +6,17 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="Launcher" />
-        <module name="API" />
         <module name="Installer" />
         <module name="ByteCodeEngine" />
-        <module name="Engine" />
         <module name="Internal" />
+        <module name="UILibrary" />
+        <module name="Launcher" />
+        <module name="Engine" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="Legacy API" target="8" />
+      <module name="Legacy Internal" target="8" />
+    </bytecodeTargetLevel>
   </component>
 </project>

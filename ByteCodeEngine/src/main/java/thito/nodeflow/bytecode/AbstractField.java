@@ -1,6 +1,6 @@
 package thito.nodeflow.bytecode;
 
-import jdk.internal.org.objectweb.asm.*;
+import org.objectweb.asm.*;
 import org.objectweb.asm.tree.*;
 
 import java.lang.reflect.*;

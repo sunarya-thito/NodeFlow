@@ -3,7 +3,6 @@ package thito.nodeflow.launcher;
 import javafx.application.*;
 import javafx.beans.property.*;
 import javafx.collections.*;
-import javafx.embed.swing.*;
 import javafx.geometry.Insets;
 import javafx.geometry.*;
 import javafx.scene.*;
@@ -116,7 +115,7 @@ public class Main extends Application {
         }
         if (System.getProperty("nodeflow.skipupdate", "false").equals("true")) {
             service.execute(() -> {
-                new JFXPanel();
+//                new JFXPanel();
                 launchApp();
             });
             return;
