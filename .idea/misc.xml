@@ -17,6 +17,8 @@
     </option>
     <option name="ignoredFiles">
       <set>
+        <option value="$PROJECT_DIR$/Installer/pom.xml" />
+        <option value="$PROJECT_DIR$/Launcher/pom.xml" />
         <option value="$PROJECT_DIR$/Legacy API/pom.xml" />
         <option value="$PROJECT_DIR$/Legacy Internal/pom.xml" />
       </set>

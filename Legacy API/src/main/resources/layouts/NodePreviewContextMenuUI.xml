@@ -1,9 +1,0 @@
-<NodeFlow>
-    <components>
-        <FlowPane>javafx.scene.layout.FlowPane</FlowPane>
-    </components>
-    <layout>
-        <FlowPane id="viewport" class="node-preview-context">
-        </FlowPane>
-    </layout>
-</NodeFlow>

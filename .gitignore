@@ -1,7 +1,7 @@
 # Project exclude paths
 /API/target/
-/Installer/target/
-/Legacy Internal/target/
-/Launcher/target/
+/Legacy Launcher/target/
 /Engine/target/
 /ByteCodeEngine/target
+/Library/target
+/Internal/target

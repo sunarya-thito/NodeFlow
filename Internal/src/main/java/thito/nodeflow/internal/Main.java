@@ -6,6 +6,8 @@ import javafx.stage.*;
 public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
-        stage.show();
+//        stage.setScene(new SplashScreen().getScene());
+//        stage.show();
+        NodeFlow.launch();
     }
 }
