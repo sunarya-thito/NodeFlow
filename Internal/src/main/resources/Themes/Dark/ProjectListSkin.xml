@@ -1,0 +1,8 @@
+<NodeFlow>
+    <Layout>
+        <ScrollPane id="scroller">
+            <VBox id="content-list">
+            </VBox>
+        </ScrollPane>
+    </Layout>
+</NodeFlow>

@@ -1,0 +1,41 @@
+.search-result-item {
+    -fx-padding: 18 24;
+    -fx-border-width: 0 0 1.5 0;
+    -fx-border-insets: 0 30;
+    -fx-border-color: rgb(255, 255, 255, 0.1);
+    -fx-fill-height: true;
+}
+
+.search-result-item:hover {
+    -fx-background-color: #313949;
+}
+
+SearchResultSkin:last .search-result-item {
+    -fx-border-width: 0;
+}
+
+.search-result-info {
+}
+
+#search-result-icon {
+    -fx-height-mode: fit;
+    -fx-alignment: center;
+    -fx-max-height: 30;
+    -fx-min-width: 50;
+}
+
+.search-result-icon-wrapper {
+}
+
+#search-result-title {
+    -fx-text-fill: white;
+    -fx-font-family: Roboto;
+    -fx-font-weight: bold;
+    -fx-font-size: 15;
+}
+
+#search-result-source {
+    -fx-text-fill: rgb(255, 255, 255, 0.5);
+    -fx-font-family: Roboto;
+    -fx-font-size: 12;
+}

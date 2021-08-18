@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="javafx" name="NodeFlow Software">
+    <output-path>$PROJECT_DIR$/out/artifacts/NodeFlow_Software</output-path>
+    <root id="root">
+      <element id="archive" name="NodeFlow_Software.jar">
+        <element id="module-output" name="NodeFlow Software" />
+      </element>
+    </root>
+  </artifact>
+</component>

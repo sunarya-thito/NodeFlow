@@ -1,0 +1,17 @@
+<NodeFlow>
+    <Layout>
+        <HBox class="project-list-item-root">
+            <VBox HBox.grow="ALWAYS" class="project-identity">
+                <HBox class="project-header">
+                    <Label id="name"/>
+                    <FlowPane id="tags"/>
+                </HBox>
+                <Label id="description"/>
+            </VBox>
+            <HBox class="project-buttons">
+                <Button id="launch-button"/>
+                <Button id="options-button"/>
+            </HBox>
+        </HBox>
+    </Layout>
+</NodeFlow>

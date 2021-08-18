@@ -1,0 +1,25 @@
+.about-root {
+    -fx-padding: 20 30 0 30;
+}
+
+#about-header {
+    -fx-text-fill: white;
+    -fx-font-family: "AXIS Extra Bold";
+    -fx-font-size: 30;
+}
+
+#about-content {
+    -fx-padding: 20 0 0 0;
+    -fx-text-fill: white;
+    -fx-opacity: 0.6;
+    -fx-font-family: "Roboto";
+    -fx-font-size: 15;
+}
+
+.about-skin {
+    -fx-padding: 20 0 0 0;
+    -fx-text-fill: white;
+    -fx-opacity: 0.3;
+    -fx-font-family: "Roboto";
+    -fx-font-size: 13;
+}

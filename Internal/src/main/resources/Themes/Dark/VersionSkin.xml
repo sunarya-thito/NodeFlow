@@ -1,0 +1,13 @@
+<NodeFlow>
+    <Layout>
+        <VBox class="version-box">
+            <HBox class="header-box">
+                <Text id="version"></Text>
+                <Pane HBox.grow="ALWAYS" id="pad"/>
+            </HBox>
+            <Label VBox.grow="ALWAYS" id="changelog-content">
+
+            </Label>
+        </VBox>
+    </Layout>
+</NodeFlow>

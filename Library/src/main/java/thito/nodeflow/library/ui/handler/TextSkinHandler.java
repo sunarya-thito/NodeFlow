@@ -8,9 +8,8 @@ import thito.nodeflow.library.ui.*;
 
 public class TextSkinHandler implements SkinHandler<Text> {
     @Override
-    public void parse(SkinParser parser, Text node, Element element) {
-        Element text = element.selectFirst("text");
-        if (text != null) {
+    public void parse(SkinParser parser, Text node, Element text) {
+        if (text != null && text.hasText()) {
             StringProperty txt = new SimpleStringProperty(text.ownText());
             node.textProperty().bind(Language.getLanguage().replace(txt));
         }

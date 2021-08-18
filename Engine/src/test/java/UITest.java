@@ -13,19 +13,17 @@ import thito.nodeflow.engine.skin.*;
 import thito.nodeflow.engine.state.*;
 
 import java.util.*;
-import java.util.concurrent.atomic.*;
 
 public class UITest extends Application {
+
     public static void main(String[] args) {
-        System.setProperty("prism.lcdtext", "false");
-        launch(args);
     }
 
     private static Color safeColor() {
         Random random = new Random();
         return Color.rgb(random.nextInt(155) + 100, random.nextInt(155) + 100, random.nextInt(155) + 100);
     }
-    @Override
+
     public void start(Stage primaryStage) throws Exception {
         NodeCanvas canvas = new NodeCanvas(new NodeCanvasHandler() {
             @Override

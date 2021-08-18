@@ -3,8 +3,10 @@ package thito.nodeflow.library.language;
 import javafx.beans.Observable;
 import javafx.beans.binding.*;
 import javafx.beans.property.*;
+import javafx.beans.value.*;
 
 import java.util.*;
+import java.util.function.*;
 
 public class I18n extends SimpleStringProperty {
 
@@ -30,6 +32,10 @@ public class I18n extends SimpleStringProperty {
         observables.add(this);
         text.bind(Bindings.createStringBinding(this::get, observables.toArray(new Observable[0])));
         return text;
+    }
+
+    public <T> ObservableValue<T> map(Function<String, T> stringTFunction) {
+        return Bindings.createObjectBinding(() -> stringTFunction.apply(get()), this);
     }
 
 }

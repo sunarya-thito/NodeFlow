@@ -1,0 +1,51 @@
+.project-list-item-root {
+    -fx-background-color: #313949;
+    -fx-background-radius: 5;
+    -fx-padding: 10 20;
+}
+
+#name {
+    -fx-text-fill: white;
+    -fx-font-family: Roboto;
+    -fx-font-size: 16;
+}
+
+#description {
+    -fx-text-fill: rgb(255, 255, 255, 0.6);
+    -fx-font-family: Roboto;
+    -fx-font-size: 14;
+}
+
+#tags {
+    -fx-pref-width: 10;
+}
+
+.project-buttons {
+    -fx-fill-height: true;
+    -fx-background-color: #434B5C;
+    -fx-background-radius: 5;
+}
+
+.project-buttons .button {
+    -fx-background-color: transparent;
+    -fx-max-height: Infinity;
+    -fx-padding: 5 15;
+}
+
+.project-buttons .button:hover {
+    -fx-background-color: rgb(255, 255, 255, 0.3);
+}
+
+#launch-button {
+    -fx-graphic: url("rsrc:Themes/Dark/Icons/PlayButton2.png");
+    -fx-background-radius: 5 0 0 5;
+}
+
+#launch-button:hover {
+    -fx-background-color: rgb(100, 200, 100);
+}
+
+#options-button {
+    -fx-graphic: url("rsrc:Themes/Dark/Icons/SettingsButton.png");
+    -fx-background-radius: 0 5 5 0;
+}

@@ -10,10 +10,6 @@ public class ConfigTest {
         section.set("test.something", "lmao");
         section.set("test.nothing.same", "123");
         System.out.println(section);
-        ArrayList<String> a = new ArrayList<>();
-        a.add("a");
-        a.add("a");
-        a.remove("a");
-        System.out.println(a);
+        System.out.println(section.getString("test.nothing.weirder").get());
     }
 }

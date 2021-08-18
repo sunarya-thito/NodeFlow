@@ -57,6 +57,7 @@ public class FXTaskThread implements TaskThread {
             state.set(TaskState.STOPPED);
         }));
         timeline.setDelay(delay);
+        timeline.play();
         return new ScheduledTask() {
             @Override
             public void cancel() {
@@ -85,6 +86,7 @@ public class FXTaskThread implements TaskThread {
         }));
         timeline.setDelay(delay);
         timeline.setCycleCount(Animation.INDEFINITE);
+        timeline.play();
         return new ScheduledTask() {
             @Override
             public void cancel() {

@@ -1,0 +1,314 @@
+#editor-root {
+    -fx-background-color: #0E121A;
+}
+
+#window-caption {
+    -fx-background-color: #1A202C;
+    -fx-min-height: 50;
+    -fx-fill-height: true;
+    -fx-spacing: 120;
+    -fx-padding: 0 5 0 20;
+}
+
+#menu-bar, #menu-bar > .container > .menu {
+    -fx-max-height: Infinity;
+}
+
+#menu-bar {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+#menu-bar .menu-button {
+    -fx-font-family: Roboto;
+    -fx-font-size: 13;
+    -fx-padding: 5 15;
+}
+
+#menu-bar .menu-button:hover, #menu-bar .menu-button:showing {
+    -fx-background-color: #313949;
+}
+
+#menu-bar .menu-button .label {
+    -fx-text-fill: #C3CDDB;
+    -fx-font-family: Roboto;
+    -fx-font-size: 13;
+}
+
+.context-menu .menu-item {
+    -fx-background-color: transparent;
+    -fx-padding: 6 25;
+}
+
+.context-menu .menu-item:hover, #menu-bar .context-menu .menu:showing {
+    -fx-background-color: rgb(255, 255, 255, 0.1);
+}
+
+
+.context-menu .menu-item .label {
+    -fx-text-fill: #C3CDDB;
+}
+
+.context-menu .menu-item .arrow {
+    -fx-background-color: #C3CDDB;
+}
+
+.context-menu .separator {
+    -fx-padding: 0 10;
+}
+
+.context-menu .separator .line {
+    -fx-box-border: #718096;
+}
+
+.context-menu {
+    -fx-background-color: #313949;
+    -fx-background-radius: 5;
+    -fx-padding: 5 0;
+    -fx-effect: dropshadow(gaussian, rgb(0, 0, 0, 0.3), 15, 0, 0, 2);
+}
+
+#menu-bar .context-menu {
+    -fx-background-radius: 0 5 5 5;
+    -fx-effect: dropshadow(gaussian, rgb(0, 0, 0, 0.2), 15, 0, 0, 8);
+}
+
+.search-bar {
+    -fx-max-width: 600;
+    -fx-background-color: #313949;
+    -fx-background-radius: 5;
+    -fx-alignment: center;
+    -fx-padding: 0 15 0 15;
+    -fx-spacing: 5;
+    -fx-pref-height: 30;
+    -fx-max-height: 30;
+}
+
+.search-icon {
+    -fx-image: url("rsrc:/Themes/Dark/Icons/Search.png");
+    -fx-opacity: 0.5;
+}
+
+.search-field {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-family: Roboto;
+    -fx-font-size: 13;
+    -fx-focus-traversable: false;
+}
+
+.search-field:empty {
+    -fx-alignment: center;
+}
+
+.search-field:focused {
+    -fx-alignment: center_left;
+}
+
+.window-control {
+    -fx-alignment: center;
+    -fx-fill-height: true;
+    -fx-spacing: 8;
+    -fx-padding: 0 10;
+}
+
+.window-control-button {
+    -fx-background-color: transparent;
+    -fx-min-width: 25;
+    -fx-pref-width: 25;
+}
+
+#close-button {
+    -fx-graphic: url("rsrc:Themes/Dark/Icons/CloseButton2.png");
+}
+
+#close-button:hover {
+    -fx-graphic: url("rsrc:Themes/Dark/Icons/CloseButton2Hovered.png");
+}
+
+#maximize-button {
+    -fx-graphic: url("rsrc:Themes/Dark/Icons/MaximizeButton.png");
+}
+
+#maximize-button:hover {
+    -fx-graphic: url("rsrc:Themes/Dark/Icons/MaximizeButtonHovered.png");
+}
+
+#minimize-button {
+    -fx-graphic: url("rsrc:Themes/Dark/Icons/MinimizeButton.png");
+}
+
+#minimize-button:hover {
+    -fx-graphic: url("rsrc:Themes/Dark/Icons/MinimizeButtonHovered.png");
+}
+
+#expand-button {
+    -fx-min-height: 50;
+    -fx-min-width: 50;
+    -fx-pref-height: 50;
+    -fx-pref-width: 50;
+    -fx-background-color: transparent;
+    -fx-graphic: url("rsrc:Themes/Dark/Icons/EditorButton.png");
+}
+
+#expand-button:selected {
+    -fx-graphic: url("rsrc:Themes/Dark/Icons/ExpandedEditorButton.png");
+    -fx-min-width: 181;
+    -fx-pref-width: 181;
+}
+
+.nav-button {
+    -fx-background-color: transparent;
+    -fx-background-radius: 0;
+    -fx-padding: 0;
+    -fx-min-height: 50;
+    -fx-max-height: 50;
+    -fx-pref-height: 50;
+    -fx-alignment: center_left;
+    -fx-graphic-text-gap: 5;
+    -fx-max-width: Infinity;
+    -fx-content-display: CENTER;
+    -fx-text-fill: #C3CDDB;
+    -fx-font-family: Roboto;
+    -fx-font-size: 0;
+}
+
+.nav-button .text {
+    visibility: false;
+}
+
+.nav-button:width_181 {
+    -fx-content-display: LEFT;
+    -fx-font-size: 13;
+}
+
+.nav-button:width_181 .text {
+    visibility: true;
+}
+
+.nav-button:selected {
+    -fx-background-color: #232A38;
+    -fx-text-fill: #ED8936;
+}
+
+#file-nav {
+    -fx-graphic: url("rsrc:Themes/Dark/Icons/FileButton.png");
+}
+
+#file-nav:selected {
+    -fx-graphic: url("rsrc:Themes/Dark/Icons/FileButtonActive.png");
+}
+
+#structure-nav {
+    -fx-graphic: url("rsrc:Themes/Dark/Icons/StructureButton.png");
+}
+
+#structure-nav:selected {
+    -fx-graphic: url("rsrc:Themes/Dark/Icons/StructureButtonActive.png");
+}
+
+#facets-nav {
+    -fx-graphic: url("rsrc:Themes/Dark/Icons/PluginButton.png");
+}
+
+#facets-nav:selected {
+    -fx-graphic: url("rsrc:Themes/Dark/Icons/PluginButtonActive.png");
+}
+
+.editor-navigation-root {
+    -fx-fill-width: true;
+    -fx-background-color: #1A202C;
+}
+
+.editor-navigation {
+    -fx-fill-width: true;
+    -fx-padding: 30 0;
+}
+
+.center-viewport {
+    -fx-orientation: HORIZONTAL;
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-skin: "thito.nodeflow.library.ui.SplitPaneSkin";
+}
+
+.center-viewport .split-pane-divider {
+    -fx-background-color: transparent;
+    -fx-padding: 0 5;
+}
+
+.nav-panel {
+    -fx-background-color: #232A38;
+}
+
+.file-tabs {
+    -fx-min-height: 100;
+    -fx-min-width: 100;
+}
+
+.file-tabs .control-buttons-tab .tab-down-button {
+    -fx-background-color: transparent;
+}
+
+.file-tabs .control-buttons-tab .tab-down-button .arrow {
+    -fx-background-color: white;
+    -fx-scale-x: 1.4;
+    -fx-scale-y: 1.4;
+    -fx-translate-y: 2;
+}
+
+.file-tabs .tab-content-area {
+    -fx-background-color: #313949;
+}
+
+.file-tabs .tab-header-area {
+    -fx-padding: 0;
+}
+
+.file-tabs .tab-header-background {
+    -fx-background-color: #0E121A;
+}
+
+.file-tabs .tab {
+    -fx-background-color: #262C3B;
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+    -fx-padding: 2 5;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.file-tabs .tab:selected {
+    -fx-background-color: #313949;
+}
+
+.file-tabs .tab-close-button {
+    -fx-background-color: rgb(255, 255, 255, 0.5);
+    -fx-effect: none;
+}
+
+.file-tabs .tab-close-button:hover {
+    -fx-background-color: rgb(255, 100, 100, 1);
+}
+
+.file-tabs .tab-label {
+    -fx-text-fill: white;
+    -fx-font-family: Roboto;
+    -fx-font-size: 13;
+    -fx-padding: 0 25;
+}
+
+EditorSkin {
+    -fx-background-color: transparent;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(gaussian, black, 20, 0, 0, 0);
+    -fx-pref-height: 800;
+    -fx-pref-width: 1000;
+    -fx-min-height: 600;
+    -fx-min-width: 800;
+}
+
+EditorSkin:maximized {
+    -fx-padding: 8;
+    -fx-effect: none;
+}

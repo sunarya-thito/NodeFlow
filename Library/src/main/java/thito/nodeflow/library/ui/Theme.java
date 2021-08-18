@@ -5,21 +5,15 @@ import javafx.scene.image.*;
 import java.io.*;
 
 public class Theme {
-    private File root;
 
-    public Theme(File root) {
-        this.root = root;
+    private String name;
+
+    public Theme(String name) {
+        this.name = name;
     }
 
-    public File getRoot() {
-        return root;
+    public String getName() {
+        return name;
     }
 
-    public Image loadImage(String path) {
-        try (FileInputStream fileInputStream = new FileInputStream(new File(root, path))) {
-            return new Image(fileInputStream);
-        } catch (Throwable t) {
-            return new WritableImage(0, 0);
-        }
-    }
 }

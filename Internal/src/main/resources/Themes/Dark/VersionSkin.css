@@ -1,0 +1,29 @@
+#pad {
+    -fx-background-color: #9CFF91;
+    -fx-background-radius: 10;
+    -fx-max-height: 3;
+}
+
+.header-box {
+    -fx-fill-height: true;
+    -fx-alignment: center_left;
+    -fx-spacing: 10;
+    -fx-padding: 5 0 15 0;
+}
+
+.version-box {
+    -fx-padding: 5 30 5 50;
+}
+
+#version {
+    -fx-font-family: "Roboto Black";
+    -fx-fill: white;
+    -fx-font-size: 20;
+}
+
+#changelog-content {
+    -fx-text-fill: rgb(255, 255, 255, 0.6);
+    -fx-font-family: "Roboto";
+    -fx-font-size: 15;
+    -fx-wrap-text: true;
+}

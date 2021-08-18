@@ -1,7 +1,7 @@
 package thito.nodeflow.library.ui;
 
-import javafx.scene.*;
 import javafx.scene.Node;
+import javafx.scene.control.*;
 import org.jsoup.*;
 import org.jsoup.nodes.*;
 import thito.nodeflow.library.ui.handler.*;
@@ -14,34 +14,42 @@ public class SkinParser {
 
     private Map<String, Class<?>> classLookUp = new HashMap<>();
     private List<SkinHandler<?>> skinHandlerList = new ArrayList<>();
+    private Skin skin;
 
-    public SkinParser() {
+    public SkinParser(Skin skin) {
+        this.skin = skin;
         skinHandlerList.add(new NodeSkinHandler());
         skinHandlerList.add(new PaneSkinHandler());
         skinHandlerList.add(new BorderPaneSkinHandler());
+        skinHandlerList.add(new FlowPaneSkinHandler());
+        skinHandlerList.add(new LabeledSkinHandler());
+        skinHandlerList.add(new SplitPaneSkinHandler());
+        skinHandlerList.add(new TextSkinHandler());
+        skinHandlerList.add(new TextFieldHandler());
+        skinHandlerList.add(new ImageViewSkinHandler());
+        skinHandlerList.add(new ScrollPaneSkinHandler());
+        skinHandlerList.add(new ToggleButtonSkinHandler());
+        skinHandlerList.add(new MenuBarSkinHandler());
+        skinHandlerList.add(new TabPaneSkinHandler());
     }
 
-    public Node load(String html) {
-        Document doc = Jsoup.parse(html);
-        return load(doc.selectFirst("NodeFlow"));
-    }
+//    public Node load(String html) {
+//        Document doc = Jsoup.parse(html);
+//        return load(doc.selectFirst("NodeFlow"));
+//    }
 
-    public Node load(Element e) {
-        Element components = e.selectFirst("components");
+    public void loadComponents(Element components) {
         if (components != null) {
             for (Element component : components.children()) {
                 try {
                     Class<?> clazz = Class.forName(component.ownText());
-                    if (Node.class.isAssignableFrom(clazz)) throw new IllegalArgumentException("not a Node "+clazz.getName());
+                    if (!Node.class.isAssignableFrom(clazz)) throw new IllegalArgumentException("not a Node "+clazz.getName());
                     classLookUp.put(component.tagName(), clazz);
                 } catch (Throwable t) {
                     t.printStackTrace();
                 }
             }
         }
-
-        Element layout = e.selectFirst("layout > *");
-        return createNode(layout);
     }
 
     public Node createNode(Element layout) {
@@ -56,6 +64,7 @@ public class SkinParser {
         try {
             constructor.setAccessible(true);
             Node node = (Node) constructor.newInstance();
+            node.getProperties().put(AdvancedPseudoClass.class, new AdvancedPseudoClass(node));
             for (SkinHandler handler : skinHandlerList) {
                 for (Type generic : handler.getClass().getGenericInterfaces()) {
                     Class<?> type = Node.class;
@@ -78,8 +87,21 @@ public class SkinParser {
         }
     }
 
+    public void handleMenu(MenuItem item, Element element) {
+        skin.handleMenu(item, element);
+    }
+    public void handleNode(Node node, Element element) {
+        skin.handleNode(node, element);
+    }
+
     public Class<?> getClass(String name) {
         Class<?> clazz = classLookUp.getOrDefault(name, defaultClassLookUp.get(name));
+        if (clazz == null) {
+            try {
+                clazz = Class.forName(name, false, SkinParser.class.getClassLoader());
+            } catch (Throwable t) {
+            }
+        }
         if (clazz == null) throw new NullPointerException("class not found "+name);
         return clazz;
     }
@@ -161,7 +183,7 @@ public class SkinParser {
                 "javafx.scene.shape.Rectangle",
                 "javafx.scene.layout.Region",
                 "javafx.scene.control.ScrollBar",
-                "javafx.scene.control.ScrollPane",
+//                "javafx.scene.control.ScrollPane",  <<-- GOT REPLACED
                 "javafx.scene.control.Separator",
                 "javafx.scene.shape.Shape",
                 "javafx.scene.control.Slider",
@@ -205,5 +227,7 @@ public class SkinParser {
             } catch (Throwable t) {
             }
         }
+        // REPLACEMENT
+        defaultClassLookUp.put("scrollpane", ScrollPane.class);
     }
 }

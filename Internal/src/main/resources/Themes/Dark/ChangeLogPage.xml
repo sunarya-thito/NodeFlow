@@ -1,0 +1,16 @@
+<NodeFlow>
+    <Layout>
+        <BorderPane class="change-log-root">
+            <Top>
+                <Label class="change-log-header">
+                    ${dashboard.changelogs-title}
+                </Label>
+            </Top>
+            <Center>
+                <ScrollPane class="change-log-scroller">
+                    <VBox id="content"></VBox>
+                </ScrollPane>
+            </Center>
+        </BorderPane>
+    </Layout>
+</NodeFlow>

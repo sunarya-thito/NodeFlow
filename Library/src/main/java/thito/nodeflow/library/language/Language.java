@@ -11,16 +11,10 @@ import java.io.*;
 import java.util.*;
 
 public class Language {
-    private static ObservableSet<Language> languages = FXCollections.observableSet(new LinkedHashSet<>());
-
     private static ObjectProperty<Language> language = new SimpleObjectProperty<>();
 
     public static ObjectProperty<Language> languageProperty() {
         return language;
-    }
-
-    public static ObservableSet<Language> getLanguages() {
-        return languages;
     }
 
     public static Language getLanguage() {
@@ -53,8 +47,17 @@ public class Language {
 
     public void loadLanguage(Reader reader) {
         MapSection section = Section.parseToMap(reader);
+        load(section, null);
+    }
+
+    void load(MapSection section, String parent) {
         section.forEach((key, value) -> {
-            items.put(key.toLowerCase(), new I18n(String.valueOf(value)));
+            String fullKey = parent == null ? key : parent + "." + key;
+            if (value instanceof Map) {
+                load(new MapSection((Map<String, ?>) value), fullKey);
+                return;
+            }
+            items.put(fullKey, new I18n(String.valueOf(value)));
         });
     }
 
@@ -74,10 +77,15 @@ public class Language {
 
             {
                 property.addListener(listener);
+                update();
             }
 
             void update() {
-                String s = get();
+                String s = property.getValue();
+                if (s == null) {
+                    set(null);
+                    return;
+                }
                 StringBuilder builder = new StringBuilder(s.length());
                 StringBuilder path = new StringBuilder();
                 Set<ObservableValue<String>> currentObserver = new HashSet<>();
@@ -94,7 +102,7 @@ public class Language {
                             continue;
                         }
                     } else if (c == '}') {
-                        if (path.length() > 2) {
+                        if (path.length() >= 2) {
                             I18n item = getItem(path.substring(2));
                             currentObserver.add(item);
                             builder.append(item.get());
@@ -102,7 +110,7 @@ public class Language {
                             continue;
                         }
                     } else {
-                        if (path.length() > 2) {
+                        if (path.length() >= 2) {
                             path.append(c);
                             continue;
                         }
@@ -124,39 +132,6 @@ public class Language {
                 set(builder.toString());
             }
         };
-    }
-
-    public String replace(String s) {
-        StringBuilder builder = new StringBuilder(s.length());
-        StringBuilder path = new StringBuilder();
-        for (int i = 0; i < s.length(); i++) {
-            char c = s.charAt(i);
-            if (c == '$') {
-                if (path.length() == 0) {
-                    path.append(c);
-                    continue;
-                }
-            } else if (c == '{') {
-                if (path.length() == 1) {
-                    path.append(c);
-                    continue;
-                }
-            } else if (c == '}') {
-                if (path.length() > 2) {
-                    I18n item = getItem(path.substring(2));
-                    builder.append(item.get());
-                    path.delete(0, path.length());
-                    continue;
-                }
-            } else {
-                if (path.length() > 2) {
-                    path.append(c);
-                    continue;
-                }
-            }
-            builder.append(c);
-        }
-        return builder.toString();
     }
 
 }

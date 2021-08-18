@@ -138,4 +138,20 @@ public interface Section {
             return text.equals("true") ? true : text.equals("false") ? false : null;
         });
     }
+    default Optional<MapSection> getMap(String path) {
+        return getObject(path).map(o -> {
+            if (o instanceof Map) {
+                return new MapSection((Map<String, ?>) o);
+            }
+            return null;
+        });
+    }
+    default Optional<ListSection> getList(String path) {
+        return getObject(path).map(o -> {
+            if (o instanceof List) {
+                return new ListSection((List<?>) o);
+            }
+            return new ListSection(Collections.singleton(o));
+        });
+    }
 }

@@ -3,6 +3,7 @@ package thito.nodeflow.library.ui;
 import javafx.beans.property.*;
 
 import java.io.*;
+import java.net.*;
 import java.nio.charset.*;
 import java.nio.file.*;
 import java.util.*;
@@ -16,7 +17,6 @@ public class ThemeManager {
     }
 
     private ObjectProperty<Theme> theme = new SimpleObjectProperty<>();
-    private Map<String, Icon> iconMap = new HashMap<>();
     private Map<Class<?>, StyleSheet> sheetMap = new HashMap<>();
 
     public ThemeManager() {
@@ -27,24 +27,26 @@ public class ThemeManager {
     }
 
     protected void updateTheme(Theme theme) {
-        iconMap.forEach((key, icon) -> {
-            icon.imageProperty().set(theme.loadImage("Icons/"+key+".png"));
-        });
         sheetMap.forEach((key, sheet) -> {
             setSheetContents(theme, sheet, key);
         });
     }
 
     protected StyleSheet setSheetContents(Theme theme, StyleSheet sheet, Class<?> name) {
-        try {
-            sheet.layoutProperty().set(Files.readString(new File(theme.getRoot(), name.getSimpleName()+".xml").toPath(), StandardCharsets.UTF_8));
-        } catch (IOException e) {
+        try{
+            URLConnection connection = new URL("rsrc:Themes/"+URLEncoder.encode(theme.getName(), StandardCharsets.UTF_8)+"/"+name.getSimpleName()+".xml").openConnection();
+            connection.setUseCaches(false);
+            connection.setDefaultUseCaches(false);
+            try (InputStream inputStream = connection.getInputStream()) {
+                sheet.layoutProperty().set(new String(inputStream.readAllBytes(), StandardCharsets.UTF_8));
+            }
+        } catch (Throwable e) {
             e.printStackTrace();
         }
         Class<?> clazz = name;
         sheet.getCssFiles().clear();
         while (Skin.class.isAssignableFrom(clazz)) {
-            sheet.getCssFiles().add(new File(theme.getRoot(), clazz.getSimpleName()+".css").getAbsolutePath());
+            sheet.getCssFiles().add(0, "rsrc:Themes/"+URLEncoder.encode(theme.getName(), StandardCharsets.UTF_8)+"/"+clazz.getSimpleName()+".css");
             clazz = clazz.getSuperclass();
         }
         return sheet;
@@ -58,12 +60,7 @@ public class ThemeManager {
         return theme.get();
     }
 
-    public Icon getIcon(String icon) {
-        return iconMap.computeIfAbsent(icon, name -> new Icon(getTheme().loadImage("Icons/"+name+".png")));
-    }
-
     public StyleSheet getStyleSheet(Skin skin) {
-        return sheetMap.computeIfAbsent(skin.getClass(), name ->
-                setSheetContents(getTheme(), new StyleSheet(), skin.getClass()));
+        return sheetMap.computeIfAbsent(skin.getClass(), name -> new StyleSheet());
     }
 }

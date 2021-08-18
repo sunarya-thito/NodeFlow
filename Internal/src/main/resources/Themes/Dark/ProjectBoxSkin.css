@@ -1,0 +1,67 @@
+.project-box-root {
+    -fx-background-color: #313949;
+    -fx-background-radius: 5;
+    -fx-padding: 10;
+    -fx-pref-width: 160;
+    -fx-fill-width: true;
+}
+
+#project-icon {
+    -fx-width-mode: fit;
+}
+
+#project-icon-overlay {
+    -fx-opacity: 0;
+    -fx-background-color: rgb(0, 0, 0, 0.3);
+    -fx-background-radius: 5;
+}
+
+#project-icon-area:hover #project-icon-overlay {
+    -fx-opacity: 1;
+}
+
+.project-box-footer {
+    -fx-alignment: center_right;
+    -fx-padding: 20 0 0 0;
+}
+
+.project-box-content {
+    -fx-padding: 5 5 0 5;
+    -fx-fill-width: true;
+}
+
+.project-identity {
+    -fx-alignment: center_left;
+    -fx-padding: 5 0 0 0;
+}
+
+#project-name {
+    -fx-font-family: Roboto;
+    -fx-font-size: 17;
+    -fx-text-fill: white;
+}
+
+#description {
+    -fx-font-family: Roboto;
+    -fx-text-fill: rgb(255, 255, 255, 0.6);
+    -fx-font-size: 14;
+}
+
+#size {
+    -fx-font-family: Roboto;
+    -fx-text-fill: rgb(255, 255, 255, 0.3);
+    -fx-font-size: 13;
+}
+
+#options {
+    -fx-graphic: url("rsrc:Themes/Dark/Icons/OptionsButton.png");
+    -fx-opacity: 0.5;
+    -fx-background-color: transparent;
+    -fx-max-width: 4;
+    -fx-min-width: 4;
+    -fx-pref-width: 4;
+}
+
+#options:hover {
+    -fx-opacity: 1;
+}

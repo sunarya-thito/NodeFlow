@@ -1,5 +1,6 @@
 package thito.nodeflow.library.ui.handler;
 
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import org.jsoup.nodes.*;
 import thito.nodeflow.library.ui.*;
@@ -7,8 +8,15 @@ import thito.nodeflow.library.ui.*;
 public class SplitPaneSkinHandler implements SkinHandler<SplitPane> {
     @Override
     public void parse(SkinParser parser, SplitPane node, Element element) {
+        int index = 0;
         for (Element e : element.children()) {
-            node.getItems().add(parser.createNode(e));
+            Node n = parser.createNode(e);
+            if (e.hasAttr("splitpane.dividerposition")) {
+                node.setDividerPosition(index, Double.parseDouble(e.attr("splitpane.dividerposition")));
+            }
+            node.getItems().add(n);
+            parser.handleNode(n, e);
+            index++;
         }
     }
 }

@@ -4,17 +4,26 @@ import javafx.geometry.*;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.shape.*;
 import org.jsoup.nodes.*;
 import thito.nodeflow.library.ui.*;
 
 public class NodeSkinHandler implements SkinHandler<Node> {
     @Override
     public void parse(SkinParser parser, Node node, Element element) {
+        if (element.hasAttr("disableOverflow")) {
+            Rectangle rectangle = new Rectangle();
+            node.layoutBoundsProperty().addListener((obs, old, val) -> {
+                rectangle.setWidth(val.getWidth());
+                rectangle.setHeight(val.getHeight());
+            });
+            node.setClip(rectangle);
+        }
         if (element.hasAttr("id")) {
             node.setId(element.id());
         }
         if (element.hasAttr("class")) {
-            node.getStyleClass().addAll(element.attr("class").split(" "));
+            node.getStyleClass().addAll(element.attr("class").split("\\s+"));
         }
         if (element.hasAttr("style")) {
             node.setStyle(element.attr("style"));
@@ -45,10 +54,6 @@ public class NodeSkinHandler implements SkinHandler<Node> {
         }
         if (element.hasAttr("splitpane.resizewithparent")) {
             SplitPane.setResizableWithParent(node, Boolean.parseBoolean(element.attr("splitpane.resizewithparent")));
-        }
-        if (element.hasAttr("splitpane.dividerposition")) {
-            ((SplitPane) node.getParent()).setDividerPosition(((SplitPane) node.getParent()).getItems().indexOf(node),
-                    Double.parseDouble(element.attr("splitpane.dividerposition")));
         }
         if (element.hasAttr("borderpane.alignment")) {
             BorderPane.setAlignment(node, Pos.valueOf(element.attr("borderpane.alignment")));
@@ -81,7 +86,7 @@ public class NodeSkinHandler implements SkinHandler<Node> {
             }
         }
         if (element.hasAttr("hbox.grow")) {
-            HBox.setHgrow(node, Priority.valueOf(element.attr("vbox.grow")));
+            HBox.setHgrow(node, Priority.valueOf(element.attr("hbox.grow")));
         }
         if (element.hasAttr("hbox.margin")) {
             String[] split = element.attr("hbox.margin").split(" ");

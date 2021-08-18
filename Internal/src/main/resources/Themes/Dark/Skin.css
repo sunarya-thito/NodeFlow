@@ -1,0 +1,60 @@
+@font-face {
+    src: url("rsrc:Fonts/AXIS.otf");
+}
+
+@font-face {
+    src: url("rsrc:Fonts/Roboto-Regular.ttf");
+}
+
+@font-face {
+    src: url("rsrc:Fonts/Roboto-Black.ttf");
+}
+
+@font-face {
+    src: url("rsrc:Fonts/Roboto-Bold.ttf");
+}
+
+@font-face {
+    src: url("rsrc:Fonts/Roboto-Medium.ttf");
+}
+
+.scroll-pane {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .scroll-bar {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .scroll-bar .thumb {
+    -fx-background-color: rgb(0, 0, 0, 0.5);
+    -fx-background-radius: 6;
+}
+
+.scroll-pane .scroll-bar:vertical {
+    -fx-min-width: 12;
+}
+
+.scroll-pane .scroll-bar:horizontal {
+    -fx-min-height: 12;
+}
+
+.scroll-pane > .scroll-bar .increment-button, .scroll-pane > .scroll-bar .decrement-button {
+    -fx-padding: 0;
+}
+
+.scroll-pane > .scroll-bar .increment-arrow, .scroll-pane > .scroll-bar .decrement-arrow {
+    -fx-padding: 0;
+}
+
+.control-button {
+    -fx-background-color: transparent;
+}
+
+.standard-close-button {
+    -fx-graphic: url("rsrc:Themes/Dark/Icons/CloseButton.png");
+}
+
+.standard-close-button:hover {
+    -fx-graphic: url("rsrc:Themes/Dark/Icons/CloseButtonHovered.png");
+}

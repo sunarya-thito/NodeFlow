@@ -1,0 +1,73 @@
+.dashboard-header {
+    -fx-background-image: url("rsrc:Images/Splash.png");
+    -fx-background-repeat: repeat;
+    -fx-min-height: 150;
+}
+
+#dashboard-page {
+    -fx-pref-width: 600;
+}
+
+DashboardSkin {
+    -fx-background-color: transparent;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(gaussian, black, 20, 0, 0, 0);
+    -fx-pref-height: 600;
+    -fx-pref-width: 800;
+    -fx-min-height: 400;
+    -fx-min-width: 600;
+}
+
+DashboardSkin:maximized {
+    -fx-padding: 8;
+    -fx-effect: none;
+}
+
+#logo {
+    -fx-image: url("rsrc:Images/NodeFlowLogoWhite.png");
+}
+
+.logo-version {
+    -fx-font-family: "AXIS Extra Bold";
+    -fx-font-size: 35px;
+    -fx-fill: rgb(255, 255, 255, 0.8);
+    -fx-translate-y: 5;
+}
+
+.logo-holder {
+    -fx-alignment: bottom_left;
+    -fx-fill-width: true;
+    -fx-spacing: 10;
+}
+
+#content {
+    -fx-background-color: #1A202C;
+}
+
+.nav-button {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-max-width: infinity;
+    -fx-alignment: center_left;
+    -fx-background-radius: 0;
+    -fx-font-family: "Roboto Medium";
+    -fx-font-size: 15;
+    -fx-text-fill: white;
+    -fx-padding: 15 35;
+}
+
+.nav-button:hover {
+    -fx-background-color: rgb(255, 255, 255, 0.06);
+}
+
+.nav-button:selected {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, transparent 0%, #ED893625 99%, #C44B4B 1%);
+    -fx-text-fill: #C44B4B;
+}
+
+.navigation {
+    -fx-background-color: #232A38;
+    -fx-min-width: 200;
+    -fx-padding: 50 0 0 0;
+    -fx-fill-width: true;
+}

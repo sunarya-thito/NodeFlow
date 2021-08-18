@@ -1,5 +1,6 @@
 package thito.nodeflow.library.ui.handler;
 
+import javafx.scene.Node;
 import javafx.scene.layout.*;
 import org.jsoup.nodes.*;
 import thito.nodeflow.library.ui.*;
@@ -7,25 +8,35 @@ import thito.nodeflow.library.ui.*;
 public class BorderPaneSkinHandler implements SkinHandler<BorderPane> {
     @Override
     public void parse(SkinParser parser, BorderPane node, Element element) {
-        Element top = element.selectFirst("top > *");
-        Element bottom = element.selectFirst("bottom > *");
-        Element left = element.selectFirst("left > *");
-        Element right = element.selectFirst("right > *");
-        Element center = element.selectFirst("center > *");
+        Element top = element.selectFirst("> top > *");
+        Element bottom = element.selectFirst("> bottom > *");
+        Element left = element.selectFirst("> left > *");
+        Element right = element.selectFirst("> right > *");
+        Element center = element.selectFirst("> center > *");
         if (top != null) {
-            node.setTop(parser.createNode(top));
+            Node n = parser.createNode(top);
+            node.setTop(n);
+            parser.handleNode(n, top);
         }
         if (bottom != null) {
-            node.setBottom(parser.createNode(bottom));
+            Node n = parser.createNode(bottom);
+            node.setBottom(n);
+            parser.handleNode(n, bottom);
         }
         if (left != null) {
-            node.setLeft(parser.createNode(left));
+            Node n = parser.createNode(left);
+            node.setLeft(n);
+            parser.handleNode(n, left);
         }
         if (right != null) {
-            node.setRight(parser.createNode(right));
+            Node n = parser.createNode(right);
+            node.setRight(n);
+            parser.handleNode(n, right);
         }
         if (center != null) {
-            node.setCenter(parser.createNode(center));
+            Node n = parser.createNode(center);
+            node.setCenter(n);
+            parser.handleNode(n, center);
         }
     }
 }

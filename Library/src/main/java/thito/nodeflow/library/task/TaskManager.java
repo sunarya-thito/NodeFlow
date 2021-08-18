@@ -1,5 +1,7 @@
 package thito.nodeflow.library.task;
 
+import thito.nodeflow.library.task.thread.*;
+
 import java.util.logging.*;
 
 public class TaskManager {
@@ -20,6 +22,9 @@ public class TaskManager {
 
     public TaskManager() {
         if (instance != null) throw new IllegalStateException("already initialized");
+        IOThread = new PoolTaskThread("I/O");
+        backgroundThread = new PoolTaskThread("Background");
+        UIThread = new FXTaskThread();
         instance = this;
     }
 

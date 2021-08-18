@@ -33,8 +33,8 @@ public class SkinViewer {
         SplitPane splitPane = new SplitPane();
         root.setCenter(splitPane);
         splitPane.getItems().add(scroller = new ScrollPane(content = new BorderPane()));
-        scroller.setFitToHeight(true);
-        scroller.setFitToWidth(true);
+        scroller.setFillToHeight(true);
+        scroller.setFillToWidth(true);
         splitPane.getItems().add(new ScrollPane(problems = new Label()));
         stage.setHeight(800);
         stage.setWidth(1200);
@@ -45,15 +45,13 @@ public class SkinViewer {
         stage.setOnHidden(event -> {
             ticker.stop();
         });
-        skin.addListener((obs, old, val) -> {
-            content.centerProperty().bind(val.rootProperty());
-        });
+        content.centerProperty().bind(skin);
         html.addListener((obs, old, val) -> {
             if (val != null) {
                 Skin skin = new Skin();
-                SkinParser parser = new SkinParser();
+                SkinParser parser = new SkinParser(skin);
                 try {
-                    skin.load(val, parser);
+                    skin.load(parser);
                 } catch (Throwable t) {
                     StringWriter writer = new StringWriter();
                     t.printStackTrace(new PrintWriter(writer));

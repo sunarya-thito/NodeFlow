@@ -1,12 +1,13 @@
 package thito.nodeflow.internal.project.module;
 
+import thito.nodeflow.internal.project.*;
 import thito.nodeflow.library.language.*;
 import thito.nodeflow.library.resource.*;
 import thito.nodeflow.library.ui.*;
 
 public interface FileModule {
     I18n getDisplayName();
-    Icon getIcon();
+    String getIconURL(Theme theme);
     boolean acceptResource(Resource resource);
-    FileViewer createViewer(Resource resource);
+    FileViewer createViewer(Project project, Resource resource, byte[] data);
 }

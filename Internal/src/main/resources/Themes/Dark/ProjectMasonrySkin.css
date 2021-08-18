@@ -1,0 +1,11 @@
+#wrapper {
+    -fx-padding: 0 0 50 0;
+}
+
+#scroller:vertical #wrapper {
+    -fx-padding: 0 10 50 0;
+}
+
+#scroller {
+    -fx-overlay-scroll-bars: false;
+}

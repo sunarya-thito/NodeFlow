@@ -1,6 +1,7 @@
 package thito.nodeflow.library.platform;
 
 import com.sun.javafx.*;
+import thito.nodeflow.library.platform.unknown.*;
 import thito.nodeflow.library.ui.*;
 import thito.nodeflow.library.platform.windows.*;
 
@@ -14,5 +15,5 @@ public interface NativeToolkit {
         return new Unknown_NativeToolkit();
     }
 
-    void makeBorderless(Window window);
+    void registerNativeWindowHandling(Window window);
 }

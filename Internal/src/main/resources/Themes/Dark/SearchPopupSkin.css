@@ -1,0 +1,15 @@
+.search-popup-scroller {
+}
+
+.search-popup-root {
+    -fx-opacity: 0.9;
+    -fx-background-color: #1A202C;
+    -fx-background-radius: 5;
+    -fx-max-height: 600;
+    // 10 is the default popup shadow
+    -fx-effect: dropshadow(gaussian, rgb(0, 0, 0, 0.5), 10, 0, 0, 2);
+}
+
+.search-popup-root:hover {
+    -fx-opacity: 0.99;
+}
