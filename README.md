@@ -12,3 +12,5 @@ you can't create an abstract class that is extendable for other class.
   (similar to record feature in the latest java version) that is good enough to provide OOP functionality.
   
 ## Building
+* Clone this repo
+* Run mvn javafx:run -f pom.xml
