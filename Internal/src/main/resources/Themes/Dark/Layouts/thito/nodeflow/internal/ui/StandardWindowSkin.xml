@@ -1,0 +1,22 @@
+<NodeFlow>
+    <Layout>
+        <BorderPane class="standard-window">
+            <Top>
+                <BorderPane class="standard-window-header">
+                    <Center>
+                        <HBox class="caption-container">
+                            <Label id="window-title"></Label>
+                        </HBox>
+                    </Center>
+                    <Right>
+                        <HBox class="control-container">
+                            <Button class="control-button" id="close-button"></Button>
+                            <Button class="control-button" id="maximize-button"></Button>
+                            <Button class="control-button" id="minimize-button"></Button>
+                        </HBox>
+                    </Right>
+                </BorderPane>
+            </Top>
+        </BorderPane>
+    </Layout>
+</NodeFlow>

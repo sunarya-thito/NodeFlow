@@ -1,0 +1,12 @@
+<NodeFlow>
+    <Layout>
+        <BorderPane class="search-popup-root">
+            <Center>
+                <ScrollPane class="search-popup-scroller">
+                    <VBox id="content">
+                    </VBox>
+                </ScrollPane>
+            </Center>
+        </BorderPane>
+    </Layout>
+</NodeFlow>

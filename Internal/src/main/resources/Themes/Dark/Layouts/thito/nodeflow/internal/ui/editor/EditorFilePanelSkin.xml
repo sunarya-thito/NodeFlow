@@ -1,0 +1,10 @@
+<NodeFlow>
+    <Components>
+        <ResourceExplorerView>thito.nodeflow.library.ui.resource.ResourceExplorerView</ResourceExplorerView>
+    </Components>
+    <Layout>
+        <VBox class="file-explorer-root">
+            <ResourceExplorerView id="file-explorer" VBox.grow="ALWAYS"/>
+        </VBox>
+    </Layout>
+</NodeFlow>

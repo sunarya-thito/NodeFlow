@@ -28,6 +28,10 @@ public class ScrollPane extends Pane {
     private static final PseudoClass FIT_TO_HEIGHT_PSEUDOCLASS_STATE = PseudoClass.getPseudoClass("fitToHeight");
     private static final PseudoClass VERTICAL = PseudoClass.getPseudoClass("vertical");
     private static final PseudoClass HORIZONTAL = PseudoClass.getPseudoClass("horizontal");
+    private static final PseudoClass OVERFLOW_X = PseudoClass.getPseudoClass("overflow_x");
+    private static final PseudoClass OVERFLOW_Y = PseudoClass.getPseudoClass("overflow_y");
+    private static final PseudoClass OVERFLOW_WIDTH = PseudoClass.getPseudoClass("overflow_width");
+    private static final PseudoClass OVERFLOW_HEIGHT = PseudoClass.getPseudoClass("overflow_height");
     private static final CssMetaData<ScrollPane, Boolean> fxFillToWidth = UIHelper.meta("-fx-fill-to-width", StyleConverter.getBooleanConverter(), false, ScrollPane::fillToWidthProperty);
     private static final CssMetaData<ScrollPane, Boolean> fxFillToHeight = UIHelper.meta("-fx-fill-to-height", StyleConverter.getBooleanConverter(), false, ScrollPane::fillToHeightProperty);
     private static final CssMetaData<ScrollPane, Boolean> fxFitToWidth = UIHelper.meta("-fx-fit-to-width", StyleConverter.getBooleanConverter(), false, ScrollPane::fitToWidthProperty);
@@ -64,6 +68,11 @@ public class ScrollPane extends Pane {
     double panX, panY;
     ScheduledTask panTask;
 
+    BooleanProperty overflowX = new SimpleBooleanProperty(),
+    overflowY = new SimpleBooleanProperty(),
+    overflowWidth = new SimpleBooleanProperty(),
+    overflowHeight = new SimpleBooleanProperty();
+
     public ScrollPane() {
         getStyleClass().add("scroll-pane");
         getChildren().addAll(viewport, horizontalScrollBar, verticalScrollBar);
@@ -72,6 +81,19 @@ public class ScrollPane extends Pane {
         pannable.addListener((obs, old, val) -> pseudoClassStateChanged(PANNABLE_PSEUDOCLASS_STATE, val));
         fitToHeight.addListener((obs, old, val) -> pseudoClassStateChanged(FIT_TO_HEIGHT_PSEUDOCLASS_STATE, val));
         fitToWidth.addListener((obs, old, val) -> pseudoClassStateChanged(FIT_TO_WIDTH_PSEUDOCLASS_STATE, val));
+        overflowX.addListener((obs, old, val) -> pseudoClassStateChanged(OVERFLOW_X, val));
+        overflowY.addListener((obs, old, val) -> pseudoClassStateChanged(OVERFLOW_Y, val));
+        overflowWidth.addListener((obs, old, val) -> pseudoClassStateChanged(OVERFLOW_WIDTH, val));
+        overflowHeight.addListener((obs, old, val) -> pseudoClassStateChanged(OVERFLOW_HEIGHT, val));
+
+        overflowX.bind(viewport.wrapper.widthProperty().greaterThan(viewport.widthProperty())
+        .and(viewport.wrapper.layoutXProperty().lessThan(0)));
+        overflowY.bind(viewport.wrapper.heightProperty().greaterThan(viewport.heightProperty())
+        .and(viewport.wrapper.layoutYProperty().lessThan(0)));
+        overflowWidth.bind(viewport.wrapper.widthProperty().greaterThan(viewport.widthProperty())
+        .and(viewport.wrapper.layoutXProperty().greaterThanOrEqualTo(viewport.widthProperty().negate())));
+        overflowHeight.bind(viewport.wrapper.heightProperty().greaterThan(viewport.heightProperty())
+        .and(viewport.wrapper.layoutYProperty().greaterThanOrEqualTo(viewport.heightProperty().negate())));
 
         addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
             if (pannable.get() && event.getButton() == MouseButton.MIDDLE && !dragging) {

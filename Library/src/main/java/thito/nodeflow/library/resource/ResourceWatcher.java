@@ -60,6 +60,7 @@ public class ResourceWatcher {
                 Path path = (Path) event.context();
                 path = ((Path) watchable).resolve(path);
                 File targetFile = path.toFile();
+//                System.out.println("target: "+path+" from "+targetFile+" is "+kind+" list "+activeResourceManagers);
                 for (ResourceManager resourceManager : activeResourceManagers) {
                     Iterator<Resource> iterator = resourceManager.watchedDirectories.iterator();
                     while (iterator.hasNext()) {

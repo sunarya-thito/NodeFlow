@@ -6,11 +6,10 @@ import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.*;
 import javafx.stage.*;
-import thito.nodeflow.engine.Node;
-import thito.nodeflow.engine.*;
-import thito.nodeflow.engine.handler.*;
-import thito.nodeflow.engine.skin.*;
-import thito.nodeflow.engine.state.*;
+import thito.nodeflow.engine.node.*;
+import thito.nodeflow.engine.node.handler.*;
+import thito.nodeflow.engine.node.skin.*;
+import thito.nodeflow.engine.node.state.*;
 
 import java.util.*;
 
@@ -27,16 +26,16 @@ public class UITest extends Application {
     public void start(Stage primaryStage) throws Exception {
         NodeCanvas canvas = new NodeCanvas(new NodeCanvasHandler() {
             @Override
-            public NodeHandler createHandler(Node node, HandlerState state) {
+            public NodeHandler createHandler(thito.nodeflow.engine.node.Node node, HandlerState state) {
                 return new NodeHandler() {
                     int count = 0;
                     @Override
                     public NodeParameterHandler createParameterHandler(NodeParameter parameter, HandlerState state) {
                         return new NodeParameterHandler() {
 
-                            private Color color1 = safeColor();
-                            private Color color = safeColor();
-                            private StringProperty displayName = new SimpleStringProperty("PARAM "+count++);
+                            private final Color color1 = safeColor();
+                            private final Color color = safeColor();
+                            private final StringProperty displayName = new SimpleStringProperty("PARAM "+count++);
 
                             @Override
                             public StringProperty displayNameProperty() {
@@ -85,7 +84,7 @@ public class UITest extends Application {
                     }
 
                     @Override
-                    public Node getNode() {
+                    public thito.nodeflow.engine.node.Node getNode() {
                         return node;
                     }
 
@@ -112,7 +111,7 @@ public class UITest extends Application {
             }
         });
         for (int i = 0; i < 5; i++) {
-            Node node = new Node();
+            thito.nodeflow.engine.node.Node node = new thito.nodeflow.engine.node.Node();
             canvas.getNodeList().add(node);
             for (int j = 0; j <= i; j++) {
                 node.getParameters().add(new NodeParameter());

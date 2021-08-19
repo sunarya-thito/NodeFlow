@@ -16,6 +16,7 @@ public class ResourceManager {
     public ResourceManager(File root) {
         this.root = new Resource(this, root);
         addWatchList(this.root);
+        ResourceWatcher.activeResourceManagers.add(this);
     }
 
     protected void addWatchList(Resource resource) {

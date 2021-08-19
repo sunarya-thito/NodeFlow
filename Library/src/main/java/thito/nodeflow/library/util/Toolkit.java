@@ -3,6 +3,13 @@ package thito.nodeflow.library.util;
 import javafx.geometry.*;
 import javafx.scene.robot.*;
 
+import java.net.*;
+import java.nio.charset.*;
+import java.util.*;
+import java.util.stream.*;
+
+import static java.util.stream.Collectors.mapping;
+
 public class Toolkit {
     private static Robot robot = new Robot();
 
@@ -12,6 +19,25 @@ public class Toolkit {
 
     public static boolean isNullOrEmpty(String s) {
         return s == null || s.isEmpty();
+    }
+
+    public static Map<String, List<String>> splitQuery(URL url) {
+        if (isNullOrEmpty(url.getQuery())) {
+            return Collections.emptyMap();
+        }
+        return Arrays.stream(url.getQuery().split("&"))
+                .map(Toolkit::splitQueryParameter)
+                .collect(Collectors.groupingBy(AbstractMap.SimpleImmutableEntry::getKey, LinkedHashMap::new, mapping(Map.Entry::getValue, Collectors.toList())));
+    }
+
+    public static AbstractMap.SimpleImmutableEntry<String, String> splitQueryParameter(String it) {
+        final int idx = it.indexOf("=");
+        final String key = idx > 0 ? it.substring(0, idx) : it;
+        final String value = idx > 0 && it.length() > idx + 1 ? it.substring(idx + 1) : null;
+        return new AbstractMap.SimpleImmutableEntry<>(
+                URLDecoder.decode(key, StandardCharsets.UTF_8),
+                URLDecoder.decode(value, StandardCharsets.UTF_8)
+        );
     }
 
     /**

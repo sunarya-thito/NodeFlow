@@ -34,7 +34,7 @@ public class ThemeManager {
 
     protected StyleSheet setSheetContents(Theme theme, StyleSheet sheet, Class<?> name) {
         try{
-            URLConnection connection = new URL("rsrc:Themes/"+URLEncoder.encode(theme.getName(), StandardCharsets.UTF_8)+"/"+name.getSimpleName()+".xml").openConnection();
+            URLConnection connection = new URL("rsrc:Themes/"+URLEncoder.encode(theme.getName(), StandardCharsets.UTF_8)+"/Layouts/"+name.getName().replace('.', '/')+".xml").openConnection();
             connection.setUseCaches(false);
             connection.setDefaultUseCaches(false);
             try (InputStream inputStream = connection.getInputStream()) {
@@ -46,7 +46,7 @@ public class ThemeManager {
         Class<?> clazz = name;
         sheet.getCssFiles().clear();
         while (Skin.class.isAssignableFrom(clazz)) {
-            sheet.getCssFiles().add(0, "rsrc:Themes/"+URLEncoder.encode(theme.getName(), StandardCharsets.UTF_8)+"/"+clazz.getSimpleName()+".css");
+            sheet.getCssFiles().add(0, "rsrc:Themes/"+URLEncoder.encode(theme.getName(), StandardCharsets.UTF_8)+"/StyleSheets/"+clazz.getName().replace('.', '/')+".css");
             clazz = clazz.getSuperclass();
         }
         return sheet;

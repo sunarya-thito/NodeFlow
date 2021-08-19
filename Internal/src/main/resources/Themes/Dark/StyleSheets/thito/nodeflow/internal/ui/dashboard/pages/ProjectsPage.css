@@ -1,0 +1,105 @@
+.search-bar {
+    -fx-background-color: #313949;
+    -fx-background-radius: 5;
+    -fx-alignment: center;
+    -fx-padding: 0 15 0 15;
+    -fx-spacing: 5;
+    -fx-pref-height: 30;
+}
+
+.search-icon {
+    -fx-image: url("rsrc:/Themes/Dark/Icons/Search.png");
+    -fx-opacity: 0.5;
+}
+
+.search-field {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-family: Roboto;
+    -fx-font-size: 15;
+    -fx-focus-traversable: false;
+}
+
+.search-field:empty {
+    -fx-alignment: center;
+}
+
+.search-field:focused {
+    -fx-alignment: center_left;
+}
+
+.projects-root {
+    -fx-padding: 30 30 0 30;
+    -fx-spacing: 20;
+}
+
+.tool-bar {
+    -fx-alignment: center;
+    -fx-fill-height: true;
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-pref-height: 30;
+}
+
+.workspace-identity {
+    -fx-alignment: center_left;
+    -fx-fill-height: true;
+    -fx-padding: 0 10 0 10;
+    -fx-spacing: 5;
+}
+
+#workspace-name {
+    -fx-text-fill: white;
+    -fx-font-size: 17;
+    -fx-font-family: Roboto;
+}
+
+#workspace-count {
+    -fx-text-fill: rgb(255, 255, 255, 0.5);
+    -fx-font-size: 17;
+    -fx-font-family: Roboto;
+}
+
+.view-buttons {
+    -fx-background-color: #313949;
+    -fx-background-radius: 5;
+    -fx-alignment: center;
+    -fx-fill-height: true;
+}
+
+.view-toggle {
+    -fx-background-color: transparent;
+    -fx-pref-width: 30;
+    -fx-pref-height: 30;
+}
+
+.view-toggle:selected {
+    -fx-background-color: #C44B4B;
+    -fx-background-radius: 5;
+    -fx-max-height: Infinity;
+}
+
+#add-button {
+    -fx-pref-width: 30;
+    -fx-pref-height: 30;
+    -fx-min-width: 30;
+    -fx-min-height: 30;
+    -fx-background-color: #C44B4B;
+    -fx-graphic: url("rsrc:/Themes/Dark/Icons/AddButton.png");
+}
+
+#add-button:hover {
+    -fx-graphic: url("rsrc:/Themes/Dark/Icons/AddButtonHovered.png");
+}
+
+#list {
+    -fx-graphic: url("rsrc:Themes/Dark/Icons/List.png");
+}
+
+#box {
+    -fx-graphic: url("rsrc:Themes/Dark/Icons/Box.png");
+}
+
+#content {
+    -fx-padding: 0 0 20 0;
+}

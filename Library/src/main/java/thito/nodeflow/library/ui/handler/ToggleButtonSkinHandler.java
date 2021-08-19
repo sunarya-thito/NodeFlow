@@ -10,7 +10,9 @@ import java.util.*;
 
 public class ToggleButtonSkinHandler implements SkinHandler<ToggleButton> {
     private static Map<String, ToggleGroup> map = new HashMap<>();
-    private static Map<String, ToggleGroup> persistentMap = new HashMap<>();
+    public static ToggleGroup getGroup(String name) {
+        return map.computeIfAbsent(name, n -> new ToggleGroup());
+    }
     @Override
     public void parse(SkinParser parser, ToggleButton node, Element element) {
         if (element.hasAttr("togglebutton.group")) {

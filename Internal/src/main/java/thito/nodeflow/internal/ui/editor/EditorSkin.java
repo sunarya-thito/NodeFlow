@@ -6,11 +6,11 @@ import javafx.geometry.*;
 import javafx.scene.control.*;
 import javafx.scene.image.*;
 import javafx.scene.layout.*;
-import javafx.stage.*;
 import thito.nodeflow.internal.ui.dashboard.*;
 import thito.nodeflow.library.language.*;
 import thito.nodeflow.library.ui.Skin;
 import thito.nodeflow.library.ui.*;
+import thito.nodeflow.library.ui.handler.*;
 
 import java.util.*;
 
@@ -34,14 +34,36 @@ public class EditorSkin extends Skin {
     @Component("search-field")
     TextField searchField;
 
+    @Component("main-viewport")
+    SplitPane mainViewport;
+
+    @Component("nav-panel")
+    BorderPane navPanel;
+
     private SearchPopup searchPopup;
     private int menuIndex;
+    private int navPanelIndex;
+    private double navPanelDividerPosition;
 
     @Override
     protected void initializeSkin() {
-
         super.initializeSkin();
         registerActionHandler("window.openDashboard", ActionEvent.ACTION, event -> DashboardWindow.getWindow().show());
+        registerActionHandler("editor.navigation.file", ActionEvent.ACTION, event -> {
+            navPanel.setCenter(new EditorFilePanelSkin());
+        });
+        ToggleGroup navigation = ToggleButtonSkinHandler.getGroup("navigation-editor");
+        navigation.selectedToggleProperty().addListener((obs, old, val) -> {
+            if (val != null) {
+                if (!mainViewport.getItems().contains(navPanel)) {
+                    mainViewport.getItems().add(navPanelIndex, navPanel);
+                    mainViewport.setDividerPosition(navPanelIndex, navPanelDividerPosition);
+                }
+            } else {
+                navPanelDividerPosition = mainViewport.getDividerPositions()[navPanelIndex];
+                mainViewport.getItems().remove(navPanelIndex);
+            }
+        });
     }
 
     @Override
@@ -55,6 +77,10 @@ public class EditorSkin extends Skin {
             menuIndex = menuBar.getMenus().indexOf(moduleMenu);
             menuBar.getMenus().remove(menuIndex);
         }
+
+        navPanelIndex = mainViewport.getItems().indexOf(navPanel);
+        navPanelDividerPosition = mainViewport.getDividerPositions()[navPanelIndex];
+        mainViewport.getItems().remove(navPanelIndex);
 
         searchField.textProperty().addListener((obs, old, val) -> {
             updateSearch(val);

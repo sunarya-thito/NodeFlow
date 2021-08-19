@@ -1,0 +1,19 @@
+#file-explorer {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+#file-explorer .cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-family: Roboto;
+    -fx-font-size: 13;
+}
+
+#file-explorer .cell .arrow {
+    -fx-background-color: #7C899B;
+}
+
+#file-explorer .cell:selected {
+    -fx-background-color: #313949;
+}

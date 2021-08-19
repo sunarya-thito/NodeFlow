@@ -26,7 +26,7 @@ public class MenuBarSkinHandler implements SkinHandler<MenuBar> {
         }
     }
 
-    private MenuItem createMenuItem(SkinParser parser, Element element) {
+    public static MenuItem createMenuItem(SkinParser parser, Element element) {
         String tag = element.tagName();
         if (tag.equals("radio")) {
             RadioMenuItem item = new RadioMenuItem();
@@ -74,7 +74,7 @@ public class MenuBarSkinHandler implements SkinHandler<MenuBar> {
         throw new IllegalArgumentException("invalid component "+tag);
     }
 
-    private void applyAttributes(MenuItem item, SkinParser parser, Element element) {
+    private static void applyAttributes(MenuItem item, SkinParser parser, Element element) {
         if (element.hasAttr("class")) {
             item.getStyleClass().addAll(element.attr("class").split("\\s+"));
         }

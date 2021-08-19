@@ -26,8 +26,15 @@ public class NodeFlow extends ApplicationResources {
 
     public static void launch() {
         System.setProperty("prism.lcdtext", "false");
+        System.setProperty("sun.java3d.opengl", "true");
+        System.setProperty("sun.java2d.d3d", "false");
         logger = Logger.getLogger("NodeFlow");
+        
         logger.log(Level.INFO, "Loading application...");
+
+        Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler());
+
+        ResourceWatcher.getResourceWatcher().open();
         NodeFlow nodeFlow = new NodeFlow();
 
         nodeFlow.registerProtocol("rsrc", new ResourceProtocol());

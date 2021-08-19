@@ -11,14 +11,6 @@ import thito.nodeflow.library.ui.*;
 public class NodeSkinHandler implements SkinHandler<Node> {
     @Override
     public void parse(SkinParser parser, Node node, Element element) {
-        if (element.hasAttr("disableOverflow")) {
-            Rectangle rectangle = new Rectangle();
-            node.layoutBoundsProperty().addListener((obs, old, val) -> {
-                rectangle.setWidth(val.getWidth());
-                rectangle.setHeight(val.getHeight());
-            });
-            node.setClip(rectangle);
-        }
         if (element.hasAttr("id")) {
             node.setId(element.id());
         }

@@ -31,6 +31,7 @@ public class SkinParser {
         skinHandlerList.add(new ToggleButtonSkinHandler());
         skinHandlerList.add(new MenuBarSkinHandler());
         skinHandlerList.add(new TabPaneSkinHandler());
+        skinHandlerList.add(new RegionSkinHandler());
     }
 
 //    public Node load(String html) {
