@@ -9,7 +9,8 @@ public class ProjectMasonrySkin extends Skin {
     @Override
     protected void onLayoutLoaded() {
         for (int i = 0; i < 10; i++) {
-            pane.getChildren().add(new ProjectBoxSkin());
+            ProjectBoxSkin e = new ProjectBoxSkin();
+            pane.getChildren().add(e);
         }
     }
 }

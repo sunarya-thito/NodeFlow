@@ -8,7 +8,7 @@ import thito.nodeflow.library.language.*;
 
 import java.util.regex.*;
 
-public abstract class ReadableContent implements SearchableContent {
+public abstract class TextContent implements SearchableContent {
 
     public abstract I18n getName();
     public abstract StringProperty contentProperty();
@@ -16,6 +16,7 @@ public abstract class ReadableContent implements SearchableContent {
 
     @Override
     public SearchSession search(SearchQuery query) {
+        SearchThread.checkThread();
         return new TextSearchSession(query);
     }
 
@@ -29,7 +30,7 @@ public abstract class ReadableContent implements SearchableContent {
             contentProperty().addListener(new WeakInvalidationListener(this));
         }
 
-        void update() {
+        private void update() {
             results.clear();
             String text = contentProperty().get();
             int flags = 0;
@@ -40,13 +41,20 @@ public abstract class ReadableContent implements SearchableContent {
                 flags |= Pattern.MULTILINE;
             }
             Pattern pattern = Pattern.compile(query.isRegex() ? query.getText() : Pattern.quote(text), flags);
+            // its recommended to implement this on every searchable content
+            // this checks whether the software got a new search query to do
+            // and this one is no longer necessary
+            if (SearchThread.shouldStop()) return; // the pattern took too long to process and already got a new search query to do
             Matcher matcher = pattern.matcher(text);
-            while (matcher.find()) {
+
+            while (!SearchThread.shouldStop() && matcher.find()) {
                 int index = matcher.start();
                 int endIndex = matcher.end();
                 TextSearchResult result = new TextSearchResult(index, endIndex);
                 boolean accept = true;
                 for (SearchFilter filter : query.getFilters()) {
+                    // the previous filter took too long to process and the software got a new search query to do
+                    if (!SearchThread.shouldStop()) return;
                     if (!filter.acceptSearch(result)) {
                         accept = false;
                         break;
@@ -60,12 +68,12 @@ public abstract class ReadableContent implements SearchableContent {
 
         @Override
         public void invalidated(Observable observable) {
-            update();
+            SearchThread.submit(this::update);
         }
 
         @Override
         public I18n getName() {
-            return ReadableContent.this.getName();
+            return TextContent.this.getName();
         }
 
         @Override
@@ -87,6 +95,11 @@ public abstract class ReadableContent implements SearchableContent {
                 this.index = index;
                 this.endIndex = endIndex;
                 contentProperty().addListener(new WeakInvalidationListener(this));
+            }
+
+            @Override
+            public SearchableContent getContent() {
+                return TextContent.this;
             }
 
             @Override

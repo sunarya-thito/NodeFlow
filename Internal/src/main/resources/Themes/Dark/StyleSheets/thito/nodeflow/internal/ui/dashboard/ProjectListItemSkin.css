@@ -4,10 +4,18 @@
     -fx-padding: 10 20;
 }
 
+.project-header {
+    -fx-spacing: 15;
+}
+
+.project-identity {
+    -fx-spacing: 5;
+}
+
 #name {
     -fx-text-fill: white;
     -fx-font-family: Roboto;
-    -fx-font-size: 16;
+    -fx-font-size: 18;
 }
 
 #description {
@@ -17,7 +25,9 @@
 }
 
 #tags {
-    -fx-pref-width: 10;
+    -fx-vgap: 3;
+    -fx-hgap: 3;
+    -fx-min-width: 0;
 }
 
 .project-buttons {

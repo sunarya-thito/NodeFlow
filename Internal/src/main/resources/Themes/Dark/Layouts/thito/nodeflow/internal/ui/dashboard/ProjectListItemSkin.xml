@@ -3,7 +3,7 @@
         <HBox class="project-list-item-root">
             <VBox HBox.grow="ALWAYS" class="project-identity">
                 <HBox class="project-header">
-                    <Label id="name"/>
+                    <Label id="name" labeled.disableOverrun="true"/>
                     <FlowPane id="tags"/>
                 </HBox>
                 <Label id="description"/>

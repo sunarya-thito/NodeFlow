@@ -6,6 +6,7 @@ import javafx.scene.image.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.*;
 import thito.nodeflow.library.ui.*;
+import thito.nodeflow.library.ui.Skin;
 
 import java.util.*;
 
@@ -20,7 +21,7 @@ public class ProjectHelper {
         pane.setPrefSize(width, height);
         pane.setMaxSize(width, height);
         Label label = new Label(collectPrefix(name));
-        label.getStylesheets().add("rsrc:Themes/"+ThemeManager.getInstance().getTheme().getName()+"/Skin.css");
+        label.getStylesheets().add("rsrc:Themes/"+ThemeManager.getInstance().getTheme().getName()+"/StyleSheets/"+ Skin.class.getName().replace('.', '/') +".css");
         label.setTextFill(Color.WHITE);
         label.setStyle("-fx-font-family: 'AXIS Extra Bold'; -fx-font-size: 60;");
         pane.setCenter(label);

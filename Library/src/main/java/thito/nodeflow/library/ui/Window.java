@@ -95,6 +95,7 @@ public abstract class Window {
     public void show() {
         Platform.runLater(() -> {
             stage.show();
+            stage.toFront();
         });
     }
 

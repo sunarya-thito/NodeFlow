@@ -4,7 +4,7 @@
             <Label id="about-header"></Label>
             <Label id="about-content"></Label>
             <Label class="about-skin">
-                Standard NodeFlow Theme by Thito Yalasatria Sunarya
+                Standard NodeFlow Dark Theme by Thito Yalasatria Sunarya
             </Label>
         </VBox>
     </Layout>

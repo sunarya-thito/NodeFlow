@@ -6,6 +6,14 @@ dashboard:
   about: ABOUT
   changelogs-title: What's New?
 search: Search
+settings:
+  general:
+    name: Appearance
+    items:
+      theme: Theme
+      language: Language
+      show-dashboard-at-start: Show Dashboard at start
+      action-buffer: Action buffer
 editor:
   navigation:
     project-files: Project

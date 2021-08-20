@@ -1,9 +1,16 @@
 package thito.nodeflow.internal.ui.dashboard;
 
 import javafx.scene.control.*;
+import javafx.scene.control.Label;
+import javafx.scene.image.*;
+import javafx.scene.layout.*;
 import thito.nodeflow.internal.project.*;
 import thito.nodeflow.library.ui.*;
+import thito.nodeflow.library.ui.Component;
 import thito.nodeflow.library.ui.Skin;
+import thito.nodeflow.library.util.*;
+
+import java.awt.*;
 
 public class TagSkin extends Skin {
 
@@ -18,5 +25,21 @@ public class TagSkin extends Skin {
 
     @Override
     protected void onLayoutLoaded() {
+        view.textProperty().bind(tag.nameProperty());
+        ImageView img = new ImageView();
+        img.imageProperty().addListener((obs, old, val) -> {
+            if (val != null) {
+                int width = (int) val.getWidth();
+                int height = (int) val.getHeight();
+                int[][] colors = new int[width][height];
+                PixelReader reader = val.getPixelReader();
+                for (int x = 0; x < width; x++) for (int y = 0; y < height; y++) colors[x][y] = reader.getArgb(x, y);
+                int[] dominant = Quantize.quantizeImage(colors, 1);
+                Color awt = new Color(dominant[0]);
+                view.setStyle("-fx-background-color: rgb("+awt.getRed()+", "+awt.getGreen()+", "+awt.getBlue()+", 0.7)");
+            }
+        });
+        img.imageProperty().bind(tag.iconProperty());
+        view.setGraphic(img);
     }
 }

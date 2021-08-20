@@ -1,4 +1,14 @@
 #tag {
     -fx-font-family: Roboto;
     -fx-font-size: 13;
+    -fx-text-fill: white;
+    -fx-background-color: transparent;
+    -fx-background-radius: 5;
+    -fx-padding: 4 8;
+    -fx-graphic-text-gap: 4;
+}
+
+#tag .image-view {
+    -fx-fit-height: 16;
+    -fx-preserve-ratio: true;
 }

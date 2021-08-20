@@ -1,6 +1,7 @@
 package thito.nodeflow.library.util;
 
 import javafx.geometry.*;
+import javafx.scene.paint.*;
 import javafx.scene.robot.*;
 
 import java.net.*;
@@ -19,6 +20,17 @@ public class Toolkit {
 
     public static boolean isNullOrEmpty(String s) {
         return s == null || s.isEmpty();
+    }
+
+    public static int colorToRGBInt(Color color) {
+        int a = (int) (color.getOpacity() * 255);
+        int r = (int) (color.getRed() * 255);
+        int g = (int) (color.getGreen() * 255);
+        int b = (int) (color.getBlue() * 255);
+        return ((a & 0xFF) << 24) |
+                ((r & 0xFF) << 16) |
+                ((g & 0xFF) << 8)  |
+                (b & 0xFF);
     }
 
     public static Map<String, List<String>> splitQuery(URL url) {

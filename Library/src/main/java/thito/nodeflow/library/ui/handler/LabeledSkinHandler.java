@@ -3,6 +3,7 @@ package thito.nodeflow.library.ui.handler;
 import javafx.beans.property.*;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.layout.*;
 import org.jsoup.nodes.*;
 import thito.nodeflow.library.language.*;
 import thito.nodeflow.library.ui.*;
@@ -20,6 +21,9 @@ public class LabeledSkinHandler implements SkinHandler<Labeled> {
             Node n = parser.createNode(graphic);
             node.setGraphic(n);
             parser.handleNode(n, graphic);
+        }
+        if (element.hasAttr("labeled.disableoverrun")) {
+            node.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
         }
     }
 }

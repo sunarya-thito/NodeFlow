@@ -2,6 +2,7 @@ package thito.nodeflow.internal.ui.dashboard;
 
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import thito.nodeflow.internal.project.*;
 import thito.nodeflow.library.ui.Skin;
 import thito.nodeflow.library.ui.*;
 
@@ -25,5 +26,8 @@ public class ProjectBoxSkin extends Skin {
     @Override
     protected void onLayoutLoaded() {
         icon.setImage(ProjectHelper.create(name.getText(), 150, 100));
+        for (int i = 0; i < 3; i++) {
+            tags.getChildren().add(new TagSkin(new Tag()));
+        }
     }
 }

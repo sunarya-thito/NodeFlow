@@ -6,6 +6,12 @@
     -fx-fill-width: true;
 }
 
+#tags {
+    -fx-vgap: 3;
+    -fx-hgap: 3;
+    -fx-padding: 0 0 5 0;
+}
+
 #project-icon {
     -fx-width-mode: fit;
 }
@@ -28,6 +34,7 @@
 .project-box-content {
     -fx-padding: 5 5 0 5;
     -fx-fill-width: true;
+    -fx-spacing: 5;
 }
 
 .project-identity {
@@ -37,7 +44,7 @@
 
 #project-name {
     -fx-font-family: Roboto;
-    -fx-font-size: 17;
+    -fx-font-size: 18;
     -fx-text-fill: white;
 }
 
