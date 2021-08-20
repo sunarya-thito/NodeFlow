@@ -4,6 +4,7 @@ import javafx.animation.*;
 import javafx.application.*;
 import javafx.beans.*;
 import javafx.beans.property.*;
+import javafx.beans.value.*;
 import javafx.collections.*;
 import javafx.css.*;
 import javafx.geometry.*;
@@ -18,7 +19,7 @@ public class MasonryPane extends Pane {
     private static final CssMetaData<MasonryPane, Orientation> fxOrientation = UIHelper.meta("-fx-orientation", StyleConverter.getEnumConverter(Orientation.class), Orientation.VERTICAL, MasonryPane::orientationProperty);
     private static final CssMetaData<MasonryPane, Number> fxPreferredSize = UIHelper.meta("-fx-preferred-size", StyleConverter.getSizeConverter(), -1, MasonryPane::preferredOrientationSizeProperty);
     private static final CssMetaData<MasonryPane, Number> fxGap = UIHelper.meta("-fx-gap", StyleConverter.getSizeConverter(), 10, MasonryPane::gapProperty);
-    private StyleableObjectProperty<Duration> repositionSpeed = new SimpleStyleableObjectProperty<>(fxRepositionSpeed, Duration.millis(1));
+    private StyleableObjectProperty<Duration> repositionSpeed = new SimpleStyleableObjectProperty<>(fxRepositionSpeed, Duration.ZERO);
     private ObjectProperty<Interpolator> interpolator = new SimpleObjectProperty<>(Interpolator.EASE_IN);
     private StyleableObjectProperty<Orientation> orientation = new SimpleStyleableObjectProperty<>(fxOrientation, Orientation.VERTICAL);
     private StyleableDoubleProperty preferredOrientationSize = new SimpleStyleableDoubleProperty(fxPreferredSize, -1d);
@@ -192,6 +193,12 @@ public class MasonryPane extends Pane {
                     height += gapTargetHeight;
                 }
             }
+        }
+        if (repositionSpeed.get().toMillis() <= 0) {
+            for (KeyValue value : values) {
+                ((WritableValue) value.getTarget()).setValue(value.getEndValue());
+            }
+            return;
         }
         animation = new Timeline(new KeyFrame(repositionSpeed.get(), values.toArray(new KeyValue[0])));
         animation.play();

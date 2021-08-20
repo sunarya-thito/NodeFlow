@@ -6,6 +6,8 @@ import javafx.geometry.*;
 import javafx.scene.control.*;
 import javafx.scene.image.*;
 import javafx.scene.layout.*;
+import thito.nodeflow.internal.settings.*;
+import thito.nodeflow.internal.settings.general.*;
 import thito.nodeflow.internal.ui.dashboard.*;
 import thito.nodeflow.library.language.*;
 import thito.nodeflow.library.ui.Skin;
@@ -48,6 +50,9 @@ public class EditorSkin extends Skin {
     @Override
     protected void initializeSkin() {
         super.initializeSkin();
+        registerActionHandler("window.openSettings", ActionEvent.ACTION, event -> {
+            new SettingsManager(General.class).getWindow().show();
+        });
         registerActionHandler("window.openDashboard", ActionEvent.ACTION, event -> DashboardWindow.getWindow().show());
         registerActionHandler("editor.navigation.file", ActionEvent.ACTION, event -> {
             navPanel.setCenter(new EditorFilePanelSkin());

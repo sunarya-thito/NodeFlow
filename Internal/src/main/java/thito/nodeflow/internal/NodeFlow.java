@@ -18,7 +18,9 @@ import java.util.logging.*;
 
 public class NodeFlow extends ApplicationResources {
 
-    public static final File ROOT = new File("C:\\Users\\Thito\\IdeaProjects\\NodeFlow Software\\Internal\\src\\main\\resources\\");
+    public static final File ROOT
+//            = new File(""); // FOR PRODUCTION
+            = new File("src/main/resources"); //  FOR DEBUGGING PURPOSES ONLY
 
     private static Logger logger;
 
@@ -51,7 +53,7 @@ public class NodeFlow extends ApplicationResources {
 
         TaskThread.IO().schedule(() -> {
             try {
-                Thread.sleep(10000);
+                Thread.sleep(8000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -83,6 +85,10 @@ public class NodeFlow extends ApplicationResources {
             });
         });
 
+    }
+
+    public static NodeFlow getInstance() {
+        return (NodeFlow) ApplicationResources.getInstance();
     }
 
     public static void shutdown() {

@@ -1,11 +1,11 @@
 package thito.nodeflow.internal.settings;
 
-import javafx.collections.*;
+import java.util.*;
 
 public class SettingsCategory {
     private SettingsDescription description;
-    ObservableList<SettingsProperty<?>> settingsPropertyList = FXCollections.observableArrayList();
-    ObservableList<SettingsCategory> subCategory = FXCollections.observableArrayList();
+    List<SettingsProperty<?>> settingsPropertyList = new ArrayList<>();
+    List<SettingsCategory> subCategory = new ArrayList<>();
 
     public SettingsCategory(SettingsDescription description) {
         this.description = description;
@@ -15,11 +15,11 @@ public class SettingsCategory {
         return description;
     }
 
-    public ObservableList<SettingsCategory> getSubCategory() {
-        return subCategory;
+    public List<SettingsCategory> getSubCategory() {
+        return Collections.unmodifiableList(subCategory);
     }
 
-    public ObservableList<SettingsProperty<?>> getSettingsPropertyList() {
-        return settingsPropertyList;
+    public List<SettingsProperty<?>> getSettingsPropertyList() {
+        return Collections.unmodifiableList(settingsPropertyList);
     }
 }

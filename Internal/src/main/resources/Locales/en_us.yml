@@ -6,6 +6,9 @@ dashboard:
   about: ABOUT
   changelogs-title: What's New?
 search: Search
+browse: Browse
+open-directory: Select Directory
+open-file: Select File
 settings:
   general:
     name: Appearance
@@ -14,6 +17,7 @@ settings:
       language: Language
       show-dashboard-at-start: Show Dashboard at start
       action-buffer: Action buffer
+      max-opened-tabs: Max Opened Tabs
 editor:
   navigation:
     project-files: Project

@@ -37,7 +37,7 @@
                                             <Item action="window.openDashboard">
                                                 <Text>${editor.menu-file.dashboard}</Text>
                                             </Item>
-                                            <Item>
+                                            <Item action="window.openSettings">
                                                 <Text>${editor.menu-file.settings}</Text>
                                             </Item>
                                             <Separator/>

@@ -11,6 +11,12 @@ import java.util.*;
 import java.util.logging.*;
 
 public class PluginManager {
+    private static PluginManager pluginManager = new PluginManager();
+
+    public static PluginManager getPluginManager() {
+        return pluginManager;
+    }
+
     private List<ProjectExport> exporter = new ArrayList<>();
     private List<FileModule> moduleList = new ArrayList<>();
     private Map<Plugin, List<String>> styleSheetMap = new HashMap<>();

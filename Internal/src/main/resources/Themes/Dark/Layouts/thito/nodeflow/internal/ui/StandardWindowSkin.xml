@@ -1,21 +1,23 @@
 <NodeFlow>
     <Layout>
-        <BorderPane class="standard-window">
+        <BorderPane class="standard-window" id="root">
             <Top>
-                <BorderPane class="standard-window-header">
-                    <Center>
-                        <HBox class="caption-container">
-                            <Label id="window-title"></Label>
-                        </HBox>
-                    </Center>
-                    <Right>
-                        <HBox class="control-container">
-                            <Button class="control-button" id="close-button"></Button>
-                            <Button class="control-button" id="maximize-button"></Button>
-                            <Button class="control-button" id="minimize-button"></Button>
-                        </HBox>
-                    </Right>
-                </BorderPane>
+                <AnchorPane class="standard-window-header" id="caption">
+                    <HBox AnchorPane.top="0"
+                          AnchorPane.right="0"
+                          AnchorPane.bottom="0"
+                          AnchorPane.left="0"
+                          class="caption-container">
+                        <Label id="window-title">Test</Label>
+                    </HBox>
+                    <HBox AnchorPane.top="0"
+                          AnchorPane.right="0"
+                          AnchorPane.bottom="0" class="control-container not-caption">
+                        <Button class="control-button" action="window.minimize" id="minimize-button"></Button>
+                        <Button class="control-button" action="window.toggleMaximize" id="maximize-button"></Button>
+                        <Button class="control-button" action="window.close" id="close-button"></Button>
+                    </HBox>
+                </AnchorPane>
             </Top>
         </BorderPane>
     </Layout>

@@ -32,6 +32,10 @@ public class Language {
         this.code = code;
     }
 
+    public String getCode() {
+        return code;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

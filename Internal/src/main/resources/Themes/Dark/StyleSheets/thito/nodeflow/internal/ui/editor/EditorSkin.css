@@ -301,7 +301,7 @@
 EditorSkin {
     -fx-background-color: transparent;
     -fx-padding: 20;
-    -fx-effect: dropshadow(gaussian, black, 20, 0, 0, 0);
+    -fx-effect: dropshadow(gaussian, rgb(0, 0, 0, 0.7), 20, 0, 0, 0);
     -fx-pref-height: 800;
     -fx-pref-width: 1000;
     -fx-min-height: 600;

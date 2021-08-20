@@ -6,6 +6,7 @@ import javafx.beans.property.*;
 import javafx.beans.value.*;
 import javafx.css.*;
 import javafx.scene.*;
+import javafx.scene.image.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.*;

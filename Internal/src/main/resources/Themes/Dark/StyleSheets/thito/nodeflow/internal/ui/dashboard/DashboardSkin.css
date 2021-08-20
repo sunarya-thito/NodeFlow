@@ -11,7 +11,7 @@
 DashboardSkin {
     -fx-background-color: transparent;
     -fx-padding: 20;
-    -fx-effect: dropshadow(gaussian, black, 20, 0, 0, 0);
+    -fx-effect: dropshadow(gaussian, rgb(0, 0, 0, 0.7), 20, 0, 0, 0);
     -fx-pref-height: 600;
     -fx-pref-width: 800;
     -fx-min-height: 400;

@@ -4,4 +4,6 @@ public interface PluginInstance {
     default Plugin getPlugin() {
         return Plugin.getPlugin(getClass());
     }
+    void onPluginLoad();
+    void onPluginUnload();
 }
