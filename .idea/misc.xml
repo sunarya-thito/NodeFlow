@@ -23,6 +23,9 @@
       </set>
     </option>
   </component>
+  <component name="ProjectResources">
+    <resource url="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0" location="$PROJECT_DIR$" />
+  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_16" default="true" project-jdk-name="16" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>

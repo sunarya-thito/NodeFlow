@@ -31,9 +31,4 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
       - name: Build with Maven
-        run: mvn --batch-mode --update-snapshots verify
-      - run: mkdir staging && cp Library/target/*.jar staging && cp Internal/target/*.jar && cp Engine/target/*.jar && cp ByteCodeEngine/target/*.jar
-      - uses: actions/upload-artifact@v2
-        with:
-          name: Package
-          path: staging
+        run: set MAVEN_OPTS=--illegal-access=permit & mvn --batch-mode --update-snapshots verify
