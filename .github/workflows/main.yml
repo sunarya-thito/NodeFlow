@@ -34,6 +34,7 @@ jobs:
         run: mvn --batch-mode --update-snapshots verify
         env:
           MAVEN_OPTS: '--illegal-access=permit'
+          NODEFLOW_STOREPASS: ${{ secrets.NODEFLOW_STOREPASS }}
       - name: Deploy Application
         uses: cpina/github-action-push-to-another-repository@v1.3
         env:
