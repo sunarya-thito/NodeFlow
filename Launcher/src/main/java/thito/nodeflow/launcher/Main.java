@@ -17,7 +17,7 @@ public class Main {
         }
         URL[] urls = Arrays.stream(bins).filter(f -> f.getName().endsWith(".jar")).map(Main::toURL).toArray(URL[]::new);
         for (URL u : urls) System.out.println("Loading "+u);
-        applicationClassLoader = new ApplicationClassLoader(urls, null);
+        applicationClassLoader = new ApplicationClassLoader(urls, Main.class.getClassLoader());
         try {
             Thread.currentThread().setContextClassLoader(applicationClassLoader);
             applicationClassLoader.initialize(args);

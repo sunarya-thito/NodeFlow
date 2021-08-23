@@ -45,6 +45,7 @@ public class NodeFlow extends ApplicationResources {
 
         logger = Logger.getLogger("NodeFlow");
         logger.log(Level.INFO, "Loading application...");
+        logger.log(Level.INFO, "Root directory at "+ROOT);
 
         NodeFlow nodeFlow = new NodeFlow();
         nodeFlow.registerProtocol("rsrc", new ResourceProtocol());
@@ -142,7 +143,7 @@ public class NodeFlow extends ApplicationResources {
             defaultLanguage.loadLanguage(reader);
             Language.setLanguage(defaultLanguage);
         } catch (Throwable t) {
-            throw new RuntimeException("failed to load default language (en_us.yml)");
+            throw new RuntimeException("failed to load default language (en_us.yml)", t);
         }
     }
 
