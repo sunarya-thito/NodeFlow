@@ -1,5 +1,6 @@
 package thito.nodeflow.library.resource;
 
+import thito.nodeflow.library.application.*;
 import thito.nodeflow.library.task.*;
 
 import java.io.*;
@@ -41,11 +42,15 @@ public class ResourceManager {
         return root;
     }
 
+    public Resource toResource(File file) {
+        return new Resource(this, file);
+    }
+
     public Resource getResource(String path) {
         String[] paths = path.split(File.separator);
         Resource lookup = root;
         for (int i = 0; i < paths.length; i++) {
-            if (lookup == null) return null;
+            if (lookup == null) return toResource(new File(root.toFile(), path));
             int finalI = i;
             lookup = lookup.children.stream().filter(res -> res.getFileName().equals(paths[finalI])).findAny()
                     .orElse(null);

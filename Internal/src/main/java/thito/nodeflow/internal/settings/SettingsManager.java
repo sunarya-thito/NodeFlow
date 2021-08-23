@@ -3,6 +3,7 @@ package thito.nodeflow.internal.settings;
 import javafx.collections.*;
 import thito.nodeflow.internal.plugin.*;
 import thito.nodeflow.internal.plugin.event.application.*;
+import thito.nodeflow.internal.settings.node.*;
 import thito.nodeflow.internal.settings.parser.*;
 import thito.nodeflow.internal.ui.*;
 import thito.nodeflow.library.config.*;
@@ -17,21 +18,12 @@ import java.util.logging.*;
 
 public class SettingsManager {
     private static Logger logger = Logger.getLogger("Settings");
-    private StandardWindow window = new StandardWindow();
-    private ObservableList<SettingsCategory> categoryList = FXCollections.observableArrayList();
+    private List<SettingsCategory> categoryList = new ArrayList<>();
     private Map<Class<?>, SettingsParser<?>> parserMap = new HashMap<>();
+    private Map<Class<?>, SettingsNodeFactory<?>> nodeMap = new HashMap<>();
     private Section loaded;
 
-    public SettingsManager(Class<? extends Settings>... rootCategories) {
-        for (Class<? extends Settings> category : rootCategories) {
-            try {
-                SettingsCategory c = scan(null, category);
-                categoryList.add(c);
-            } catch (Exception e) {
-                logger.log(Level.WARNING, "Failed to scan category "+category.getName(), e);
-            }
-        }
-
+    public SettingsManager() {
         registerParser(Boolean.class, new BooleanParser());
         registerParser(Byte.class, new ByteParser());
         registerParser(Character.class, new CharParser());
@@ -43,15 +35,76 @@ public class SettingsManager {
         registerParser(Long.class, new LongParser());
         registerParser(Short.class, new ShortParser());
         registerParser(Theme.class, new ThemeParser());
+        registerParser(String.class, new StringParser());
+
+        registerNodeFactory(Boolean.class, new BooleanNode.Factory());
+        registerNodeFactory(Byte.class, new NumberNode.Factory());
+        registerNodeFactory(Character.class, new CharacterNode.Factory());
+        registerNodeFactory(Double.class, new NumberNode.Factory());
+        registerNodeFactory(File.class, new FileNode.Factory());
+        registerNodeFactory(Float.class, new NumberNode.Factory());
+        registerNodeFactory(Integer.class, new NumberNode.Factory());
+        registerNodeFactory(Language.class, new SelectionNode.LanguageFactory());
+        registerNodeFactory(Long.class, new NumberNode.Factory());
+        registerNodeFactory(Short.class, new NumberNode.Factory());
+        registerNodeFactory(Theme.class, new SelectionNode.ThemeFactory());
+        registerNodeFactory(String.class, new StringParser.Factory());
     }
 
-    public void registerParser(Class<?> clazz, SettingsParser<?> parser) {
+    @SafeVarargs
+    public final void addCategories(Class<? extends Settings>... rootCategories) {
+        for (Class<? extends Settings> category : rootCategories) {
+            try {
+                SettingsCategory c = scan(null, category);
+                categoryList.add(c);
+            } catch (Exception e) {
+                logger.log(Level.WARNING, "Failed to scan category "+category.getName(), e);
+            }
+        }
+    }
+
+    public <T> void registerParser(Class<T> clazz, SettingsParser<? extends T> parser) {
         parserMap.put(clazz, parser);
+    }
+
+    public <T> void registerNodeFactory(Class<T> clazz, SettingsNodeFactory<? super T> factory) {
+        nodeMap.put(clazz, factory);
+    }
+
+    public void unregisterParser(SettingsParser<?> parser) {
+        parserMap.values().remove(parser);
+    }
+
+    public void unregisterNodeFactory(SettingsNodeFactory<?> factory) {
+        nodeMap.values().remove(factory);
     }
 
     public void load(Reader reader) {
         loaded = Section.parseToMap(reader);
         load(null, categoryList);
+    }
+
+    public void save(Writer writer) throws IOException {
+        save(null, categoryList);
+        writer.write(Section.toString(loaded));
+    }
+
+    private void save(String parent, List<SettingsCategory> child) {
+        for (SettingsCategory category : child) {
+            String path = parent == null ? category.getClass().getSimpleName() : parent + "." + category.getClass().getSimpleName();
+            for (SettingsProperty property : category.settingsPropertyList) {
+                String itemPath = path + "." + property.fieldName;
+                SettingsParser parser = parserMap.get(property.getType());
+                if (parser == null) {
+                    logger.log(Level.WARNING, "SettingsProperty "+itemPath.replace('.', '/')+" does not have any parser for "+property.getType().getName());
+                    continue;
+                }
+                SettingsSaveEvent event = new SettingsSaveEvent(property);
+                PluginManager.getPluginManager().fireEvent(event);
+                parser.toConfig(loaded, itemPath, property.get());
+            }
+            save(path, category.subCategory);
+        }
     }
 
     private void load(String parent, List<SettingsCategory> child) {
@@ -67,21 +120,19 @@ public class SettingsManager {
                     logger.log(Level.WARNING, "SettingsProperty "+itemPath.replace('.', '/')+" does not have any parser for "+property.getType().getName());
                     continue;
                 }
-                property.set(parser.fromConfig(loaded, itemPath));
+                parser.fromConfig(loaded, itemPath).ifPresent(property::set);
                 SettingsLoadEvent settingsLoadEvent = new SettingsLoadEvent(property);
-                property.set(settingsLoadEvent);
+                PluginManager.getPluginManager().fireEvent(settingsLoadEvent);
             }
             load(path, category.subCategory);
         }
     }
 
-    public StandardWindow getWindow() {
-        return window;
-    }
-
     private SettingsCategory scan(Settings parentCategory, Class<? extends Settings> settingsClass)
             throws InvocationTargetException, InstantiationException, IllegalAccessException {
-        Constructor<?> constructor = settingsClass.asSubclass(Object.class).getConstructors()[0];
+        Constructor<?> constructor = settingsClass.getDeclaredConstructors()[0];
+        if (constructor == null) throw new IllegalArgumentException("no default constructor for "+settingsClass.getName());
+        constructor.setAccessible(true);
         Settings settings = (Settings) (parentCategory != null && !Modifier.isStatic(settingsClass.getModifiers()) ?
                 constructor.newInstance(parentCategory) :
                 constructor.newInstance());

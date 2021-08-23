@@ -27,7 +27,7 @@ public class I18n extends SimpleStringProperty {
 
     public I18n format(Object...args) {
         I18n text = new I18n();
-        List<Observable> observables = new ArrayList<>();
+        List<Observable> observables = new ArrayList<>(args.length + 1);
         Arrays.stream(args).filter(x -> x instanceof Observable).map(Observable.class::cast).forEach(observables::add);
         observables.add(this);
         text.bind(Bindings.createStringBinding(this::get, observables.toArray(new Observable[0])));

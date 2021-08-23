@@ -1,5 +1,6 @@
 package thito.nodeflow.internal.settings.node;
 
+import javafx.beans.property.*;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import thito.nodeflow.internal.settings.*;
@@ -15,42 +16,68 @@ public class NumberNode extends SettingsNode<Number> {
     }
 
     private Spinner spinner;
+    private ObjectProperty<Number> value = new SimpleObjectProperty<>();
 
     boolean updating = false;
-    public NumberNode(SettingsProperty<? extends Number> item, Number minValue, Number maxValue) {
+    public NumberNode(SettingsProperty item, Number minValue, Number maxValue) {
         super(item);
         spinner = new Spinner<>();
         if (item.getType() == Double.class || item.getType() == Float.class) {
-            spinner.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(minValue == null ? Double.MIN_VALUE : minValue.doubleValue(),
-                    maxValue == null ? Double.MAX_VALUE : maxValue.doubleValue()));
-            spinner.getValueFactory().setValue(item.get().doubleValue());
+            spinner.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(minValue == null ? Double.MIN_VALUE :
+                    Math.max(minValue.doubleValue(), minValue(item.getType()).doubleValue()),
+                    maxValue == null ? Double.MAX_VALUE : Math.min(maxValue.doubleValue(), maxValue(item.getType()).doubleValue())));
+            spinner.getValueFactory().setValue(getItem().get().doubleValue());
         } else {
-            spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(minValue == null ? Integer.MIN_VALUE : minValue.intValue(),
-                    maxValue == null ? Integer.MAX_VALUE : maxValue.intValue()));
-            spinner.getValueFactory().setValue(item.get().intValue());
+            spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(minValue == null ? Integer.MIN_VALUE :
+                    Math.max(minValue.intValue(), minValue(item.getType()).intValue()),
+                    maxValue == null ? Integer.MAX_VALUE : Math.min(maxValue.intValue(), maxValue(item.getType()).intValue())));
+            spinner.getValueFactory().setValue(getItem().get().intValue());
         }
-        item.addListener((obs, old, val) -> {
+        value.addListener((obs, old, val) -> {
             if (updating) return;
             updating = true;
             if (item.getType() == Double.class || item.getType() == Float.class) {
-                spinner.getValueFactory().setValue(val.doubleValue());
+                spinner.getValueFactory().setValue(getItem().get().doubleValue());
             } else {
-                spinner.getValueFactory().setValue(val.intValue());
+                spinner.getValueFactory().setValue(getItem().get().intValue());
             }
             updating = false;
         });
         spinner.valueProperty().addListener((obs, old, val) -> {
             if (updating) return;
             updating = true;
-            ((SettingsProperty) item).set(numberReBoxing((Number) val, item.getType()));
+            value.set(numberReBoxing((Number) val, item.getType()));
             updating = false;
         });
         spinner.getStyleClass().add("settings-number");
     }
 
     @Override
+    public void apply() {
+        getItem().set(value.get());
+    }
+
+    @Override
     public Node getNode() {
         return spinner;
+    }
+
+    static Number maxValue(Class<?> type) {
+        if (type == Integer.class) return Integer.MAX_VALUE;
+        if (type == Short.class) return Short.MAX_VALUE;
+        if (type == Byte.class) return Byte.MAX_VALUE;
+        if (type == Double.class) return Double.MAX_VALUE;
+        if (type == Float.class) return Float.MAX_VALUE;
+        return Long.MAX_VALUE;
+    }
+
+    static Number minValue(Class<?> type) {
+        if (type == Integer.class) return Integer.MIN_VALUE;
+        if (type == Short.class) return Short.MIN_VALUE;
+        if (type == Byte.class) return Byte.MIN_VALUE;
+        if (type == Double.class) return Double.MIN_VALUE;
+        if (type == Float.class) return Float.MIN_VALUE;
+        return Long.MIN_VALUE;
     }
 
     static Number numberReBoxing(Number from, Class<?> targetType) {

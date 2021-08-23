@@ -11,7 +11,7 @@ public class SettingsProperty<T> extends SimpleObjectProperty<T> {
     Class<T> type;
     String fieldName;
     Map<Class<? extends Annotation>, Annotation> annotationMap = new HashMap<>();
-    NumberSettings numberSettings;
+    private T defaultValue;
     private I18n name;
 
     public SettingsProperty(I18n name, T initialValue) {
@@ -21,9 +21,14 @@ public class SettingsProperty<T> extends SimpleObjectProperty<T> {
 
     public SettingsProperty(Class<T> type, String fieldName, I18n displayName, T initialValue) {
         super(initialValue);
+        this.defaultValue = initialValue;
         this.type = type;
         this.fieldName = fieldName;
         this.name = displayName;
+    }
+
+    public T getDefaultValue() {
+        return defaultValue;
     }
 
     public <T extends Annotation> T getAnnotated(Class<T> annotated) {

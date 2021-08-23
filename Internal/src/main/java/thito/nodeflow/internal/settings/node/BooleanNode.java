@@ -18,7 +18,12 @@ public class BooleanNode extends SettingsNode<Boolean> {
         super(item);
         checkBox = new CheckBox();
         checkBox.getStyleClass().add("settings-boolean");
-        checkBox.selectedProperty().bindBidirectional(item);
+        checkBox.setSelected(item.get());
+    }
+
+    @Override
+    public void apply() {
+        getItem().set(checkBox.isSelected());
     }
 
     @Override

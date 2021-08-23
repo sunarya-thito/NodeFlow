@@ -20,8 +20,12 @@ public class TaskManager {
     private TaskThread backgroundThread;
     private TaskThread UIThread;
 
-    public TaskManager() {
+    public static void init() {
         if (instance != null) throw new IllegalStateException("already initialized");
+        instance = new TaskManager();
+    }
+
+    public TaskManager() {
         IOThread = new PoolTaskThread("I/O");
         backgroundThread = new PoolTaskThread("Background");
         UIThread = new FXTaskThread();

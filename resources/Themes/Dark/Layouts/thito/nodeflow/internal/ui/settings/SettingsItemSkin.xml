@@ -1,0 +1,12 @@
+<NodeFlow>
+    <Layout>
+        <BorderPane class="settings-item">
+            <Left>
+                <Label id="name"/>
+            </Left>
+            <Center>
+                <BorderPane id="item"/>
+            </Center>
+        </BorderPane>
+    </Layout>
+</NodeFlow>

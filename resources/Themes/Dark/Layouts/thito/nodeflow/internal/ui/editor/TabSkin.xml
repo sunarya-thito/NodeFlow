@@ -1,0 +1,9 @@
+<NodeFlow>
+    <Layout>
+        <StackPane id="root">
+            <ScrollPane id="scroller">
+                <BorderPane id="content"/>
+            </ScrollPane>
+        </StackPane>
+    </Layout>
+</NodeFlow>

@@ -19,8 +19,12 @@ public class ThemeManager {
     private ObjectProperty<Theme> theme = new SimpleObjectProperty<>();
     private Map<Class<?>, StyleSheet> sheetMap = new HashMap<>();
 
+    public static void init() {
+        if (instance != null) throw new IllegalStateException("already initialized");
+        instance = new ThemeManager();
+    }
+
     public ThemeManager() {
-        instance = this;
         theme.addListener((obs, old, val) -> {
             updateTheme(val);
         });

@@ -1,0 +1,29 @@
+<NodeFlow>
+    <Layout>
+        <BorderPane class="settings-root">
+            <Center>
+                <SplitPane class="settings-panel">
+                    <VBox class="settings-navigation">
+                        <TextField id="search">
+                            <PromptText>${search}</PromptText>
+                        </TextField>
+                        <TreeView id="category-view"/>
+                    </VBox>
+                    <VBox class="settings-content">
+                        <FlowPane id="path"/>
+                        <ScrollPane class="settings-scroller">
+                            <VBox id="content"/>
+                        </ScrollPane>
+                    </VBox>
+                </SplitPane>
+            </Center>
+            <Bottom>
+                <HBox class="settings-buttons">
+                    <Button default="true">${ok}</Button>
+                    <Button cancel="true">${cancel}</Button>
+                    <Button>${apply}</Button>
+                </HBox>
+            </Bottom>
+        </BorderPane>
+    </Layout>
+</NodeFlow>

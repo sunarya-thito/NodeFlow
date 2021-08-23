@@ -21,7 +21,7 @@ public class StandardWindow extends Window implements WindowHitTest {
 
     @Override
     protected Skin createSkin() {
-        return new StandardWindowSkin();
+        return new StandardWindowSkin(this);
     }
 
     @Override

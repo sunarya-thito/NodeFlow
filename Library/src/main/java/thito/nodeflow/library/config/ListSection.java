@@ -4,12 +4,23 @@ import java.util.*;
 import java.util.stream.*;
 
 public class ListSection extends ArrayList<Object> implements Section {
+    private Section parent;
+
     public ListSection() {
         super();
     }
 
     public ListSection(Collection<?> c) {
         super(c);
+    }
+
+    protected void setParent(Section parent) {
+        this.parent = parent;
+    }
+
+    @Override
+    public Section getParent() {
+        return parent;
     }
 
     @Override

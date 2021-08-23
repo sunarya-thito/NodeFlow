@@ -1,18 +1,25 @@
 package thito.nodeflow.internal.project;
 
+import thito.nodeflow.library.config.*;
 import thito.nodeflow.library.resource.*;
 
 import java.util.*;
 
 public class Project {
-    private ResourceManager resourceManager;
     private Resource sourceFolder;
-    private Resource dependenciesFolder;
+    private ProjectProperties properties;
+    private Section configuration;
 
     private List<ProjectExport.Handler> exportHandlerList = new ArrayList<>();
 
-    public ResourceManager getResourceManager() {
-        return resourceManager;
+    public Project(Workspace workspace, ProjectProperties properties) {
+        this.properties = properties;
+        configuration = properties.getConfig().getMap("configuration").orElseThrow();
+        sourceFolder = properties.getDirectory().getChild("src");
+    }
+
+    public ProjectProperties getProperties() {
+        return properties;
     }
 
 }

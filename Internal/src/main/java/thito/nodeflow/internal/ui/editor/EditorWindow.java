@@ -1,11 +1,35 @@
 package thito.nodeflow.internal.ui.editor;
 
+import javafx.beans.binding.*;
 import javafx.geometry.*;
 import javafx.scene.*;
 import javafx.scene.input.*;
+import thito.nodeflow.internal.ui.dashboard.*;
+import thito.nodeflow.library.binding.*;
+import thito.nodeflow.library.language.*;
 import thito.nodeflow.library.ui.*;
 
 public class EditorWindow extends Window implements WindowHitTest {
+    private Editor editor;
+
+    public EditorWindow(Editor editor) {
+        this.editor = editor;
+        titleProperty().bind(Bindings.when(editor.projectProperty().isNull()).then(I18n.$("editor.title-no-project"))
+                .otherwise(I18n.$("editor.title").format(MappedBinding.map(editor.projectProperty(), project -> project == null ? null : project.getProperties().getName()))));
+    }
+
+    @Override
+    protected void initializeWindow() {
+        super.initializeWindow();
+        getStage().focusedProperty().addListener((obs, old, val) -> {
+            DashboardWindow.getWindow().getStage().toFront();
+        });
+    }
+
+    public Editor getEditor() {
+        return editor;
+    }
+
     @Override
     protected Skin createSkin() {
         return new EditorSkin();

@@ -1,5 +1,6 @@
 package thito.nodeflow.internal.settings.node;
 
+import javafx.beans.property.*;
 import javafx.css.*;
 import javafx.scene.*;
 import javafx.scene.control.*;
@@ -59,6 +60,7 @@ public class FileNode extends SettingsNode<File> {
     boolean updating;
     private boolean directory, save;
     private List<FileChooser.ExtensionFilter> filters;
+    private ObjectProperty<File> selectedFile = new SimpleObjectProperty<>();
     public FileNode(SettingsProperty<File> item, boolean mustExist, boolean directory, boolean save, List<FileChooser.ExtensionFilter> extensionFilters) {
         super(item);
         filters = extensionFilters;
@@ -76,10 +78,10 @@ public class FileNode extends SettingsNode<File> {
             }
             field.pseudoClassStateChanged(invalid, false);
             updating = true;
-            item.set(file);
+            selectedFile.set(file);
             updating = false;
         });
-        item.addListener((obs, old, val) -> {
+        selectedFile.addListener((obs, old, val) -> {
             if (updating) return;
             updating = true;
             field.setText(val.getAbsolutePath());
@@ -90,6 +92,11 @@ public class FileNode extends SettingsNode<File> {
         });
         box = new HBox(field, button);
         box.getStyleClass().add("settings-file");
+    }
+
+    @Override
+    public void apply() {
+        getItem().set(selectedFile.get());
     }
 
     private File getExistingRoot() {
@@ -116,11 +123,13 @@ public class FileNode extends SettingsNode<File> {
             }
             chooser.titleProperty().bind(I18n.$("open-file"));
             chooser.setInitialFileName(getItem().get().getName());
+            File result;
             if (save) {
-                chooser.showSaveDialog(box.getScene().getWindow());
+                result = chooser.showSaveDialog(box.getScene().getWindow());
             } else {
-                chooser.showOpenDialog(box.getScene().getWindow());
+                result = chooser.showOpenDialog(box.getScene().getWindow());
             }
+            selectedFile.set(result);
         }
     }
 

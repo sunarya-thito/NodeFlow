@@ -5,6 +5,7 @@ import thito.nodeflow.internal.plugin.event.EventListener;
 import thito.nodeflow.internal.plugin.event.*;
 import thito.nodeflow.internal.project.*;
 import thito.nodeflow.internal.project.module.*;
+import thito.nodeflow.library.resource.*;
 
 import java.lang.reflect.*;
 import java.util.*;
@@ -21,6 +22,48 @@ public class PluginManager {
     private List<FileModule> moduleList = new ArrayList<>();
     private Map<Plugin, List<String>> styleSheetMap = new HashMap<>();
     private ArrayList<EventListener> listeners = new ArrayList<>();
+    private UnknownFileModule unknownFileModule = new UnknownFileModule();
+
+    public List<FileModule> getModuleList() {
+        return Collections.unmodifiableList(moduleList);
+    }
+
+    public FileModule getModule(Resource resource) {
+        for (FileModule module : moduleList) {
+            if (module.acceptResource(resource)) {
+                return module;
+            }
+        }
+        return unknownFileModule;
+    }
+
+    public List<ProjectExport> getExporter() {
+        return Collections.unmodifiableList(exporter);
+    }
+
+    public void registerFileModule(FileModule module) {
+        moduleList.add(module);
+    }
+
+    public void unregisterFileModule(FileModule module) {
+        moduleList.remove(module);
+    }
+
+    public void unregisterFileModule(Plugin plugin) {
+        moduleList.removeIf(module -> Plugin.getPlugin(module.getClass()) == plugin);
+    }
+
+    public void registerExporter(ProjectExport export) {
+        exporter.add(export);
+    }
+
+    public void unregisterExporter(ProjectExport export) {
+        exporter.remove(export);
+    }
+
+    public void unregisterExporter(Plugin plugin) {
+        exporter.removeIf(export -> Plugin.getPlugin(export.getClass()) == plugin);
+    }
 
     public void registerListener(EventListener listener) {
         listeners.add(listener);
@@ -71,6 +114,11 @@ public class PluginManager {
 
     public void addStyleSheet(Plugin plugin, String path) {
         styleSheetMap.computeIfAbsent(plugin, x -> new ArrayList<>()).add(path);
+        for (List<String> other : styleSheetMap.values()) {
+            if (other.contains(path)) {
+                return;
+            }
+        }
         StyleManager.getInstance().addUserAgentStylesheet(path);
     }
 

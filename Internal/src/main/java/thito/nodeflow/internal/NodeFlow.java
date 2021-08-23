@@ -1,7 +1,12 @@
 package thito.nodeflow.internal;
 
 import javafx.application.*;
+import javafx.beans.binding.*;
+import javafx.beans.property.*;
+import thito.nodeflow.internal.project.*;
 import thito.nodeflow.internal.protocol.*;
+import thito.nodeflow.internal.settings.*;
+import thito.nodeflow.internal.settings.general.*;
 import thito.nodeflow.internal.ui.*;
 import thito.nodeflow.internal.ui.dashboard.*;
 import thito.nodeflow.internal.ui.editor.*;
@@ -18,9 +23,12 @@ import java.util.logging.*;
 
 public class NodeFlow extends ApplicationResources {
 
-    public static final File ROOT
-//            = new File(""); // FOR PRODUCTION
-            = new File("src/main/resources"); //  FOR DEBUGGING PURPOSES ONLY
+    public static final File ROOT;
+
+    static {
+        String rootProp = System.getProperty("nodeflow.rootDirectory", "");
+        ROOT = new File(rootProp).getAbsoluteFile();
+    }
 
     private static Logger logger;
 
@@ -29,6 +37,8 @@ public class NodeFlow extends ApplicationResources {
     }
 
     public static void launch() {
+        Thread.setDefaultUncaughtExceptionHandler(new CrashExceptionHandler());
+        System.setProperty("java.util.logging.SimpleFormatter.format", "%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS %4$-6s %2$s %5$s%6$s%n");
         System.setProperty("prism.lcdtext", "false");
         System.setProperty("sun.java3d.opengl", "true");
         System.setProperty("sun.java2d.d3d", "false");
@@ -40,7 +50,7 @@ public class NodeFlow extends ApplicationResources {
         nodeFlow.registerProtocol("rsrc", new ResourceProtocol());
         nodeFlow.registerProtocol("plugin", new PluginResourceProtocol());
 
-        new TaskManager(); // initializes the task manager
+        TaskManager.init();
 
         try (InputStreamReader reader = new InputStreamReader(new URL("rsrc:ChangeLogs.txt").openStream())) {
             Version.read(reader);
@@ -51,40 +61,66 @@ public class NodeFlow extends ApplicationResources {
         SplashScreen splashScreen = new SplashScreen();
         splashScreen.show();
 
+        Platform.setImplicitExit(true);
+
+        StringProperty status = new SimpleStringProperty();
+        DoubleProperty totalProgress = new SimpleDoubleProperty();
+
+        splashScreen.progressProperty().bind(totalProgress);
+        splashScreen.statusProperty().bind(status);
+
         TaskThread.IO().schedule(() -> {
-            try {
-                Thread.sleep(8000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler());
+            ThemeManager.init();
+            nodeFlow.getSettingsManager().addCategories(General.class);
 
             ResourceWatcher.getResourceWatcher().open();
 
-            new ThemeManager();
-            // for debugging purpose
-            ThemeManager.getInstance().setTheme(new Theme("Dark"));
-            //
+            nodeFlow.submitProgressedTask((progress, stat) -> {
+                stat.set("Loading settings configuration");
+                File target = new File(ROOT, "nodeflow.yml");
+                if (target.exists()) {
+                    try (FileReader reader = new FileReader(target)) {
+                        nodeFlow.getSettingsManager().load(reader);
+                    } catch (Exception e) {
+                        logger.log(Level.SEVERE, "Failed to load nodeflow.yml", e);
+                    }
+                }
+            });
 
-            Language lang = new Language("en_us");
-            try (FileReader reader = new FileReader(new File(ROOT, "Locales/en_us.yml"))) {
-                lang.loadLanguage(reader);
-            } catch (Throwable t) {
-                t.printStackTrace();
-            }
-            Language.setLanguage(lang);
+            runLoaderTask(nodeFlow.progressedTasks, 0, status, totalProgress, () -> {
+                Platform.runLater(() -> {
+                    logger.log(Level.INFO, "Starting Application...");
+                    Thread.setDefaultUncaughtExceptionHandler(new ReportedExceptionHandler());
+                    DashboardWindow dashboardWindow = new DashboardWindow();
+                    EditorWindow editorWindow = new Editor().getEditorWindow();
+                    editorWindow.show();
+                    dashboardWindow.show();
 
-            Platform.runLater(() -> {
-                DashboardWindow dashboardWindow = new DashboardWindow();
-                EditorWindow editorWindow = new EditorWindow();
-                dashboardWindow.getStage().initOwner(editorWindow.getStage());
-                editorWindow.show();
-                dashboardWindow.show();
-
-                splashScreen.close();
+                    splashScreen.close();
+                });
             });
         });
 
+    }
+
+    private static void runLoaderTask(Queue<ProgressedTask> taskList, int progressDone, StringProperty status, DoubleProperty totalProgress, Runnable onDone) {
+        ProgressedTask finalTask = taskList.poll();
+        if (finalTask != null) {
+            onDone.run();
+            return;
+        }
+        Platform.runLater(() -> {
+            int remaining = taskList.size();
+            DoubleProperty currentProgress = new SimpleDoubleProperty();
+            totalProgress.bind(Bindings.createDoubleBinding(() -> {
+                int total = remaining + progressDone;
+                return (progressDone + currentProgress.get()) / (total + 1d);
+            }, currentProgress));
+            TaskThread.IO().schedule(() -> {
+                finalTask.run(currentProgress, status);
+                runLoaderTask(taskList, progressDone + 1, status, totalProgress, onDone);
+            });
+        });
     }
 
     public static NodeFlow getInstance() {
@@ -94,6 +130,38 @@ public class NodeFlow extends ApplicationResources {
     public static void shutdown() {
         ResourceWatcher.getResourceWatcher().close();
         TaskManager.getInstance().shutdown();
+    }
+
+    private Language defaultLanguage = new Language("en_us");
+    private SettingsManager settingsManager = new SettingsManager();
+    private LinkedList<ProgressedTask> progressedTasks = new LinkedList<>();
+    private ObjectProperty<Workspace> workspace = new SimpleObjectProperty<>();
+
+    public NodeFlow() {
+        try (FileReader reader = new FileReader(new File(ROOT, "Locales/en_us.yml"))) {
+            defaultLanguage.loadLanguage(reader);
+            Language.setLanguage(defaultLanguage);
+        } catch (Throwable t) {
+            throw new RuntimeException("failed to load default language (en_us.yml)");
+        }
+    }
+
+    public ObjectProperty<Workspace> workspaceProperty() {
+        return workspace;
+    }
+
+    public SettingsManager getSettingsManager() {
+        return settingsManager;
+    }
+
+    public void submitProgressedTask(ProgressedTask task) {
+        if (progressedTasks == null) throw new IllegalStateException("nodeflow is already loaded");
+        progressedTasks.add(task);
+    }
+
+    @Override
+    public Language getDefaultLanguage() {
+        return defaultLanguage;
     }
 
     @Override

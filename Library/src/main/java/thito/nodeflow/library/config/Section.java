@@ -32,6 +32,7 @@ public interface Section {
         }
         return paths;
     }
+    Section getParent();
     Optional<?> getInScope(String key);
     void setInScope(String key, Object value);
     default void set(String path, Object value) {
@@ -141,7 +142,9 @@ public interface Section {
     default Optional<MapSection> getMap(String path) {
         return getObject(path).map(o -> {
             if (o instanceof Map) {
-                return new MapSection((Map<String, ?>) o);
+                MapSection mapSection = new MapSection((Map<String, ?>) o);
+                mapSection.setParent(this);
+                return mapSection;
             }
             return null;
         });
@@ -149,9 +152,13 @@ public interface Section {
     default Optional<ListSection> getList(String path) {
         return getObject(path).map(o -> {
             if (o instanceof List) {
-                return new ListSection((List<?>) o);
+                ListSection list = new ListSection((List<?>) o);
+                list.setParent(this);
+                return list;
             }
-            return new ListSection(Collections.singleton(o));
+            ListSection list = new ListSection(Collections.singleton(o));
+            list.setParent(this);
+            return list;
         });
     }
 }

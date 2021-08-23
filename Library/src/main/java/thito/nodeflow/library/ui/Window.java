@@ -29,6 +29,10 @@ public abstract class Window {
     protected abstract Skin createSkin();
     protected abstract WindowHitTest createHitTest();
 
+    protected StringProperty titleProperty() {
+        return getStage().titleProperty();
+    }
+
     protected void initializeWindow() {
         skin.addListener((obs, old, val) -> {
             if (old != null) root.getChildren().remove(old);

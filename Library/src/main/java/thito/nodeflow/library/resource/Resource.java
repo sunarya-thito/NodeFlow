@@ -148,6 +148,17 @@ public class Resource {
         return typeProperty().isNotEqualTo(ResourceType.UNKNOWN);
     }
 
+    public Resource getChild(String path) {
+        String[] paths = path.split("/");
+        Resource current = this;
+        for (int i = 0; i < paths.length; i++) {
+            if (current == null) return resourceManager.toResource(new File(toFile(), path));
+            int finalI = i;
+            current = current.children.stream().filter(x -> x.getFileName().equals(paths[finalI])).findAny().orElse(null);
+        }
+        return current;
+    }
+
     public ObservableList<Resource> getChildren() {
         return FXCollections.unmodifiableObservableList(children);
     }

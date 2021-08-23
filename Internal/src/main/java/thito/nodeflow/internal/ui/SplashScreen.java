@@ -37,7 +37,6 @@ public class SplashScreen {
         pane.setEffect(new DropShadow(20, Color.color(0, 0, 0, 0.7)));
         pane.setPadding(new Insets(20));
         pane.setBackground(Background.EMPTY);
-        progressText.setText("TEST LABEL PROGRESS");
         progressText.setTextFill(Color.WHITE);
         progressText.setFont(Font.loadFont("rsrc:Fonts/Roboto-Regular.ttf", 10));
         progressText.setPadding(new Insets(4));
@@ -60,6 +59,7 @@ public class SplashScreen {
         version.setTranslateY(5);
         stage = new Stage(StageStyle.TRANSPARENT);
         stage.setScene(scene);
+        stage.setTitle("");
         stage.setResizable(false);
         version.setText(Version.getCurrentVersion().getVersion());
         logo.setImage(new Image("rsrc:Images/NodeflowLogoWhite.png"));
@@ -76,11 +76,18 @@ public class SplashScreen {
         task = TaskThread.UI().schedule(() -> {
             xOffset++;
             yOffset++;
-            progress.set(Math.min(1, progress.get() + 0.002));
             updateBackground();
         }, Duration.millis(16), Duration.millis(16));
         stage.show();
         stage.toFront();
+    }
+
+    public DoubleProperty progressProperty() {
+        return progress;
+    }
+
+    public StringProperty statusProperty() {
+        return progressText.textProperty();
     }
 
     public void close() {

@@ -11,14 +11,6 @@
 
     <artifactId>NodeFlowLibrary</artifactId>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.jsoup</groupId>
-            <artifactId>jsoup</artifactId>
-            <version>1.11.3</version>
-        </dependency>
-    </dependencies>
-
     <properties>
         <maven.compiler.source>16</maven.compiler.source>
         <maven.compiler.target>16</maven.compiler.target>
@@ -27,11 +19,12 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.openjfx</groupId>
-                <artifactId>javafx-maven-plugin</artifactId>
-                <version>0.0.1</version>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.0</version>
                 <configuration>
-                    <mainClass>thito.nodeflow.library.ui.SkinTestViewer</mainClass>
+                    <finalName>${project.artifactId}</finalName>
+                    <outputDirectory>../target/Libraries</outputDirectory>
                 </configuration>
             </plugin>
         </plugins>

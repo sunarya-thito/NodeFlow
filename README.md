@@ -13,4 +13,4 @@ you can't create an abstract class that is extendable for other class.
   
 ## Building
 * Clone this repo
-* Run mvn javafx:run -f pom.xml
+* Run set MAVEN_OPTS=--illegal-access=permit & mvn clean package

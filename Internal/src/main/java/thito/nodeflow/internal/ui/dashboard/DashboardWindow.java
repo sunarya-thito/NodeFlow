@@ -4,6 +4,7 @@ import javafx.geometry.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.stage.*;
+import thito.nodeflow.library.language.*;
 import thito.nodeflow.library.ui.Window;
 import thito.nodeflow.library.ui.*;
 
@@ -17,6 +18,12 @@ public class DashboardWindow extends Window implements WindowHitTest {
 
     public DashboardWindow() {
         window = this;
+    }
+
+    @Override
+    protected void initializeWindow() {
+        super.initializeWindow();
+        titleProperty().bind(I18n.$("dashboard.title"));
     }
 
     @Override

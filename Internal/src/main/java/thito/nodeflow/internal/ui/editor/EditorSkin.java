@@ -51,7 +51,6 @@ public class EditorSkin extends Skin {
     protected void initializeSkin() {
         super.initializeSkin();
         registerActionHandler("window.openSettings", ActionEvent.ACTION, event -> {
-            new SettingsManager(General.class).getWindow().show();
         });
         registerActionHandler("window.openDashboard", ActionEvent.ACTION, event -> DashboardWindow.getWindow().show());
         registerActionHandler("editor.navigation.file", ActionEvent.ACTION, event -> {

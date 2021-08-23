@@ -73,6 +73,7 @@ public class ResourceWatcher {
                             if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
                                 Resource res = new Resource(resourceManager, targetFile);
                                 TaskThread.IO().schedule(() -> {
+                                    resource.children.remove(res);
                                     resource.children.add(res);
                                     if (res.getType() == ResourceType.DIRECTORY) {
                                         resourceManager.addWatchList(res);

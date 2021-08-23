@@ -17,6 +17,9 @@ public class NodeSkinHandler implements SkinHandler<Node> {
         if (element.hasAttr("class")) {
             node.getStyleClass().addAll(element.attr("class").split("\\s+"));
         }
+        if (element.hasAttr("disable")) {
+            node.setDisable(Boolean.parseBoolean(element.attr("disable")));
+        }
         if (element.hasAttr("style")) {
             node.setStyle(element.attr("style"));
         }

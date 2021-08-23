@@ -44,5 +44,6 @@ public abstract class ApplicationResources {
 //    public abstract URLConnection openResource(URL u) throws IOException;
     public abstract Collection<? extends Language> getAvailableLanguages();
     public abstract Collection<? extends Theme> getAvailableThemes();
+    public abstract Language getDefaultLanguage();
 
 }
