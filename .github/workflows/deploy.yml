@@ -5,7 +5,7 @@ on:
 
 jobs:
   copy-file:
-    runs-on: window-latest
+    runs-on: windows-latest
     steps:
     - name: Checkout
       uses: actions/checkout@v2
