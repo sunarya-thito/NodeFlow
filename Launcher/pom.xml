@@ -168,20 +168,70 @@
                     </execution>
                 </executions>
             </plugin>
-<!--            <plugin>-->
-<!--                <groupId>org.apache.maven.plugins</groupId>-->
-<!--                <artifactId>maven-jar-plugin</artifactId>-->
-<!--                <version>3.2.0</version>-->
-<!--                <configuration>-->
-<!--                    <finalName>Launcher</finalName>-->
-<!--                    <outputDirectory>../target</outputDirectory>-->
-<!--                    <archive>-->
-<!--                        <manifest>-->
-<!--                            <mainClass>thito.nodeflow.launcher.Main</mainClass>-->
-<!--                        </manifest>-->
-<!--                    </archive>-->
-<!--                </configuration>-->
-<!--            </plugin>-->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>keytool-maven-plugin</artifactId>
+                <version>1.5</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generateKeyPair</goal>
+                        </goals>
+                        <phase>package</phase>
+                    </execution>
+                </executions>
+                <configuration>
+                    <keystore>${project.basedir}/target/nodeflow.jks</keystore>
+                    <!--suppress UnresolvedMavenProperty -->
+                    <storepass>${env.NODEFLOW_STOREPASS}</storepass>
+                    <alias>nodeflow</alias>
+                    <dname>cn=sunarya-thito.github.io, ou=None, L=Bandung, ST=Washington, o=KudaDev, c=ID</dname>
+                    <ext></ext>
+                    <validity>365000</validity>
+                    <keyalg>DSA</keyalg>
+                    <keysize>1024</keysize>
+                    <sigalg>SHA1withDSA</sigalg>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>net.jsign</groupId>
+                <artifactId>jsign-maven-plugin</artifactId>
+                <version>4.0</version>
+                <executions>
+                    <execution>
+                        <id>sign-gui</id>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                        <phase>package</phase>
+                        <configuration>
+                            <file>../target/NodeFlow.exe</file>
+                            <name>NodeFlow</name>
+                            <url>${nodeflow.discord}</url>
+                            <keystore>target/nodeflow.jks</keystore>
+                            <alias>nodeflow</alias>
+                            <!--suppress UnresolvedMavenProperty -->
+                            <storepass>${env.NODEFLOW_STOREPASS}</storepass>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>sign-cli</id>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                        <phase>package</phase>
+                        <configuration>
+                            <file>../target/NodeFlow-CLI.exe</file>
+                            <name>NodeFlow</name>
+                            <url>${nodeflow.discord}</url>
+                            <keystore>target/nodeflow.jks</keystore>
+                            <alias>nodeflow</alias>
+                            <!--suppress UnresolvedMavenProperty -->
+                            <storepass>${env.NODEFLOW_STOREPASS}</storepass>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>

@@ -13,4 +13,4 @@ you can't create an abstract class that is extendable for other class.
   
 ## Building
 * Clone this repo
-* Run set MAVEN_OPTS=--illegal-access=permit & mvn clean package
+* Run `set MAVEN_OPTS=--illegal-access=permit & set NODEFLOW_STOREPASS=<PASSWORD> & mvn clean package`
