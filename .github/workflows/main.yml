@@ -34,3 +34,12 @@ jobs:
         run: mvn --batch-mode --update-snapshots verify
         env:
           MAVEN_OPTS: '--illegal-access=permit'
+      - name: Deploy Application
+        uses: cpina/github-action-push-to-another-repository@v1.3
+        with:
+          source-directory: target
+          destination-github-username: sunarya-thito
+          destination-repository-name: NodeFlow
+          target-branch: deploy
+          commit-message: 'Update from main repository'
+          user-email: septogeddon@gmail.com
