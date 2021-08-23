@@ -20,10 +20,10 @@ jobs:
         path: ~/.m2
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
-    - name: Allow Illegal Access
-      run: set MAVEN_OPTS=--illegal-access=permit
     - name: Build with Maven
-      run: set MAVEN_OPTS=--illegal-access=permit & mvn --batch-mode --update-snapshots verify
+      run: mvn --batch-mode --update-snapshots verify
+      env:
+        MAVEN_OPTS: '--illegal-access=permit'
     - name: Pushes to another repository
       uses: cpina/github-action-push-to-another-repository@main
       env:
