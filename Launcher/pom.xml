@@ -9,6 +9,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <version>2.0</version>
+
     <artifactId>nodeflow-launcher</artifactId>
 
     <properties>
