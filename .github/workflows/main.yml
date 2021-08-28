@@ -33,8 +33,10 @@ jobs:
       - name: Set outputs
         id: vars
         run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+      - name: Change Version
+        run: mvn versions:set -DgenerateBackupPoms=false -DnewVersion=${{ steps.vars.outputs.sha_short }}
       - name: Build and Deploy with Maven
-        run: mvn --batch-mode --update-snapshots versions:set deploy -DgenerateBackupPoms=false -DnewVersion=${{ steps.vars.outputs.sha_short }}
+        run: mvn --batch-mode --update-snapshots verify deploy
         env:
           MAVEN_OPTS: '--illegal-access=permit'
           NODEFLOW_STOREPASS: ${{ secrets.NODEFLOW_STOREPASS }}
