@@ -59,6 +59,10 @@ public class Version {
         return version;
     }
 
+    void setVersion(String version) {
+        this.version = version;
+    }
+
     public String getChangeLog() {
         return changeLog;
     }

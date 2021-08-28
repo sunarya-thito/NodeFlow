@@ -52,6 +52,8 @@ public class Main extends Application {
 
         try (InputStreamReader reader = new InputStreamReader(new URL("rsrc:ChangeLogs.txt").openStream())) {
             Version.read(reader);
+            String deployVersion = System.getProperty("nodeflow.version", "RELEASE");
+            Version.getCurrentVersion().setVersion(Version.getCurrentVersion().getVersion() + "-" + deployVersion);
         } catch (Throwable t) {
             t.printStackTrace();
         }

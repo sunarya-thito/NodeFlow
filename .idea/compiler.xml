@@ -7,10 +7,15 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="nodeflow-setup" />
+        <module name="nodeflow-engine" />
         <module name="Internal" />
-        <module name="Launcher" />
         <module name="code-engine" />
+        <module name="nodeflow-launcher" />
+        <module name="nodeflow-library" />
+        <module name="nodeflow-setup" />
+        <module name="nodeflow-internal" />
+        <module name="Launcher" />
+        <module name="nodeflow-resources" />
         <module name="Library" />
         <module name="Resources" />
         <module name="Setup" />
@@ -19,10 +24,16 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="CodeEngine" target="16" />
+      <module name="Engine" target="16" />
       <module name="Installer" target="8" />
+      <module name="Internal" target="16" />
+      <module name="Launcher" target="16" />
       <module name="Legacy API" target="8" />
       <module name="Legacy Internal" target="8" />
+      <module name="Library" target="16" />
+      <module name="NodeFlow Software" target="16" />
       <module name="NodeFlowLauncher" target="14" />
+      <module name="Resources" target="16" />
       <module name="Setup" target="16" />
     </bytecodeTargetLevel>
   </component>

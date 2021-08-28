@@ -2,6 +2,12 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/Engine/Engine.iml" filepath="$PROJECT_DIR$/Engine/Engine.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Internal/Internal.iml" filepath="$PROJECT_DIR$/Internal/Internal.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Launcher/Launcher.iml" filepath="$PROJECT_DIR$/Launcher/Launcher.iml" />
+      <module fileurl="file://$PROJECT_DIR$/UILibrary/Library.iml" filepath="$PROJECT_DIR$/UILibrary/Library.iml" />
+      <module fileurl="file://$PROJECT_DIR$/NodeFlow Software.iml" filepath="$PROJECT_DIR$/NodeFlow Software.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Resources/Resources.iml" filepath="$PROJECT_DIR$/Resources/Resources.iml" />
       <module fileurl="file://$PROJECT_DIR$/Setup/Setup.iml" filepath="$PROJECT_DIR$/Setup/Setup.iml" />
     </modules>
   </component>
