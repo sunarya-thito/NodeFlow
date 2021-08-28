@@ -1,0 +1,1 @@
+This is a dummy module to help the compiler to bundle the JDK

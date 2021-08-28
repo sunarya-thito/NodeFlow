@@ -9,8 +9,6 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <version>2.0</version>
-
     <artifactId>nodeflow-launcher</artifactId>
 
     <properties>
@@ -241,44 +239,6 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.openjfx</groupId>
-                <artifactId>javafx-maven-plugin</artifactId>
-                <version>0.0.6</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>jlink</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <mainClass>thito.nodeflow.launcher.Main</mainClass>
-                    <compress>2</compress>
-                    <noHeaderFiles>true</noHeaderFiles>
-                    <noManPages>true</noManPages>
-                    <jlinkImageName>Bundled</jlinkImageName>
-                    <builddir>../target</builddir>
-                    <launcher>Launcher</launcher>
-                    <options>
-                        <option>--add-exports</option>
-                        <option>javafx.base/com.sun.javafx=ALL-UNNAMED</option>
-                        <option>--add-exports</option>
-                        <option>javafx.graphics/com.sun.javafx.stage=ALL-UNNAMED</option>
-                        <option>--add-exports</option>
-                        <option>javafx.graphics/com.sun.javafx.tk=ALL-UNNAMED</option>
-                        <option>--add-opens</option>
-                        <option>javafx.graphics/javafx.scene=ALL-UNNAMED</option>
-                        <option>--add-opens</option>
-                        <option>java.base/java.util=ALL-UNNAMED</option>
-                        <option>--add-exports</option>
-                        <option>javafx.graphics/com.sun.javafx.css=ALL-UNNAMED</option>
-                        <option>--add-opens</option>
-                        <option>javafx.graphics/com.sun.javafx.css=ALL-UNNAMED</option>
-                    </options>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

@@ -10,6 +10,7 @@
         <module name="nodeflow-engine" />
         <module name="Internal" />
         <module name="code-engine" />
+        <module name="Bundler" />
         <module name="nodeflow-launcher" />
         <module name="nodeflow-library" />
         <module name="nodeflow-setup" />

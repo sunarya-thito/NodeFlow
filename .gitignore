@@ -1,6 +1,5 @@
 # Project exclude paths
 /API/target/
-/Legacy Launcher/target/
 /Engine/target/
 /CodeEngine/target
 /Library/target
@@ -9,3 +8,4 @@
 /Launcher/target
 /Setup/target
 /Resources/target
+/Bundler/target
