@@ -22,19 +22,22 @@ public class General implements Settings {
     @NumberSettings(min = 0, max = 200)
     SettingsProperty<Integer> actionBuffer = new SettingsProperty<>(I18n.$("settings.general.items.action-buffer"), 50);
 
+    public General() {
+        workspaceDirectory.addListenerAndFire((obs, old, val) -> {
+            val.mkdirs();
+            Workspace workspace = new Workspace(val);
+            NodeFlow.getInstance().workspaceProperty().set(workspace);
+        });
+    }
+
     @Getter @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
     public class Appearance implements Settings {
 
-        SettingsProperty<Boolean> showDashboardAtStart = new SettingsProperty<>(I18n.$("settings.general.items.show-dashboard-at-start"), true);
-        SettingsProperty<Theme> theme = new SettingsProperty<>(I18n.$("settings.general.items.name"), new Theme("Dark"));
-        SettingsProperty<Language> language = new SettingsProperty<>(I18n.$("settings.general.items.language"), NodeFlow.getInstance().getDefaultLanguage());
+        SettingsProperty<Boolean> showDashboardAtStart = new SettingsProperty<>(I18n.$("settings.general.sub.appearance.items.show-dashboard-at-start"), true);
+        SettingsProperty<Theme> theme = new SettingsProperty<>(I18n.$("settings.general.sub.appearance.items.theme"), new Theme("Dark"));
+        SettingsProperty<Language> language = new SettingsProperty<>(I18n.$("settings.general.sub.appearance.items.language"), NodeFlow.getInstance().getDefaultLanguage());
 
         public Appearance() {
-            workspaceDirectory.addListenerAndFire((obs, old, val) -> {
-                Workspace workspace = new Workspace(val);
-                workspace.scanProjects();
-                NodeFlow.getInstance().workspaceProperty().set(workspace);
-            });
             theme.addListenerAndFire((obs, old, val) -> {
                 ThemeManager.getInstance().setTheme(val);
             });

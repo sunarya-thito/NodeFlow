@@ -1,5 +1,6 @@
 package thito.nodeflow.library.ui;
 
+import com.sun.javafx.css.*;
 import javafx.beans.property.*;
 
 import java.io.*;
@@ -26,7 +27,13 @@ public class ThemeManager {
 
     public ThemeManager() {
         theme.addListener((obs, old, val) -> {
+//            if (old != null) {
+////                StyleManager.getInstance().removeUserAgentStylesheet(
+////                        "rsrc:Themes/"+URLEncoder.encode(old.getName(), StandardCharsets.UTF_8)+"/StyleSheets/"+Skin.class.getName().replace('.', '/')+".css");
+//            }
             updateTheme(val);
+//            StyleManager.getInstance().addUserAgentStylesheet(
+//                    "rsrc:Themes/"+URLEncoder.encode(val.getName(), StandardCharsets.UTF_8)+"/StyleSheets/"+Skin.class.getName().replace('.', '/')+".css");
         });
     }
 
@@ -54,6 +61,10 @@ public class ThemeManager {
             clazz = clazz.getSuperclass();
         }
         return sheet;
+    }
+
+    public ObjectProperty<Theme> themeProperty() {
+        return theme;
     }
 
     public void setTheme(Theme theme) {

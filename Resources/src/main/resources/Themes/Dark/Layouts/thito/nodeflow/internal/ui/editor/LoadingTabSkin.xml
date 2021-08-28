@@ -1,0 +1,10 @@
+<NodeFlow>
+    <Layout>
+        <HBox class="loading-tab-root">
+            <VBox class="loading-tab-container">
+                <Label class="loading-tab-status" id="status">${editor.loading-file}</Label>
+                <ProgressBar class="loading-tab-progress" id="progress"/>
+            </VBox>
+        </HBox>
+    </Layout>
+</NodeFlow>

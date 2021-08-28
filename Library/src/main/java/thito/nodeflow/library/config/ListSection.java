@@ -11,7 +11,8 @@ public class ListSection extends ArrayList<Object> implements Section {
     }
 
     public ListSection(Collection<?> c) {
-        super(c);
+        super();
+        addAll(c);
     }
 
     protected void setParent(Section parent) {
@@ -43,6 +44,37 @@ public class ListSection extends ArrayList<Object> implements Section {
             set(Integer.parseInt(key), value);
         } catch (Throwable t) {
         }
+    }
+
+    @Override
+    public Object set(int index, Object element) {
+        element = Section.wrap(element);
+        return super.set(index, element);
+    }
+
+    @Override
+    public boolean add(Object o) {
+        o = Section.wrap(o);
+        return super.add(o);
+    }
+
+    @Override
+    public void add(int index, Object element) {
+        element = Section.wrap(element);
+        super.add(index, element);
+    }
+
+    @Override
+    public boolean addAll(Collection<?> c) {
+        c.forEach(o -> add(c));
+        return !c.isEmpty();
+    }
+
+    @Override
+    public boolean addAll(int index, Collection<?> c) {
+        List<Object> wrapped = new ArrayList<>();
+        c.forEach(o -> wrapped.add(Section.wrap(o)));
+        return super.addAll(index, wrapped);
     }
 
     @Override

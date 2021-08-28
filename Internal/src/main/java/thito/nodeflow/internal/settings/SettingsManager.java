@@ -5,7 +5,6 @@ import thito.nodeflow.internal.plugin.*;
 import thito.nodeflow.internal.plugin.event.application.*;
 import thito.nodeflow.internal.settings.node.*;
 import thito.nodeflow.internal.settings.parser.*;
-import thito.nodeflow.internal.ui.*;
 import thito.nodeflow.library.config.*;
 import thito.nodeflow.library.language.*;
 import thito.nodeflow.library.ui.*;
@@ -18,7 +17,7 @@ import java.util.logging.*;
 
 public class SettingsManager {
     private static Logger logger = Logger.getLogger("Settings");
-    private List<SettingsCategory> categoryList = new ArrayList<>();
+    private ObservableList<SettingsCategory> categoryList = FXCollections.observableArrayList();
     private Map<Class<?>, SettingsParser<?>> parserMap = new HashMap<>();
     private Map<Class<?>, SettingsNodeFactory<?>> nodeMap = new HashMap<>();
     private Section loaded;
@@ -55,12 +54,20 @@ public class SettingsManager {
     public final void addCategories(Class<? extends Settings>... rootCategories) {
         for (Class<? extends Settings> category : rootCategories) {
             try {
-                SettingsCategory c = scan(null, category);
+                SettingsCategory c = scan(null, null, category);
                 categoryList.add(c);
             } catch (Exception e) {
                 logger.log(Level.WARNING, "Failed to scan category "+category.getName(), e);
             }
         }
+    }
+
+    public ObservableList<SettingsCategory> getCategoryList() {
+        return categoryList;
+    }
+
+    public <T> SettingsNodeFactory<? super T> getNodeFactory(Class<T> clazz) {
+        return (SettingsNodeFactory<? super T>) nodeMap.get(clazz);
     }
 
     public <T> void registerParser(Class<T> clazz, SettingsParser<? extends T> parser) {
@@ -128,21 +135,23 @@ public class SettingsManager {
         }
     }
 
-    private SettingsCategory scan(Settings parentCategory, Class<? extends Settings> settingsClass)
+    private SettingsCategory scan(Settings parentSettings, SettingsCategory parentCategory, Class<? extends Settings> settingsClass)
             throws InvocationTargetException, InstantiationException, IllegalAccessException {
         Constructor<?> constructor = settingsClass.getDeclaredConstructors()[0];
         if (constructor == null) throw new IllegalArgumentException("no default constructor for "+settingsClass.getName());
         constructor.setAccessible(true);
-        Settings settings = (Settings) (parentCategory != null && !Modifier.isStatic(settingsClass.getModifiers()) ?
-                constructor.newInstance(parentCategory) :
+        Settings settings = (Settings) (parentSettings != null && !Modifier.isStatic(settingsClass.getModifiers()) ?
+                constructor.newInstance(parentSettings) :
                 constructor.newInstance());
         SettingsCategory category = new SettingsCategory(settings.description());
+        category.parent = parentCategory;
         Class<?> parent = settingsClass;
         while (Settings.class.isAssignableFrom(parent)) {
             for (Field field : parent.getDeclaredFields()) {
                 field.setAccessible(true);
                 if (SettingsProperty.class.isAssignableFrom(field.getType())) {
                     SettingsProperty<?> item = (SettingsProperty<?>) field.get(settings);
+                    item.category = category;
                     Type rawType = ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0];
                     if (!(rawType instanceof Class<?>)) throw new IllegalArgumentException("invalid SettingsProperty for "+field.toGenericString());
                     for (Annotation annotation : field.getAnnotations()) {
@@ -158,7 +167,7 @@ public class SettingsManager {
         for (Class<?> clazz : settings.getClass().getClasses()) {
             if (Settings.class.isAssignableFrom(clazz)) {
                 try {
-                    SettingsCategory subCategory = scan(settings, clazz.asSubclass(Settings.class));
+                    SettingsCategory subCategory = scan(settings, category, clazz.asSubclass(Settings.class));
                     category.subCategory.add(subCategory);
                 } catch (Exception e) {
                     logger.log(Level.WARNING, "Failed to scan category "+clazz.getName(), e);

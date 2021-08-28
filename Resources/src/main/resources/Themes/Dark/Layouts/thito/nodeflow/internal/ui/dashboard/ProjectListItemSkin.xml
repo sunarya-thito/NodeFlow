@@ -1,0 +1,25 @@
+<NodeFlow>
+    <Layout>
+        <HBox class="project-list-item-root">
+            <VBox HBox.grow="ALWAYS" class="project-identity">
+                <HBox class="project-header">
+                    <Label id="name" labeled.disableOverrun="true"/>
+                    <FlowPane id="tags"/>
+                </HBox>
+                <Label id="description"/>
+            </VBox>
+            <HBox class="project-buttons">
+                <Button id="launch-button" action="project.open"/>
+                <Button id="options-button">
+                    <ContextMenu>
+                        <Item>
+                            <Text></Text>
+                        </Item>
+                        <Item>Change Description</Item>
+                        <Item>Open Folder Location</Item>
+                    </ContextMenu>
+                </Button>
+            </HBox>
+        </HBox>
+    </Layout>
+</NodeFlow>

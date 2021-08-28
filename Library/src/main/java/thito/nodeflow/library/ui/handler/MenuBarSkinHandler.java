@@ -74,7 +74,7 @@ public class MenuBarSkinHandler implements SkinHandler<MenuBar> {
         throw new IllegalArgumentException("invalid component "+tag);
     }
 
-    private static void applyAttributes(MenuItem item, SkinParser parser, Element element) {
+    public static void applyAttributes(MenuItem item, SkinParser parser, Element element) {
         if (element.hasAttr("class")) {
             item.getStyleClass().addAll(element.attr("class").split("\\s+"));
         }

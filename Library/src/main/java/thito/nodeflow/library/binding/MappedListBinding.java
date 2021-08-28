@@ -11,7 +11,7 @@ import java.util.stream.*;
 
 public class MappedListBinding<F, E> implements ListChangeListener<E>, WeakListener {
     public static <F, E> MappedListBinding<F, E> bind(List<F> list1, ObservableList<? extends E> list2, Function<E, F> mapping) {
-        final MappedListBinding<F, E> contentBinding = new MappedListBinding(list1, mapping, list2);
+        final MappedListBinding<F, E> contentBinding = new MappedListBinding<>(list1, mapping, list2);
         if (list1 instanceof ObservableList) {
             ((ObservableList) list1).setAll(list2.stream().map(mapping).collect(Collectors.toList()));
         } else {
@@ -26,8 +26,6 @@ public class MappedListBinding<F, E> implements ListChangeListener<E>, WeakListe
     private final WeakReference<List<F>> listRef;
     private final Function<E, F> mapping;
 
-    private BooleanProperty updating = new SimpleBooleanProperty();
-
     private ObservableList<? extends E> list2;
 
     public MappedListBinding(List<F> list, Function<E, F> mapping, ObservableList<? extends E> list2) {
@@ -40,14 +38,8 @@ public class MappedListBinding<F, E> implements ListChangeListener<E>, WeakListe
         list2.removeListener(this);
     }
 
-    public BooleanProperty updatingProperty() {
-        return updating;
-    }
-
     @Override
     public synchronized void onChanged(Change<? extends E> change) {
-        if (updating.get()) return;
-        updating.set(true);
         final List<F> list = listRef.get();
         if (list == null) {
             change.getList().removeListener(this);
@@ -68,7 +60,6 @@ public class MappedListBinding<F, E> implements ListChangeListener<E>, WeakListe
                 }
             }
         }
-        updating.set(false);
     }
 
     @Override

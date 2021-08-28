@@ -9,8 +9,11 @@ import thito.nodeflow.library.config.*;
 
 import java.io.*;
 import java.util.*;
+import java.util.logging.*;
 
 public class Language {
+    private static final Logger logger = Logger.getLogger(Language.class.getName());
+
     private static ObjectProperty<Language> language = new SimpleObjectProperty<>();
 
     public static ObjectProperty<Language> languageProperty() {
@@ -45,6 +48,11 @@ public class Language {
     }
 
     @Override
+    public String toString() {
+        return getItem("name").getValueSafe();
+    }
+
+    @Override
     public int hashCode() {
         return Objects.hash(code);
     }
@@ -61,12 +69,12 @@ public class Language {
                 load(new MapSection((Map<String, ?>) value), fullKey);
                 return;
             }
+            logger.log(Level.INFO, "Loaded language: "+fullKey);
             items.put(fullKey, new I18n(String.valueOf(value)));
         });
     }
 
     public I18n getItem(String key) {
-        key = key.toLowerCase();
         I18n item = items.get(key);
         if (item != null) return item;
         I18n newItem = new I18n();

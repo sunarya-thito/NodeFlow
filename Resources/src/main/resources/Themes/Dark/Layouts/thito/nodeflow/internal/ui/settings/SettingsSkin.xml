@@ -1,0 +1,37 @@
+<NodeFlow>
+    <Layout>
+        <BorderPane class="settings-root">
+            <Center>
+                <SplitPane class="settings-panel">
+                    <VBox class="settings-navigation" SplitPane.dividerPosition="0.25" SplitPane.resizeWithParent="false">
+                        <TextField id="search">
+                            <PromptText>${search}</PromptText>
+                        </TextField>
+                        <TreeView id="category-view"/>
+                    </VBox>
+                    <VBox class="settings-content">
+                        <HBox id="path"/>
+                        <ScrollPane class="settings-scroller">
+                            <VBox id="content"/>
+                        </ScrollPane>
+                    </VBox>
+                </SplitPane>
+            </Center>
+            <Bottom>
+                <HBox class="settings-buttons">
+                    <Button default="true">
+                        <Label>${ok}</Label>
+                    </Button>
+                    <Button cancel="true">
+                        <Label>${cancel}</Label>
+                    </Button>
+                    <Button>
+                        <Label>
+                            ${apply}
+                        </Label>
+                    </Button>
+                </HBox>
+            </Bottom>
+        </BorderPane>
+    </Layout>
+</NodeFlow>

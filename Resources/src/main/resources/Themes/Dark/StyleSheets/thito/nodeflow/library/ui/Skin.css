@@ -1,0 +1,109 @@
+@font-face {
+    src: url("rsrc:Fonts/AXIS.otf");
+}
+
+@font-face {
+    src: url("rsrc:Fonts/Roboto-Regular.ttf");
+}
+
+@font-face {
+    src: url("rsrc:Fonts/Roboto-Black.ttf");
+}
+
+@font-face {
+    src: url("rsrc:Fonts/Roboto-Bold.ttf");
+}
+
+@font-face {
+    src: url("rsrc:Fonts/Roboto-Medium.ttf");
+}
+
+.scroll-pane {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: rgb(0, 0, 0, 0.5);
+    -fx-background-radius: 6;
+}
+
+.scroll-bar:vertical {
+    -fx-min-width: 12;
+}
+
+.scroll-bar:horizontal {
+    -fx-min-height: 12;
+}
+
+.scroll-bar .increment-button, .scroll-bar .decrement-button {
+    -fx-padding: 0;
+}
+
+.scroll-bar .increment-arrow, .scroll-bar .decrement-arrow {
+    -fx-padding: 0;
+}
+
+.control-button {
+    -fx-background-color: transparent;
+}
+
+.standard-close-button {
+    -fx-graphic: url("rsrc:Themes/Dark/Icons/CloseButton.png");
+}
+
+.standard-close-button:hover {
+    -fx-graphic: url("rsrc:Themes/Dark/Icons/CloseButtonHovered.png");
+}
+
+ResourceExplorerView .cell {
+    -fx-graphic-text-gap: 8;
+}
+
+ResourceExplorerView .cell:empty {
+    -fx-graphic: null;
+}
+
+ResourceExplorerView .file {
+    -fx-graphic: url("rsrc:Themes/Dark/Icons/UnknownFile.png");
+}
+
+ResourceExplorerView .directory {
+    -fx-graphic: url("rsrc:Themes/Dark/Icons/Folder.png");
+}
+
+.context-menu .menu-item {
+    -fx-background-color: transparent;
+    -fx-padding: 6 25;
+}
+
+.context-menu .menu-item:hover, .context-menu .menu:showing {
+    -fx-background-color: rgb(255, 255, 255, 0.1);
+}
+
+.context-menu .menu-item .label {
+    -fx-text-fill: #C3CDDB;
+    -fx-font-size: 13;
+}
+
+.context-menu .menu-item .arrow {
+    -fx-background-color: #C3CDDB;
+}
+
+.context-menu .separator {
+    -fx-padding: 0 10;
+}
+
+.context-menu .separator .line {
+    -fx-box-border: #718096;
+}
+
+.context-menu {
+    -fx-background-color: #313949;
+    -fx-background-radius: 5;
+    -fx-padding: 5 0;
+    -fx-effect: dropshadow(gaussian, rgb(0, 0, 0, 0.3), 15, 0, 0, 2);
+}

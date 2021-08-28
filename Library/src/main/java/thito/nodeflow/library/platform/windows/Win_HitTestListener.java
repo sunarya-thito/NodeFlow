@@ -51,26 +51,37 @@ public class Win_HitTestListener implements WinUser.WindowProc {
             case WM_DESTROY:
                 Win_User32.INSTANCE.SetWindowLongPtr(hWnd, Win_User32.GWLP_WNDPROC, defaultWindowHandler);
                 return new WinDef.LRESULT(0);
+            case Win_User32.WM_NCLBUTTONDOWN:
+            case Win_User32.WM_LBUTTONDOWN:
+                MOUSE_BUTTON = MouseButton.PRIMARY;
+                return Win_User32.INSTANCE.CallWindowProc(defaultWindowHandler, hWnd, i, wParam, lParam);
+            case Win_User32.WM_NCRBUTTONDOWN:
+            case Win_User32.WM_RBUTTONDOWN:
+                MOUSE_BUTTON = MouseButton.SECONDARY;
+                return Win_User32.INSTANCE.CallWindowProc(defaultWindowHandler, hWnd, i, wParam, lParam);
+            case Win_User32.WM_NCMBUTTONDOWN:
+            case Win_User32.WM_MBUTTONDOWN:
+                MOUSE_BUTTON = MouseButton.MIDDLE;
+                return Win_User32.INSTANCE.CallWindowProc(defaultWindowHandler, hWnd, i, wParam, lParam);
+            case Win_User32.WM_LBUTTONUP:
+            case Win_User32.WM_MBUTTONUP:
+            case Win_User32.WM_RBUTTONUP:
+            case Win_User32.WM_NCLBUTTONUP:
+            case Win_User32.WM_NCMBUTTONUP:
+            case Win_User32.WM_NCRBUTTONUP:
+                MOUSE_BUTTON = MouseButton.NONE;
+                return Win_User32.INSTANCE.CallWindowProc(defaultWindowHandler, hWnd, i, wParam, lParam);
             default:
                 return Win_User32.INSTANCE.CallWindowProc(defaultWindowHandler, hWnd, i, wParam, lParam);
         }
     }
 
+    private MouseButton MOUSE_BUTTON = MouseButton.NONE;
     private WinDef.LRESULT handle$WM_NCHITTEST(WinDef.HWND hWnd, int message, WinDef.WPARAM wPara, WinDef.LPARAM lParam) {
-        MouseButton button;
-        if (message == 0x0201) { // WM_LBUTTONDOWN
-            button = MouseButton.PRIMARY;
-        } else if (message == 0x0207) {// WM_MBUTTONDOWN
-            button = MouseButton.MIDDLE;
-        } else if (message == 0x0204) { // WM_RBUTTONDOWN
-            button = MouseButton.SECONDARY;
-        } else {
-            button = MouseButton.NONE;
-        }
         int dword = lParam.intValue();
         int mouseX = (short) (dword);
         int mouseY = (short) (dword >> 16);
-        int result = window.getWindowHitTest().testHit(mouseX, mouseY, button).getValue();
+        int result = window.getWindowHitTest().testHit(mouseX, mouseY, MOUSE_BUTTON).getValue();
 
         return new LRESULT(result);
     }

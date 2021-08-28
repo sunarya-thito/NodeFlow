@@ -69,6 +69,8 @@ public class FileNode extends SettingsNode<File> {
         TextField field = new TextField();
         Button button = new Button();
         button.textProperty().bind(I18n.$("browse"));
+        selectedFile.set(item.get().getAbsoluteFile());
+        field.textProperty().set(item.get().getAbsolutePath());
         field.textProperty().addListener((obs, old, val) -> {
             if (updating) return;
             File file = new File(val).getAbsoluteFile();
@@ -92,6 +94,8 @@ public class FileNode extends SettingsNode<File> {
         });
         box = new HBox(field, button);
         box.getStyleClass().add("settings-file");
+
+        hasChangedPropertyProperty().bind(selectedFile.isNotEqualTo(item));
     }
 
     @Override

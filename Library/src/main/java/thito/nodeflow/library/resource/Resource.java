@@ -3,7 +3,10 @@ package thito.nodeflow.library.resource;
 import javafx.beans.binding.*;
 import javafx.beans.property.*;
 import javafx.collections.*;
+import javafx.collections.transformation.*;
 import javafx.event.*;
+import thito.nodeflow.library.binding.*;
+import thito.nodeflow.library.task.*;
 
 import java.io.*;
 import java.lang.ref.*;
@@ -18,49 +21,52 @@ public class Resource {
     protected ObjectProperty<ResourceType> type = new SimpleObjectProperty<>();
     protected ObservableList<Resource> children = FXCollections.observableArrayList();
     protected LongProperty modifiedDate = new SimpleLongProperty();
-    protected URL url;
+    protected File file;
     protected ResourceManager resourceManager;
+    protected WatchKey watchKey;
 
-    public Resource(ResourceManager resourceManager, String path, boolean internal) {
-        this.resourceManager = resourceManager;
-        try {
-            if (internal) {
-                url = Resource.class.getClassLoader().getResource(path);
+    {
+        type.addListener((obs, old, val) -> {
+            if (val == ResourceType.DIRECTORY) {
+                updateChildren();
+                addToWatchList();
             } else {
-                File file = new File(path);
-                url = file.toURI().toURL();
-                modifiedDate.addListener((obs, old, val) -> {
-                    if (updatingProperties) return;
-                    updatingProperties = true;
-                    if (file.setLastModified(val.longValue())) {
-                        modifiedDate.set(old.longValue());
-                    }
-                    updatingProperties = false;
-                });
+                removeFromWatchList();
             }
-            updateProperties();
-        } catch (Throwable t) {
-            throw new IllegalArgumentException(t);
-        }
+        });
     }
 
     public Resource(ResourceManager resourceManager, File file) {
         this.resourceManager = resourceManager;
-        try {
-            url = file.toURI().toURL();
-            modifiedDate.addListener((obs, old, val) -> {
-                if (updatingProperties) return;
-                updatingProperties = true;
-                if (file.setLastModified(val.longValue())) {
-                    modifiedDate.set(old.longValue());
-                }
-                updatingProperties = false;
-            });
-            updateProperties();
-            scanChildren();
-        } catch (Throwable t) {
-            throw new IllegalArgumentException(t);
+        this.file = file;
+        modifiedDate.addListener((obs, old, val) -> {
+            if (updatingProperties) return;
+            updatingProperties = true;
+            if (file.setLastModified(val.longValue())) {
+                modifiedDate.set(old.longValue());
+            }
+            updatingProperties = false;
+        });
+    }
+
+    protected void updateChildren() {
+        String[] children = file.list();
+        if (children != null) {
+            for (String child : children) {
+                this.children.add(resourceManager.getResource(new File(file, child)));
+            }
         }
+    }
+
+    private void removeFromWatchList() {
+        if (watchKey != null) {
+            watchKey.cancel();
+        }
+    }
+
+    private void addToWatchList() {
+        removeFromWatchList();
+        watchKey = resourceManager.addWatchList(this);
     }
 
     public String getFileName() {
@@ -85,59 +91,47 @@ public class Resource {
         return resourceManager;
     }
 
-    protected void scanChildren() {
-        File file = toFile();
-        File[] list = file.listFiles();
-        if (list != null) {
-            for (File f : list) {
-                Resource resource = new Resource(getResourceManager(), f);
-                children.add(resource);
-                if (resource.getType() == ResourceType.DIRECTORY) {
-                    getResourceManager().addWatchList(resource);
-                }
-            }
-        }
-    }
-
     public File toFile() {
-        return new File(URLDecoder.decode(url.getFile(), StandardCharsets.UTF_8));
+        return file;
     }
 
     public boolean isSameFile(File file) {
-        return toFile().equals(file);
+        return toFile().getAbsolutePath().equals(file.getAbsolutePath());
     }
 
     public URL getURL() {
-        return url;
+        try {
+            return toFile().toURI().toURL();
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     protected boolean updatingProperties;
-    public void updateProperties() {
+    protected synchronized void updateLastModified() {
         if (updatingProperties) return;
         updatingProperties = true;
+        File file = toFile();
+        modifiedDate.set(file.lastModified());
+        updatingProperties = false;
+    }
+    protected synchronized void updateProperties() {
         try {
-            URLConnection connection = url.openConnection();
-            connection.setAllowUserInteraction(true);
-            connection.connect();
-            modifiedDate.set(connection.getLastModified());
             File file = toFile();
-            if (file.isDirectory()) {
+            updateLastModified();
+            if (file.exists() && file.isDirectory()) {
                 type.set(ResourceType.DIRECTORY);
-                size.set(ResourceManager.directorySize(Paths.get(url.toURI())));
-            } else if (file.isFile()) {
+                size.set(ResourceManager.directorySize(toFile().toPath()));
+            } else if (file.exists() && file.isFile()) {
                 type.set(ResourceType.FILE);
-                size.set(connection.getContentLengthLong());
+                size.set(file.length());
             } else {
                 type.set(ResourceType.UNKNOWN);
                 size.set(0);
             }
-            connection.getInputStream().close();
-        } catch (FileNotFoundException e) {
-            type.set(ResourceType.UNKNOWN);
         } catch (Throwable t) {
             t.printStackTrace();
         }
-        updatingProperties = false;
     }
 
     public boolean exists() {
@@ -149,14 +143,7 @@ public class Resource {
     }
 
     public Resource getChild(String path) {
-        String[] paths = path.split("/");
-        Resource current = this;
-        for (int i = 0; i < paths.length; i++) {
-            if (current == null) return resourceManager.toResource(new File(toFile(), path));
-            int finalI = i;
-            current = current.children.stream().filter(x -> x.getFileName().equals(paths[finalI])).findAny().orElse(null);
-        }
-        return current;
+        return getResourceManager().getResource(new File(toFile(), path));
     }
 
     public ObservableList<Resource> getChildren() {
@@ -164,22 +151,23 @@ public class Resource {
     }
 
     public InputStream openInput() throws IOException {
-        URLConnection connection = url.openConnection();
-        return connection.getInputStream();
+        checkThread();
+        return new FileInputStream(toFile());
     }
 
     public OutputStream openOutput() throws IOException {
-        URLConnection connection = url.openConnection();
-        connection.setDoOutput(true);
-        return connection.getOutputStream();
+        checkThread();
+        return new FileOutputStream(toFile());
     }
 
     public Reader openReader() throws IOException {
-        return new InputStreamReader(openInput());
+        checkThread();
+        return new FileReader(toFile());
     }
 
     public Writer openWriter() throws IOException {
-        return new OutputStreamWriter(openOutput());
+        checkThread();
+        return new FileWriter(toFile());
     }
 
     private Map<EventType<?>, LinkedList<EventHandler<?>>> listener = new ConcurrentHashMap<>();
@@ -209,6 +197,7 @@ public class Resource {
     }
 
     public void fireEvent(Event event) {
+        checkThread();
         LinkedList<?> list = listener.get(event.getEventType());
         if (list != null) {
             for (Object o : list) {
@@ -234,18 +223,20 @@ public class Resource {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Resource)) return false;
-        Resource resource = (Resource) o;
-        return url.equals(resource.url);
+        if (!(o instanceof Resource resource)) return false;
+        return Objects.equals(file.getAbsolutePath(), resource.file.getAbsolutePath());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(url);
+        return Objects.hash(file);
     }
 
     public String toString() {
-        return url.toExternalForm();
+        return file.getAbsolutePath();
     }
 
+    private void checkThread() {
+        if (!TaskThread.IO().isInThread()) throw new IllegalStateException("not on IO thread");
+    }
 }

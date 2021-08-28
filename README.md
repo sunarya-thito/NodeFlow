@@ -12,5 +12,7 @@ you can't create an abstract class that is extendable for other class.
   (similar to record feature in the latest java version) that is good enough to provide OOP functionality.
   
 ## Building
+To build this repository, you will need JDK 16 installed on your device.
 * Clone this repo
 * Run `set MAVEN_OPTS=--illegal-access=permit & set NODEFLOW_STOREPASS=<PASSWORD> & mvn clean package`
+* The build will be available at `target` directory

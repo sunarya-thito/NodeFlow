@@ -9,7 +9,7 @@ public class SettingsDescription {
         this.name = name;
     }
 
-    public String getName() {
-        return name.get();
+    public I18n nameProperty() {
+        return name;
     }
 }

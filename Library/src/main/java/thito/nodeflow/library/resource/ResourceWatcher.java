@@ -3,6 +3,7 @@ package thito.nodeflow.library.resource;
 import thito.nodeflow.library.task.*;
 
 import java.io.*;
+import java.lang.ref.*;
 import java.nio.file.*;
 import java.util.*;
 
@@ -16,7 +17,6 @@ public class ResourceWatcher {
 
     private Thread thread;
     private WatchService service;
-    private boolean running;
 
     public ResourceWatcher() {
         try {
@@ -28,14 +28,12 @@ public class ResourceWatcher {
     }
 
     public void open() {
-        if (running) return;
-        running = true;
+        if (thread.isAlive()) return;
         thread.start();
     }
 
     public void close() {
-        if (!running) return;
-        running = false;
+        if (!thread.isAlive()) return;
         thread.interrupt();
     }
 
@@ -44,7 +42,7 @@ public class ResourceWatcher {
     }
 
     private void startWatcher() {
-        while (running) {
+        while (!Thread.currentThread().isInterrupted()) {
             WatchKey key;
             try {
                 key = service.take();
@@ -58,40 +56,37 @@ public class ResourceWatcher {
                 if (kind == StandardWatchEventKinds.OVERFLOW) continue;
 
                 Path path = (Path) event.context();
-                path = ((Path) watchable).resolve(path);
                 File targetFile = path.toFile();
-//                System.out.println("target: "+path+" from "+targetFile+" is "+kind+" list "+activeResourceManagers);
                 for (ResourceManager resourceManager : activeResourceManagers) {
-                    Iterator<Resource> iterator = resourceManager.watchedDirectories.iterator();
-                    while (iterator.hasNext()) {
-                        Resource resource = iterator.next();
-                        if (resource == null) {
-                            iterator.remove();
-                            continue;
-                        }
-                        if (resource.isSameFile(currentFile)) {
-                            if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
-                                Resource res = new Resource(resourceManager, targetFile);
-                                TaskThread.IO().schedule(() -> {
-                                    resource.children.remove(res);
-                                    resource.children.add(res);
-                                    if (res.getType() == ResourceType.DIRECTORY) {
-                                        resourceManager.addWatchList(res);
-                                    }
-                                });
-                            } else if (kind == StandardWatchEventKinds.ENTRY_DELETE) {
-                                TaskThread.IO().schedule(() -> {
-                                    resource.children.removeIf(res -> res.isSameFile(targetFile));
-                                });
-                            } else if (kind == StandardWatchEventKinds.ENTRY_MODIFY) {
-                                for (Resource res : resource.children) {
-                                    if (res.isSameFile(targetFile)) {
-                                        TaskThread.IO().schedule(() -> {
-                                            res.updateProperties();
-                                            res.fireEvent(new ResourceEvent(ResourceEvent.FILE_MODIFIED, res));
-                                        });
-                                        break;
-                                    }
+                    synchronized (resourceManager.watchedResources) {
+                        Iterator<WeakReference<Resource>> iterator = resourceManager.watchedResources.iterator();
+                        while (iterator.hasNext() && !Thread.currentThread().isInterrupted()) {
+                            WeakReference<Resource> weakReference = iterator.next();
+                            Resource resource = weakReference.get();
+                            if (resource == null) {
+                                iterator.remove();
+                                continue;
+                            }
+                            if (resource.isSameFile(currentFile)) {
+                                if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
+                                    TaskThread.IO().schedule(() -> {
+                                        Resource target = resource.getChild(targetFile.getPath());
+                                        resource.children.add(target);
+                                        resource.updateProperties();
+                                    });
+                                } else if (kind == StandardWatchEventKinds.ENTRY_DELETE) {
+                                    TaskThread.IO().schedule(() -> {
+                                        Resource target = resource.getChild(targetFile.getPath());
+                                        resource.children.remove(target);
+                                        resource.updateProperties();
+                                    });
+                                } else if (kind == StandardWatchEventKinds.ENTRY_MODIFY) {
+                                    TaskThread.IO().schedule(() -> {
+                                        Resource target = resource.getChild(targetFile.getPath());
+                                        target.updateProperties();
+                                        target.fireEvent(new ResourceEvent(ResourceEvent.FILE_MODIFIED, target));
+                                        resource.updateProperties();
+                                    });
                                 }
                             }
                         }
@@ -99,7 +94,7 @@ public class ResourceWatcher {
                 }
             }
 
-            if (!key.reset()) {
+            if (!key.reset() || Thread.currentThread().isInterrupted()) {
                 key.cancel();
             }
         }

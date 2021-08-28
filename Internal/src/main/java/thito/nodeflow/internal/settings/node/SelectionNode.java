@@ -31,6 +31,7 @@ public class SelectionNode<T> extends SettingsNode<T> {
         comboBox = new ComboBox<>(selections);
         comboBox.setValue(item.get());
         comboBox.getStyleClass().add("settings-list");
+        hasChangedPropertyProperty().bind(comboBox.valueProperty().isNotEqualTo(item));
     }
 
     @Override

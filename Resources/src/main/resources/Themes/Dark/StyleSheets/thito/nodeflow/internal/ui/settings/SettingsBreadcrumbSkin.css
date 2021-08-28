@@ -1,0 +1,8 @@
+#breadcrumb-label {
+    -fx-content-display: right;
+    -fx-graphic: url("rsrc:Themes/Dark/Icons/BreadcrumbSeparator.png");
+}
+
+#breadcrumb-label:last .image-view {
+    -fx-opacity: 0;
+}

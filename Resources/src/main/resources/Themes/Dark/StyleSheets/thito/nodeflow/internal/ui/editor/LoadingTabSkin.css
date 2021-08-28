@@ -1,0 +1,30 @@
+.loading-tab-root {
+    -fx-alignment: center;
+}
+
+.loading-tab-container {
+    -fx-alignment: center;
+    -fx-spacing: 10;
+}
+
+.loading-tab-status {
+    -fx-font-family: Roboto;
+    -fx-font-size: 20;
+    -fx-text-fill: white;
+}
+
+.loading-tab-progress {
+    -fx-pref-height: 3;
+    -fx-pref-width: 350;
+}
+
+.loading-tab-progress .track {
+    -fx-background-color: rgb(255, 255, 255, 0.1);
+    -fx-background-radius: 0;
+}
+
+.loading-tab-progress .bar {
+    -fx-background-color: white;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+}

@@ -2,6 +2,7 @@ package thito.nodeflow.library.task.thread;
 
 import javafx.animation.*;
 import javafx.application.*;
+import javafx.beans.property.*;
 import javafx.util.*;
 import thito.nodeflow.library.task.*;
 
@@ -9,6 +10,23 @@ import java.util.concurrent.atomic.*;
 import java.util.logging.*;
 
 public class FXTaskThread implements TaskThread {
+
+    private LongProperty timeInMillis = new SimpleLongProperty();
+
+    public FXTaskThread() {
+        schedule(() -> {
+            Thread.currentThread().setName("UI");
+        });
+        schedule(() -> {
+            timeInMillis.set(System.currentTimeMillis());
+        }, Duration.millis(1), Duration.millis(1));
+    }
+
+    @Override
+    public String getThreadName() {
+        return "UI";
+    }
+
     @Override
     public ScheduledTask schedule(Runnable runnable) {
         AtomicReference<TaskState> state = new AtomicReference<>(TaskState.IDLE);
@@ -37,6 +55,11 @@ public class FXTaskThread implements TaskThread {
                 return state.get();
             }
         };
+    }
+
+    @Override
+    public LongProperty timeInMillisProperty() {
+        return timeInMillis;
     }
 
     @Override

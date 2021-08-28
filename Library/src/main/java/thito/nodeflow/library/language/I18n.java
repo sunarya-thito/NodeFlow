@@ -7,6 +7,7 @@ import javafx.beans.value.*;
 
 import java.util.*;
 import java.util.function.*;
+import java.util.logging.*;
 
 public class I18n extends SimpleStringProperty {
 
@@ -26,11 +27,23 @@ public class I18n extends SimpleStringProperty {
     }
 
     public I18n format(Object...args) {
+        if (args.length == 0) return this;
         I18n text = new I18n();
         List<Observable> observables = new ArrayList<>(args.length + 1);
-        Arrays.stream(args).filter(x -> x instanceof Observable).map(Observable.class::cast).forEach(observables::add);
         observables.add(this);
-        text.bind(Bindings.createStringBinding(this::get, observables.toArray(new Observable[0])));
+        for (int i = 0; i < args.length; i++) {
+            if (args[i] instanceof Observable) {
+                observables.add((Observable) args[i]);
+                if (args[i] instanceof ObservableValue) {
+                    args[i] = ((ObservableValue<?>) args[i]).getValue();
+                }
+            }
+        }
+        text.bind(Bindings.createStringBinding(() -> {
+            String format = get();
+            if (format == null) return null;
+            return String.format(format, args);
+        }, observables.toArray(new Observable[0])));
         return text;
     }
 

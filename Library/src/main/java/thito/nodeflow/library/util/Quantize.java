@@ -354,7 +354,9 @@ public class Quantize {
             int pixels[][] = this.pixels;
 
             int width = pixels.length;
+            if (width == 0) return;
             int height = pixels[0].length;
+            if (height == 0) return;
 
             // convert to indexed color
             for (int x = width; x-- > 0; ) {

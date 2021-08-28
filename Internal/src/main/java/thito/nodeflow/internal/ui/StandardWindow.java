@@ -8,10 +8,20 @@ import javafx.scene.layout.*;
 import thito.nodeflow.library.ui.*;
 
 public class StandardWindow extends Window implements WindowHitTest {
-    private BorderPane content = new BorderPane();
+    private BorderPane content;
 
     public ObjectProperty<Node> contentProperty() {
         return content.centerProperty();
+    }
+
+    @Override
+    protected void initializeWindow() {
+        super.initializeWindow();
+        content = new BorderPane();
+    }
+
+    protected BorderPane getContent() {
+        return content;
     }
 
     @Override

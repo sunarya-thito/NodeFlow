@@ -1,5 +1,6 @@
 package thito.nodeflow.library.task.thread;
 
+import javafx.beans.property.*;
 import javafx.util.*;
 import thito.nodeflow.library.task.*;
 
@@ -11,9 +12,23 @@ public class PoolTaskThread implements TaskThread {
     private String name;
     private Thread thread;
     private ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor(r -> thread = new Thread(r, name));
+    private LongProperty timeInMillis = new SimpleLongProperty();
 
     public PoolTaskThread(String name) {
         this.name = name;
+        schedule(() -> {
+            timeInMillisProperty().set(System.currentTimeMillis());
+        }, Duration.millis(1), Duration.millis(1));
+    }
+
+    @Override
+    public String getThreadName() {
+        return name;
+    }
+
+    @Override
+    public LongProperty timeInMillisProperty() {
+        return timeInMillis;
     }
 
     public String getName() {

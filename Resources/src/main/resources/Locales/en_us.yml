@@ -1,0 +1,91 @@
+name: English (US)
+loading: Loading
+dashboard:
+  title: Dashboard
+  changelogs: CHANGE LOGS
+  projects: PROJECTS
+  about: ABOUT
+  changelogs-title: What's New?
+search: Search
+browse: Browse
+open-directory: Select Directory
+open-file: Select File
+ok: Ok
+cancel: Cancel
+apply: Apply
+file-size:
+  B: "%sB"
+  kB: "%skB"
+  mB: "%smB"
+  gB: "%sgB"
+time-since:
+  secondly: "%s SECS AGO"
+  minutely: "%s MINS AGO"
+  hourly: "%sH AGO"
+  yesterday: "YESTERDAY"
+  daily: "%sD AGO"
+  monthly: "%sM AGO"
+module:
+  unknown:
+    name: Unknown File
+settings:
+  title: Settings
+  general:
+    name: General
+    items:
+      action-buffer: Action buffer
+      max-opened-tabs: Max Opened Tabs
+      workspace-directory: Workspace Directory
+    sub:
+      appearance:
+        name: Appearance
+        items:
+          theme: Theme
+          language: Language
+          show-dashboard-at-start: Show Dashboard at start
+editor:
+  title: NodeFlow - %s
+  title-no-project: NodeFlow
+  loading-file: Loading File
+  navigation:
+    project-files: Project
+    module-structure: Structure
+    plugin-options: Facets
+  file: File
+  edit: Edit
+  view: View
+  help: Help
+  copy-stacktrace: Copy Error Message
+  error:
+    open-file: UNABLE TO OPEN THE FILE
+    unknown-file: UNKNOWN FILE
+    unknown-file-info: |-
+      We do not know how to open this file type. Perhaps you forgot to install required plugins for this file type?
+  menu-file:
+    new: New
+    import: Import
+    export: Export
+    close-project: Close Project
+    dashboard: Dashboard
+    settings: Settings
+    exit: Exit
+  menu-edit:
+    undo: Undo
+    redo: Redo
+    cut: Cut
+    copy: Copy
+    paste: Paste
+    delete: Delete
+    find: Find
+    replace: Replace
+    select-all: Select All
+  menu-view:
+    zoom-in: Zoom In
+    zoom-out: Zoom Out
+    zoom-fit: Zoom Fit
+    zoom-selected: Zoom to Fit Selection
+  menu-help:
+    discord: Discord
+    github: Github
+    donate: Donate
+    report-issue: Report Issue

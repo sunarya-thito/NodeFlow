@@ -4,17 +4,15 @@ import javafx.scene.control.*;
 import org.jsoup.nodes.*;
 import thito.nodeflow.library.ui.*;
 
-import java.util.*;
-
 public class ControlSkinHandler implements SkinHandler<Control> {
     @Override
     public void parse(SkinParser parser, Control node, Element element) {
         Element contextMenu = element.selectFirst("> contextmenu");
         if (contextMenu != null) {
-            Menu menu = (Menu) MenuBarSkinHandler.createMenuItem(parser, contextMenu);
             ContextMenu m = new ContextMenu();
-            List<MenuItem> items = new ArrayList<>(menu.getItems());
-            menu.getItems().clear(); m.getItems().addAll(items);
+            for (Element child : contextMenu.children()) {
+                m.getItems().add(MenuBarSkinHandler.createMenuItem(parser, child));
+            }
             node.setContextMenu(m);
         }
     }

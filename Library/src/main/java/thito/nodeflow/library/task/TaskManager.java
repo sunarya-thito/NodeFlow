@@ -26,8 +26,8 @@ public class TaskManager {
     }
 
     public TaskManager() {
-        IOThread = new PoolTaskThread("I/O");
-        backgroundThread = new PoolTaskThread("Background");
+        IOThread = new PoolTaskThread("IO");
+        backgroundThread = new PoolTaskThread("BG");
         UIThread = new FXTaskThread();
         instance = this;
     }

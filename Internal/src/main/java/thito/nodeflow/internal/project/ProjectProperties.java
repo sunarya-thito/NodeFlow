@@ -1,7 +1,13 @@
 package thito.nodeflow.internal.project;
 
+import javafx.beans.*;
+import javafx.beans.property.*;
+import javafx.collections.*;
+import thito.nodeflow.internal.*;
+import thito.nodeflow.internal.ui.editor.*;
 import thito.nodeflow.library.config.*;
 import thito.nodeflow.library.resource.*;
+import thito.nodeflow.library.task.*;
 
 import java.io.*;
 import java.util.*;
@@ -12,15 +18,84 @@ public class ProjectProperties {
         return directory.getChild("project.yml").exists();
     }
 
+    private Workspace workspace;
     private Resource directory;
+    private StringProperty name = new SimpleStringProperty();
+    private LongProperty lastModified = new SimpleLongProperty(System.currentTimeMillis());
+    private StringProperty description = new SimpleStringProperty();
+    private ObservableList<String> tags = FXCollections.observableArrayList();
+    private ObjectProperty<Project> loadedProject = new SimpleObjectProperty<>();
+
     private Section config;
 
-    public ProjectProperties(Resource directory) throws IOException {
+    public ProjectProperties(Workspace workspace, Resource directory, Section config) {
+        this.workspace = workspace;
+        this.config = config;
         this.directory = directory;
-        try (Reader reader = directory.getChild("project.yml").openReader()) {
-            config = Section.parseToMap(reader);
-        }
+        name.set(config.getString("name").orElseThrow(() -> new NullPointerException("name")));
+        description.set(config.getString("description").orElse(""));
+        lastModified.set(config.getLong("last-modified").orElse(System.currentTimeMillis()));
+        tags.setAll(config.getList("tags").stream().map(String::valueOf).collect(Collectors.toList()));
+        name.addListener(obs -> save());
+        description.addListener(obs -> save());
+        lastModified.addListener(obs -> save());
+        tags.addListener((InvalidationListener) obs -> save());
         validate();
+    }
+
+    public Project openProject() {
+        TaskThread.BACKGROUND().checkThread();
+        Project oldProject = loadedProject.get();
+        Editor oldEditor = null;
+        if (oldProject != null) {
+            oldEditor = oldProject.editorProperty().get();
+            if (oldEditor != null) {
+                if (oldEditor.projectProperty().get() == oldProject) {
+                    oldEditor.projectProperty().set(null);
+                }
+            }
+        }
+        Project project = new Project(getWorkspace(), this);
+        loadedProject.set(project);
+        if (oldEditor != null && oldEditor.projectProperty().get() == null) {
+            oldEditor.projectProperty().set(project);
+            Editor finalOldEditor = oldEditor;
+            TaskThread.UI().schedule(() -> {
+                finalOldEditor.getEditorWindow().getStage().toFront();
+            });
+        } else {
+            for (Editor editor : NodeFlow.getInstance().getActiveEditors()) {
+                if (editor.projectProperty().get() == null) {
+                    editor.projectProperty().set(project);
+                    return project;
+                }
+            }
+            TaskThread.UI().schedule(() -> {
+                Editor editor = NodeFlow.getInstance().createNewEditor();
+                editor.projectProperty().set(project);
+            });
+        }
+        return project;
+    }
+
+    public ObjectProperty<Project> loadedProjectProperty() {
+        return loadedProject;
+    }
+
+    public Workspace getWorkspace() {
+        return workspace;
+    }
+
+    public StringProperty nameProperty() {
+        return name;
+    }
+
+    public LongProperty lastModifiedProperty() {
+        return lastModified;
+    }
+
+    public StringProperty descriptionProperty() {
+        return description;
     }
 
     public Resource getDirectory() {
@@ -32,48 +107,46 @@ public class ProjectProperties {
     }
 
     public long getLastModified() {
-        return config.getLong("last-modified").orElse(System.currentTimeMillis());
+        return lastModified.get();
     }
 
     public void setLastModified(long lastModified) {
-        config.set("last-modified", lastModified);
-        save();
+        this.lastModified.set(lastModified);
     }
 
     public String getName() {
-        return config.getString("name").orElseThrow();
+        return name.get();
     }
 
     public void setName(String name) {
-        config.set("name", name);
-        save();
+        this.name.set(name);
     }
 
     public String getDescription() {
-        return config.getString("description").orElse(null);
+        return description.get();
     }
 
     public void setDescription(String description) {
-        config.set("description", description);
-        save();
+        this.description.set(description);
     }
 
-    public List<String> getTags() {
-        return config.getList("tags").orElse(new ListSection()).stream().map(String::valueOf).collect(Collectors.toList());
-    }
-
-    public void setTags(List<String> tags) {
-        config.set("tags", tags);
-        save();
+    public ObservableList<String> getTags() {
+        return tags;
     }
 
     void save() {
         directory.toFile().mkdirs();
-        try (Writer writer = directory.getChild("project.yml").openWriter()) {
-            writer.write(Section.toString(config));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        config.set("name", getName());
+        config.set("description", getDescription());
+        config.set("last-modified", getLastModified());
+        config.set("tags", getTags());
+        TaskThread.IO().schedule(() -> {
+            try (Writer writer = directory.getChild("project.yml").openWriter()) {
+                writer.write(Section.toString(config));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     void validate() {

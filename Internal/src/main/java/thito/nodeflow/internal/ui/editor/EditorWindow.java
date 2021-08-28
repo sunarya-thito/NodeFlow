@@ -4,6 +4,7 @@ import javafx.beans.binding.*;
 import javafx.geometry.*;
 import javafx.scene.*;
 import javafx.scene.input.*;
+import thito.nodeflow.internal.*;
 import thito.nodeflow.internal.ui.dashboard.*;
 import thito.nodeflow.library.binding.*;
 import thito.nodeflow.library.language.*;
@@ -21,6 +22,13 @@ public class EditorWindow extends Window implements WindowHitTest {
     @Override
     protected void initializeWindow() {
         super.initializeWindow();
+        getStage().showingProperty().addListener((obs, old, val) -> {
+            if (val) {
+                NodeFlow.getInstance().getActiveEditors().add(editor);
+            } else {
+                NodeFlow.getInstance().getActiveEditors().remove(editor);
+            }
+        });
         getStage().focusedProperty().addListener((obs, old, val) -> {
             DashboardWindow.getWindow().getStage().toFront();
         });
@@ -32,7 +40,7 @@ public class EditorWindow extends Window implements WindowHitTest {
 
     @Override
     protected Skin createSkin() {
-        return new EditorSkin();
+        return new EditorSkin(this);
     }
 
     @Override
@@ -55,6 +63,9 @@ public class EditorWindow extends Window implements WindowHitTest {
                 if (corner == Corner.CENTER) {
                     Point2D captionLocal = skin.caption.screenToLocal(screenX, screenY);
                     if (skin.caption.contains(captionLocal)) {
+                        if (button == MouseButton.MIDDLE) {
+                            return HitTestAction.MAXIMIZE_BUTTON;
+                        }
                         for (Node child : skin.caption.getChildren()) {
                             if (child.contains(child.parentToLocal(captionLocal))) {
                                 return HitTestAction.CLIENT;

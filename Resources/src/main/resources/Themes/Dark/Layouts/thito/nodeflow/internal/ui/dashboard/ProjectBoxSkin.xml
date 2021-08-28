@@ -1,0 +1,32 @@
+<NodeFlow>
+    <Components>
+        <ImagePane>thito.nodeflow.library.ui.ImagePane</ImagePane>
+    </Components>
+    <Layout>
+        <VBox class="project-box-root">
+            <StackPane id="project-icon-area" action="project.open">
+                <ImagePane id="project-icon"/>
+                <BorderPane id="project-icon-overlay">
+                    <Center>
+                        <ImageView>rsrc:Themes/Dark/Icons/PlayButton.png</ImageView>
+                    </Center>
+                </BorderPane>
+            </StackPane>
+            <VBox class="project-box-content">
+                <BorderPane class="project-identity">
+                    <Center>
+                        <Label BorderPane.alignment="CENTER_LEFT" id="project-name"/>
+                    </Center>
+                    <Right>
+                        <Button id="options"/>
+                    </Right>
+                </BorderPane>
+                <FlowPane id="tags"/>
+                <Label VBox.grow="ALWAYS" id="description"/>
+                <HBox class="project-box-footer">
+                    <Label id="size"/>
+                </HBox>
+            </VBox>
+        </VBox>
+    </Layout>
+</NodeFlow>

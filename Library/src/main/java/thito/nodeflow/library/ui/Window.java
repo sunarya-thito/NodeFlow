@@ -12,7 +12,9 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.*;
 import javafx.stage.*;
 import thito.nodeflow.library.application.*;
+import thito.nodeflow.library.binding.*;
 import thito.nodeflow.library.platform.*;
+import thito.nodeflow.library.task.*;
 
 public abstract class Window {
     public static final PseudoClass MAXIMIZED = PseudoClass.getPseudoClass("maximized");
@@ -21,6 +23,7 @@ public abstract class Window {
     private ObjectProperty<Skin> skin = new SimpleObjectProperty<>();
     private LayoutDebugger debugger;
     private StackPane root;
+    private StringProperty title = new SimpleStringProperty();
 
     public Window() {
         initializeWindow();
@@ -30,7 +33,7 @@ public abstract class Window {
     protected abstract WindowHitTest createHitTest();
 
     protected StringProperty titleProperty() {
-        return getStage().titleProperty();
+        return title;
     }
 
     protected void initializeWindow() {
@@ -79,6 +82,8 @@ public abstract class Window {
             stage.setMinWidth(root.minWidth(root.getHeight()));
             stage.setMinHeight(root.minHeight(root.getWidth()));
         });
+
+        ThreadBinding.bind(stage.titleProperty(), titleProperty(), TaskThread.UI());
     }
 
     public StackPane getRoot() {

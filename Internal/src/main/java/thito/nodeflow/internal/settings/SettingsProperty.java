@@ -11,6 +11,7 @@ public class SettingsProperty<T> extends SimpleObjectProperty<T> {
     Class<T> type;
     String fieldName;
     Map<Class<? extends Annotation>, Annotation> annotationMap = new HashMap<>();
+    SettingsCategory category;
     private T defaultValue;
     private I18n name;
 
@@ -27,6 +28,10 @@ public class SettingsProperty<T> extends SimpleObjectProperty<T> {
         this.name = displayName;
     }
 
+    public SettingsCategory getCategory() {
+        return category;
+    }
+
     public T getDefaultValue() {
         return defaultValue;
     }
@@ -40,8 +45,8 @@ public class SettingsProperty<T> extends SimpleObjectProperty<T> {
         return fieldName;
     }
 
-    public String getDisplayName() {
-        return name.get();
+    public I18n displayNameProperty() {
+        return name;
     }
 
     public Class<T> getType() {

@@ -1,0 +1,52 @@
+.vertical-container {
+    -fx-alignment: center;
+    -fx-padding: 25;
+}
+
+.container {
+    -fx-alignment: center;
+    -fx-spacing: 50;
+    -fx-padding: 25;
+}
+
+.danger-icon {
+    -fx-image: url("rsrc:Themes/Dark/Icons/Danger.png");
+}
+
+.info {
+    -fx-spacing: 15;
+}
+
+#title {
+    -fx-font-family: Roboto;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-font-size: 20;
+}
+
+#description {
+    -fx-font-family: Roboto;
+    -fx-text-fill: white;
+    -fx-font-size: 13;
+    -fx-wrap-text: true;
+}
+
+.buttons {
+    -fx-spacing: 10;
+}
+
+.buttons .button {
+    -fx-padding: 10 20;
+    -fx-font-family: Roboto;
+    -fx-text-size: 15;
+    -fx-text-fill: white;
+    -fx-background-color: rgb(0, 0, 0, 0.3);
+}
+
+.buttons .button:hover {
+    -fx-background-color: rgb(255, 255, 255, 0.2);
+}
+
+.buttons .button:pressed {
+    -fx-background-color: rgb(0, 0, 0, 0.5);
+}

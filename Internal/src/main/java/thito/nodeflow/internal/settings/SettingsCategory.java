@@ -1,25 +1,30 @@
 package thito.nodeflow.internal.settings;
 
-import java.util.*;
+import javafx.collections.*;
 
 public class SettingsCategory {
     private SettingsDescription description;
-    List<SettingsProperty<?>> settingsPropertyList = new ArrayList<>();
-    List<SettingsCategory> subCategory = new ArrayList<>();
+    SettingsCategory parent;
+    ObservableList<SettingsProperty<?>> settingsPropertyList = FXCollections.observableArrayList();
+    ObservableList<SettingsCategory> subCategory = FXCollections.observableArrayList();
 
     public SettingsCategory(SettingsDescription description) {
         this.description = description;
+    }
+
+    public SettingsCategory getParent() {
+        return parent;
     }
 
     public SettingsDescription getDescription() {
         return description;
     }
 
-    public List<SettingsCategory> getSubCategory() {
-        return Collections.unmodifiableList(subCategory);
+    public ObservableList<SettingsCategory> getSubCategory() {
+        return subCategory;
     }
 
-    public List<SettingsProperty<?>> getSettingsPropertyList() {
-        return Collections.unmodifiableList(settingsPropertyList);
+    public ObservableList<SettingsProperty<?>> getSettingsPropertyList() {
+        return settingsPropertyList;
     }
 }

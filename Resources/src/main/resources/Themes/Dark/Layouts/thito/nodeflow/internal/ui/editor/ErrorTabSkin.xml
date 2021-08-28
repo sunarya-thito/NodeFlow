@@ -1,0 +1,18 @@
+<NodeFlow>
+    <Layout>
+        <VBox class="vertical-container">
+            <HBox class="container">
+                <ImageView class="danger-icon"/>
+                <VBox class="info">
+                    <Label id="title">${editor.error.open-file}</Label>
+                    <Label id="description"/>
+                    <HBox class="buttons">
+                        <Button action="copy-stacktrace">
+                            <Label>${editor.copy-stacktrace}</Label>
+                        </Button>
+                    </HBox>
+                </VBox>
+            </HBox>
+        </VBox>
+    </Layout>
+</NodeFlow>

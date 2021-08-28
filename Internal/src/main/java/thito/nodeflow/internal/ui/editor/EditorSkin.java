@@ -1,15 +1,20 @@
 package thito.nodeflow.internal.ui.editor;
 
 import javafx.application.*;
+import javafx.beans.*;
+import javafx.beans.binding.*;
+import javafx.collections.*;
 import javafx.event.*;
 import javafx.geometry.*;
 import javafx.scene.control.*;
 import javafx.scene.image.*;
 import javafx.scene.layout.*;
-import thito.nodeflow.internal.settings.*;
-import thito.nodeflow.internal.settings.general.*;
+import thito.nodeflow.internal.project.*;
 import thito.nodeflow.internal.ui.dashboard.*;
+import thito.nodeflow.internal.ui.settings.*;
+import thito.nodeflow.library.binding.*;
 import thito.nodeflow.library.language.*;
+import thito.nodeflow.library.task.*;
 import thito.nodeflow.library.ui.Skin;
 import thito.nodeflow.library.ui.*;
 import thito.nodeflow.library.ui.handler.*;
@@ -17,6 +22,12 @@ import thito.nodeflow.library.ui.handler.*;
 import java.util.*;
 
 public class EditorSkin extends Skin {
+
+    @Component("file-menu")
+    Menu fileMenu;
+
+    @Component("maximize-button")
+    Button maximizeButton;
 
     @Component("editor-root")
     BorderPane root;
@@ -42,19 +53,28 @@ public class EditorSkin extends Skin {
     @Component("nav-panel")
     BorderPane navPanel;
 
+    @Component("file-tabs")
+    TabPane fileTabs;
+
     private SearchPopup searchPopup;
     private int menuIndex;
     private int navPanelIndex;
     private double navPanelDividerPosition;
+    private EditorWindow editorWindow;
+
+    public EditorSkin(EditorWindow editorWindow) {
+        this.editorWindow = editorWindow;
+    }
 
     @Override
     protected void initializeSkin() {
         super.initializeSkin();
         registerActionHandler("window.openSettings", ActionEvent.ACTION, event -> {
+            SettingsWindow.open();
         });
         registerActionHandler("window.openDashboard", ActionEvent.ACTION, event -> DashboardWindow.getWindow().show());
         registerActionHandler("editor.navigation.file", ActionEvent.ACTION, event -> {
-            navPanel.setCenter(new EditorFilePanelSkin());
+            navPanel.setCenter(new EditorFilePanelSkin(this));
         });
         ToggleGroup navigation = ToggleButtonSkinHandler.getGroup("navigation-editor");
         navigation.selectedToggleProperty().addListener((obs, old, val) -> {
@@ -97,6 +117,47 @@ public class EditorSkin extends Skin {
         getScene().getWindow().heightProperty().addListener(obs -> updateSearchPopupPosition());
         updateSearchPopupPosition();
 
+        editorWindow.getEditor().getOpenedFiles().addListener(new ListChangeListener<FileTab>() {
+            @Override
+            public void onChanged(Change<? extends FileTab> change) {
+                while (change.next()) {
+                    if (change.wasRemoved()) {
+                        for (FileTab t : change.getRemoved()) {
+                            fileTabs.getTabs().remove(t.getTab());
+                        }
+                    }
+                    if (change.wasAdded()) {
+                        for (FileTab t : change.getAddedSubList()) {
+                            fileTabs.getTabs().add(t.getTab());
+                        }
+                    }
+                }
+            }
+        });
+        fileTabs.getTabs().addListener((InvalidationListener) obs -> {
+            for (Tab tab : fileTabs.getTabs()) {
+                FileTab fileTab = (FileTab) tab.getProperties().get(FileTab.class);
+                if (fileTab != null) {
+                    fileTab.updateName();
+                }
+            }
+        });
+
+        editorWindow.getEditor().projectProperty().addListener((obs, old, val) -> {
+            if (val == null) {
+                ThreadBinding.bind(fileMenu.textProperty(), I18n.$("editor.file"), TaskThread.UI());
+            } else {
+                ThreadBinding.bind(fileMenu.textProperty(), val.getProperties().nameProperty(), TaskThread.UI());
+            }
+        });
+
+        Project project = editorWindow.getEditor().projectProperty().get();
+        if (project == null) {
+            ThreadBinding.bind(fileMenu.textProperty(), I18n.$("editor.file"), TaskThread.UI());
+        } else {
+            ThreadBinding.bind(fileMenu.textProperty(), project.getProperties().nameProperty(), TaskThread.UI());
+        }
+
         searchField.focusedProperty().addListener((obs, old, val) -> {
             if (val) {
                 if (!searchPopup.isShowing()) {
@@ -107,6 +168,10 @@ public class EditorSkin extends Skin {
                 searchPopup.hide();
             }
         });
+    }
+
+    public EditorWindow getEditorWindow() {
+        return editorWindow;
     }
 
     void updateSearchPopupPosition() {

@@ -9,7 +9,7 @@ public class StandardWindowSkin extends Skin {
     @Component("caption")
     Pane caption;
     @Component("root")
-    Pane root;
+    BorderPane root;
     @Component("window-title")
     Labeled title;
 
@@ -22,5 +22,6 @@ public class StandardWindowSkin extends Skin {
     @Override
     protected void onLayoutLoaded() {
         title.textProperty().bind(window.getStage().titleProperty());
+        root.centerProperty().set(window.getContent());
     }
 }

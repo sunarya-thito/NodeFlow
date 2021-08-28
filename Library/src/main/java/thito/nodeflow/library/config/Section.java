@@ -6,6 +6,17 @@ import java.io.*;
 import java.util.*;
 
 public interface Section {
+    static Object wrap(Object o) {
+        if (!(o instanceof Section)) {
+            if (o instanceof List) {
+                return new ListSection((List) o);
+            }
+            if (o instanceof Map) {
+                return new MapSection((Map) o);
+            }
+        }
+        return o;
+    }
     static String toString(Section section) {
         DumperOptions options = new DumperOptions();
         options.setIndent(4);
@@ -142,6 +153,7 @@ public interface Section {
     default Optional<MapSection> getMap(String path) {
         return getObject(path).map(o -> {
             if (o instanceof Map) {
+                if (o instanceof MapSection) return (MapSection) o;
                 MapSection mapSection = new MapSection((Map<String, ?>) o);
                 mapSection.setParent(this);
                 return mapSection;
@@ -152,6 +164,9 @@ public interface Section {
     default Optional<ListSection> getList(String path) {
         return getObject(path).map(o -> {
             if (o instanceof List) {
+                if (o instanceof ListSection) {
+                    return (ListSection) o;
+                }
                 ListSection list = new ListSection((List<?>) o);
                 list.setParent(this);
                 return list;

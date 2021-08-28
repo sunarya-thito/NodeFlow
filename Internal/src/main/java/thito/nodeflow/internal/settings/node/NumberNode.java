@@ -33,6 +33,7 @@ public class NumberNode extends SettingsNode<Number> {
                     maxValue == null ? Integer.MAX_VALUE : Math.min(maxValue.intValue(), maxValue(item.getType()).intValue())));
             spinner.getValueFactory().setValue(getItem().get().intValue());
         }
+        value.set(numberReBoxing((Number) spinner.getValue(), item.getType()));
         value.addListener((obs, old, val) -> {
             if (updating) return;
             updating = true;
@@ -50,6 +51,7 @@ public class NumberNode extends SettingsNode<Number> {
             updating = false;
         });
         spinner.getStyleClass().add("settings-number");
+        hasChangedPropertyProperty().bind(value.isNotEqualTo(item));
     }
 
     @Override

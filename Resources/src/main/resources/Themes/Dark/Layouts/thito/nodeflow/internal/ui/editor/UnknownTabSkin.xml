@@ -1,0 +1,13 @@
+<NodeFlow>
+    <Layout>
+        <VBox class="vertical-container">
+            <HBox class="container">
+                <ImageView class="unknown-icon"/>
+                <VBox class="info">
+                    <Label id="title">${editor.error.unknown-file}</Label>
+                    <Label id="description">${editor.error.unknown-file-info}</Label>
+                </VBox>
+            </HBox>
+        </VBox>
+    </Layout>
+</NodeFlow>

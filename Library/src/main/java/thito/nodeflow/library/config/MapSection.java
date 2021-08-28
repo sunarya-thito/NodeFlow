@@ -10,7 +10,8 @@ public class MapSection extends HashMap<String, Object> implements Section {
     }
 
     public MapSection(Map<? extends String, ?> m) {
-        super(m);
+        super();
+        putAll(m);
     }
 
     protected void setParent(Section parent) {
@@ -25,6 +26,17 @@ public class MapSection extends HashMap<String, Object> implements Section {
     @Override
     public void setInScope(String key, Object value) {
         put(key, value);
+    }
+
+    @Override
+    public Object put(String key, Object value) {
+        value = Section.wrap(value);
+        return super.put(key, value);
+    }
+
+    @Override
+    public void putAll(Map<? extends String, ?> m) {
+        m.forEach((key, value) -> put(key, value));
     }
 
     @Override

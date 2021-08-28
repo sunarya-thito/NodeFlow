@@ -1,0 +1,22 @@
+<NodeFlow>
+    <Layout>
+        <BorderPane class="standard-window" id="root">
+            <Top>
+                <AnchorPane class="standard-window-header" id="caption">
+                    <HBox AnchorPane.top="0"
+                          AnchorPane.right="0"
+                          AnchorPane.bottom="0"
+                          AnchorPane.left="0"
+                          class="caption-container">
+                        <Label id="window-title">Test</Label>
+                    </HBox>
+                    <HBox AnchorPane.top="0"
+                          AnchorPane.right="0"
+                          AnchorPane.bottom="0" class="control-container not-caption">
+                        <Button class="control-button" action="window.close" id="close-button"></Button>
+                    </HBox>
+                </AnchorPane>
+            </Top>
+        </BorderPane>
+    </Layout>
+</NodeFlow>
