@@ -51,5 +51,5 @@ jobs:
           destination-github-username: sunarya-thito
           destination-repository-name: NodeFlow
           target-branch: deploy
-          commit-message: 'Update from main repository'
+          commit-message: 'Update from https://github.com/sunarya-thito/NodeFlowSoftware/commit/${{ env.GITHUB_SHA }}'
           user-email: septogeddon@gmail.com
