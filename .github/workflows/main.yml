@@ -33,14 +33,15 @@ jobs:
       - name: Set outputs
         id: vars
         run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
-      - name: Change Version
-        run: mvn versions:set -DgenerateBackupPoms=false -DnewVersion=${{ steps.vars.outputs.sha_short }}
-      - name: Build and Deploy with Maven
-        run: mvn --batch-mode --update-snapshots deploy
+#       - name: Change Version
+#         run: mvn --batch-mode versions:set -DgenerateBackupPoms=false -DnewVersion=${{ steps.vars.outputs.sha_short }}
+      - name: Build with Maven
+        run: mvn --batch-mode --update-snapshots verify
         env:
           MAVEN_OPTS: '--illegal-access=permit'
           NODEFLOW_STOREPASS: ${{ secrets.NODEFLOW_STOREPASS }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODEFLOW_VERSION: ${{ steps.vars.outputs.sha_short }}
       - name: Deploy Application
         uses: cpina/github-action-push-to-another-repository@v1.3
         env:
