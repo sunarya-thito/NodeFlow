@@ -36,7 +36,7 @@ jobs:
       - name: Change Version
         run: mvn --batch-mode versions:set -DgenerateBackupPoms=false -DnewVersion=${{ steps.vars.outputs.sha_short }}
       - name: Build and Deploy with Maven
-        run: mvn -T 10 --batch-mode --update-snapshots deploy
+        run: mvn --batch-mode --update-snapshots deploy
         env:
           MAVEN_OPTS: '--illegal-access=permit'
           NODEFLOW_STOREPASS: ${{ secrets.NODEFLOW_STOREPASS }}
@@ -51,5 +51,4 @@ jobs:
           destination-github-username: sunarya-thito
           destination-repository-name: NodeFlow
           target-branch: deploy
-          commit-message: 'Update from https://github.com/sunarya-thito/NodeFlowSoftware/commit/${{ env.GITHUB_SHA }}'
           user-email: septogeddon@gmail.com
