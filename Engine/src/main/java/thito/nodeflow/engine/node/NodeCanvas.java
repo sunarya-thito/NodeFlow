@@ -22,6 +22,7 @@ public class NodeCanvas {
     private final NodeCanvasHandler handler;
     private final NodeCanvasSkin skin;
 
+    private final ObjectProperty<EventNode> eventNode = new SimpleObjectProperty<>();
     private final ObjectProperty<LinkStyle> linkStyle = new SimpleObjectProperty<>(LinkStyle.CABLE);
     private final BooleanProperty snapToGrid = new SimpleBooleanProperty();
 
@@ -29,6 +30,7 @@ public class NodeCanvas {
         this.handler = handler;
         skin = handler.createCanvasSkin(this);
 
+        eventNode.addListener(new EventNodeChangeListener());
         nodeList.addListener(new NodeCanvasNodeListListener());
         nodeLinkedList.addListener(new NodeCanvasNodeLinkedListListener());
         groupList.addListener(new NodeCanvasNodeGroupListListener());
@@ -57,6 +59,8 @@ public class NodeCanvas {
             NodeLink link = nodeLinkedList.get(i);
             if ((link.getSource().equals(a) || link.getSource().equals(a))
                     && (link.getSource().equals(b) || link.getTarget().equals(b)) && !a.equals(b)) {
+                link.getTarget().getHandler().onNodeUnlinked(link.getSource(), true);
+                link.getSource().getHandler().onNodeUnlinked(link.getTarget(), false);
                 nodeLinkedList.remove(i);
                 return true;
             }
@@ -80,6 +84,8 @@ public class NodeCanvas {
             if (!target.getHandler().acceptPairing(source, true)) return false;
             if (!source.getHandler().acceptPairing(target, false)) return false;
         }
+        target.getHandler().onNodeLinked(source, true);
+        source.getHandler().onNodeLinked(target, false);
         nodeLinkedList.add(linked);
         return true;
     }
@@ -96,6 +102,18 @@ public class NodeCanvas {
             }
         }
         return null;
+    }
+
+    public ObjectProperty<EventNode> eventNodeProperty() {
+        return eventNode;
+    }
+
+    public EventNode getEventNode() {
+        return eventNode.get();
+    }
+
+    public void setEventNode(EventNode node) {
+        eventNode.set(node);
     }
 
     public ObjectProperty<LinkStyle> linkStyleProperty() {
@@ -129,6 +147,9 @@ public class NodeCanvas {
         offsetX.set(state.offsetX);
         offsetY.set(state.offsetY);
         scale.set(state.scale);
+        if (state.eventNodeState != null) {
+            setEventNode(new EventNode(this, state.eventNodeState));
+        }
         state.nodeStateList.forEach(nodeState -> {
             nodeList.add(new Node(this, nodeState));
         });
@@ -148,10 +169,27 @@ public class NodeCanvas {
         state.offsetX = offsetX.get();
         state.offsetY = offsetY.get();
         state.scale = scale.get();
+        EventNode eventNode = getEventNode();
+        if (eventNode != null) {
+            state.eventNodeState = eventNode.saveState();
+        }
         nodeList.stream().map(Node::saveState).forEach(state.nodeStateList::add);
         nodeLinkedList.stream().map(NodeLinked::saveState).forEach(state.nodeLinkedStateList::add);
         groupList.stream().map(NodeGroup::saveState).forEach(state.groupStateList::add);
         return state;
+    }
+
+    public class EventNodeChangeListener implements ChangeListener<EventNode> {
+        @Override
+        public void changed(ObservableValue<? extends EventNode> observable, EventNode oldValue, EventNode newValue) {
+            if (oldValue != null) {
+                skin.onNodeRemoved(oldValue);
+            }
+            if (newValue != null) {
+                newValue.initialize(NodeCanvas.this);
+                skin.onNodeAdded(newValue);
+            }
+        }
     }
 
     public class NodeCanvasNodeListListener implements ListChangeListener<Node> {

@@ -11,6 +11,7 @@ import thito.nodeflow.internal.settings.*;
 import thito.nodeflow.library.binding.*;
 import thito.nodeflow.library.ui.Skin;
 import thito.nodeflow.library.ui.*;
+import thito.nodeflow.library.util.*;
 
 import java.util.*;
 import java.util.function.*;
@@ -38,17 +39,19 @@ public class SettingsSkin extends Skin {
     protected void onLayoutLoaded() {
         view.getSelectionModel().selectedItemProperty().addListener((obs, old, val) -> {
             items.clear();
-            if (val != null) {
-                SettingsCategory value = val.getValue();
-                if (value != null) {
-                    items.addAll(value.getSettingsPropertyList());
-                    List<SettingsCategory> path = new ArrayList<>();
-                    while (value != null) {
-                        path.add(0, value);
-                        value = value.getParent();
-                    }
-                    breadcrumb.getChildren().setAll(path.stream().map(x -> new SettingsBreadcrumbSkin(x.getDescription().nameProperty())).collect(Collectors.toList()));
+            if (val == null) {
+                view.getSelectionModel().selectFirst();
+                return;
+            }
+            SettingsCategory value = val.getValue();
+            if (value != null) {
+                items.addAll(value.getSettingsPropertyList());
+                List<SettingsCategory> path = new ArrayList<>();
+                while (value != null) {
+                    path.add(0, value);
+                    value = value.getParent();
                 }
+                breadcrumb.getChildren().setAll(path.stream().map(x -> new SettingsBreadcrumbSkin(x.getDescription().nameProperty())).collect(Collectors.toList()));
             }
         });
 
@@ -71,6 +74,29 @@ public class SettingsSkin extends Skin {
                 }
             }
         });
+        search.textProperty().addListener((obs, old, val) -> {
+            if (val == null || val.trim().isEmpty()) {
+                filter.set(null);
+                return;
+            }
+            filter.set(obj -> {
+                if (obj instanceof SettingsCategory) {
+                    for (SettingsProperty prop : ((SettingsCategory) obj).getSettingsPropertyList()) {
+                        if (Toolkit.searchScore(prop.displayNameProperty().get(), val) > 0) {
+                            return true;
+                        }
+                    }
+                    return Toolkit.searchScore(((SettingsCategory) obj).getDescription().nameProperty().get(), val) > 0;
+                }
+                if (obj instanceof SettingsProperty) {
+                    return Toolkit.searchScore(((SettingsProperty<?>) obj).displayNameProperty().get(), val) > 0 ||
+                            Toolkit.searchScore(((SettingsProperty<?>) obj).getCategory().getDescription().nameProperty().get(), val) > 0;
+                }
+                return true;
+            });
+        });
+
+        view.getSelectionModel().selectFirst();
     }
 
     public class SettingsCategoryItem extends TreeItem<SettingsCategory> {

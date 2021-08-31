@@ -121,21 +121,38 @@ public class Toolkit {
         );
     }
 
-    /**
-     * Calculates the similarity (a number within 0 and 1) between two strings.
-     */
-    public static double similarity(String s1, String s2) {
+    public static double searchScore(String target, String search) {
+        String[] split = search.split("\\s+");
+        String ignoreCaseTarget = target.toLowerCase();
+        double score = 0;
+        double maxScore = target.split("\\s+").length * 2;
+        int previousIndex = -1;
+        int ignoreCasePreviousIndex = -1;
+        for (int i = 0; i < split.length; i++) {
+            int index = target.indexOf(split[i]);
+            if (previousIndex < index) {
+                score += 2;
+                previousIndex = index;
+                continue;
+            }
+            String ignoreCaseSearch = split[i].toLowerCase();
+            int ignoreCaseIndex = ignoreCaseTarget.indexOf(ignoreCaseSearch);
+            if (ignoreCasePreviousIndex < ignoreCaseIndex) {
+                score++;
+                ignoreCasePreviousIndex = ignoreCaseIndex;
+            }
+        }
+        return score / maxScore;
+    }
+
+    public static double distance(String s1, String s2) {
         String longer = s1, shorter = s2;
         if (s1.length() < s2.length()) { // longer should always have greater length
             longer = s2; shorter = s1;
         }
         int longerLength = longer.length();
         if (longerLength == 0) { return 1.0; /* both strings are zero length */ }
-    /* // If you have Apache Commons Text, you can use it to calculate the edit distance:
-    LevenshteinDistance levenshteinDistance = new LevenshteinDistance();
-    return (longerLength - levenshteinDistance.apply(longer, shorter)) / (double) longerLength; */
         return (longerLength - editDistance(longer, shorter)) / (double) longerLength;
-
     }
 
     // Example implementation of the Levenshtein Edit Distance

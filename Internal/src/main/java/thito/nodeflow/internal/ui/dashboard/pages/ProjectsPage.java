@@ -1,8 +1,6 @@
 package thito.nodeflow.internal.ui.dashboard.pages;
 
-import com.sun.javafx.binding.*;
 import javafx.beans.binding.*;
-import javafx.beans.property.*;
 import javafx.beans.value.*;
 import javafx.collections.*;
 import javafx.collections.transformation.*;
@@ -10,14 +8,18 @@ import javafx.event.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import thito.nodeflow.internal.*;
+import thito.nodeflow.internal.plugin.*;
 import thito.nodeflow.internal.project.*;
+import thito.nodeflow.internal.ui.*;
 import thito.nodeflow.internal.ui.dashboard.*;
+import thito.nodeflow.internal.ui.form.*;
 import thito.nodeflow.library.binding.*;
 import thito.nodeflow.library.language.*;
 import thito.nodeflow.library.task.*;
 import thito.nodeflow.library.ui.*;
 import thito.nodeflow.library.util.*;
 
+import java.io.*;
 import java.util.*;
 
 public class ProjectsPage extends DashboardPage {
@@ -66,6 +68,23 @@ public class ProjectsPage extends DashboardPage {
         registerActionHandler("dashboard.project-list.list-view", ActionEvent.ACTION, event -> {
             content.setCenter(new ProjectListSkin(this));
         });
+        registerActionHandler("project.create", ActionEvent.ACTION, event -> {
+            FormDialog.create(I18n.$("dashboard.forms.create-project"), new CreateProjectForm())
+                    .show(form -> {
+                        TaskThread.IO().schedule(() -> {
+                            try {
+                                ProjectProperties projectProperties = NodeFlow.getInstance().workspaceProperty().get()
+                                        .createProject(form.name.get());
+                                String description = form.description.get();
+                                if (description != null && !description.trim().isEmpty()) {
+                                    projectProperties.setDescription(description);
+                                }
+                            } catch (IOException e) {
+                                ReportedExceptionHandler.report(e);
+                            }
+                        });
+                    });
+        });
     }
 
     public SortedList<ProjectProperties> getSortedProject() {
@@ -81,10 +100,10 @@ public class ProjectsPage extends DashboardPage {
                 sortedProject.comparatorProperty().set((a, b) -> Long.compare(b.getLastModified(), a.getLastModified()));
             } else {
                 shownProjects.predicateProperty().set(project -> scoreMap.computeIfAbsent(project, p ->
-                        Toolkit.similarity(p.getName(), val) * 10 +
-                                Toolkit.similarity(p.getDescription(), val) * 5 +
-                                Toolkit.similarity(String.join(" ", p.getTags()), val) * 2 +
-                                Toolkit.similarity(p.getDirectory().toFile().getAbsolutePath(), val)
+                        Toolkit.searchScore(p.getName(), val) * 10 +
+                                Toolkit.searchScore(p.getDescription(), val) * 5 +
+                                Toolkit.searchScore(String.join(" ", p.getTags()), val) * 2 +
+                                Toolkit.searchScore(p.getDirectory().toFile().getAbsolutePath(), val)
                 ) > 0);
                 sortedProject.comparatorProperty().set(((Comparator<ProjectProperties>) (o1, o2) ->
                         Double.compare(scoreMap.getOrDefault(o2, 0d), scoreMap.getOrDefault(o1, 0d)))

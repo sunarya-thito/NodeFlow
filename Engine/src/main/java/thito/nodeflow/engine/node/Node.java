@@ -19,7 +19,7 @@ public class Node extends CanvasElement {
     private final BooleanProperty selected = new SimpleBooleanProperty();
     // end editor
 
-    private NodeHandler handler;
+    protected NodeHandler handler;
 
     private final ObservableList<NodeParameter> parameters = FXCollections.observableArrayList();
 
@@ -38,10 +38,14 @@ public class Node extends CanvasElement {
     public Node() {
     }
 
+    public void setHandler(NodeHandler handler) {
+        this.handler = handler;
+    }
+
     protected void initialize(NodeCanvas canvas) {
+        if (this.canvas != null) return;
         this.canvas = canvas;
         id = UUID.randomUUID();
-        handler = canvas.getHandler().createHandler(this, null);
         skin = handler.createSkin();
     }
 
@@ -50,11 +54,15 @@ public class Node extends CanvasElement {
         id = state.id;
         x.set(state.x);
         y.set(state.y);
-        handler = canvas.getHandler().createHandler(this, state.handlerState);
+        handler = createHandler(state.handlerState);
         state.nodeParameterStateList.forEach(parameterState -> {
             parameters.add(new NodeParameter(this, parameterState));
         });
         skin = handler.createSkin();
+    }
+
+    protected NodeHandler createHandler(HandlerState state) {
+        return canvas.getHandler().createHandler(this, state);
     }
 
     public NodeHandler getHandler() {

@@ -5,8 +5,8 @@ import thito.nodeflow.library.util.*;
 public interface DocumentReference {
     default int calculateSearchScore(String search) {
         int count = 0;
-        count += Toolkit.similarity(getDocumentTitle(), search) * 4;
-        count += Toolkit.similarity(getDocumentContent(), search);
+        count += Toolkit.searchScore(getDocumentTitle(), search) * 4;
+        count += Toolkit.searchScore(getDocumentContent(), search);
         return count;
     }
     String getDocumentTitle();

@@ -25,6 +25,7 @@ public class PluginClassLoader extends URLClassLoader {
     public void load() {
         try (InputStreamReader reader = new InputStreamReader(Objects.requireNonNull(getResourceAsStream("plugin.yml")))) {
             Section pluginProperties = Section.parseToMap(reader);
+            String id = pluginProperties.getString("id").orElseThrow();
             String name = pluginProperties.getString("name").orElseThrow();
             String version = pluginProperties.getString("version").orElseThrow();
             String main = pluginProperties.getString("main").orElseThrow();
@@ -32,7 +33,7 @@ public class PluginClassLoader extends URLClassLoader {
                     .stream().map(String::valueOf).collect(Collectors.toList());
             Class<?> mainClass = Class.forName(main, true, this);
             if (PluginInstance.class.isAssignableFrom(mainClass)) throw new ClassNotFoundException("main class does not extend "+PluginInstance.class.getName());
-            plugin = new Plugin(name, version, mainClass, authors, this);
+            plugin = new Plugin(id, name, version, mainClass, authors, this);
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }

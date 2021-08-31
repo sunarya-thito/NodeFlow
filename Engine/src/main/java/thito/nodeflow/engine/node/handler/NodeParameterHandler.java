@@ -13,4 +13,7 @@ public interface NodeParameterHandler {
     NodePort getInputPort();
     NodePort getOutputPort();
     HandlerState saveState();
+
+    default void onNodeLinked(NodeParameter other, boolean asInput) {}
+    default void onNodeUnlinked(NodeParameter other, boolean asInput) {}
 }

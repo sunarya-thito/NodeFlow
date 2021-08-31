@@ -16,11 +16,15 @@ public class UnknownFileViewer implements FileViewer {
     private UnknownTabSkin unknownTabSkin;
     private ObservableList<Menu> menus = FXCollections.observableArrayList();
 
-    public UnknownFileViewer(UnknownFileModule module, Project project, Resource resource, byte[] data) {
+    public UnknownFileViewer(UnknownFileModule module, Project project, Resource resource) {
         this.project = project;
         this.module = module;
         this.resource = resource;
         unknownTabSkin = new UnknownTabSkin();
+    }
+
+    @Override
+    public void reload(byte[] data) {
     }
 
     @Override

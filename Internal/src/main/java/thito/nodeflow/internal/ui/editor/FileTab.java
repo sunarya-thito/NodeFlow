@@ -59,8 +59,16 @@ public class FileTab {
                         });
                     }
                     TaskThread.UI().schedule(() -> {
-                        FileViewer fileViewer = module.createViewer(project, resource, buffer);
-                        tab.setContent(fileViewer.getNode());
+                        // Allowing the viewer to initialize their fx component
+                        FileViewer fileViewer = module.createViewer(project, resource);
+                        TaskThread.BACKGROUND().schedule(() -> {
+                            // Parse the file into viewable components in background
+                            fileViewer.reload(buffer);
+                            TaskThread.UI().schedule(() -> {
+                                // When done, show the viewer fx component to the user
+                                tab.setContent(fileViewer.getNode());
+                            });
+                        });
                     });
                 }
             } catch (Throwable t) {

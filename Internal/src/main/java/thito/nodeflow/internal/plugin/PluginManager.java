@@ -5,8 +5,11 @@ import thito.nodeflow.internal.plugin.event.EventListener;
 import thito.nodeflow.internal.plugin.event.*;
 import thito.nodeflow.internal.project.*;
 import thito.nodeflow.internal.project.module.*;
+import thito.nodeflow.library.config.*;
+import thito.nodeflow.library.language.*;
 import thito.nodeflow.library.resource.*;
 
+import java.io.*;
 import java.lang.reflect.*;
 import java.util.*;
 import java.util.logging.*;
@@ -26,6 +29,13 @@ public class PluginManager {
 
     public List<FileModule> getModuleList() {
         return Collections.unmodifiableList(moduleList);
+    }
+
+    public void loadPluginLocale(Language target, Plugin plugin, InputStream inputStream) throws IOException {
+        try (InputStreamReader reader = new InputStreamReader(inputStream)) {
+            MapSection section = Section.parseToMap(reader);
+            target.loadLanguage(section, plugin.getId());
+        }
     }
 
     public FileModule getModule(Resource resource) {

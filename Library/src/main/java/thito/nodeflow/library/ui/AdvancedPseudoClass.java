@@ -4,7 +4,9 @@ import javafx.beans.*;
 import javafx.beans.property.*;
 import javafx.collections.*;
 import javafx.css.*;
+import javafx.geometry.*;
 import javafx.scene.*;
+import javafx.scene.layout.*;
 
 import java.lang.reflect.*;
 import java.util.*;
@@ -13,6 +15,7 @@ public class AdvancedPseudoClass {
 
     static List<CssMetaData<? extends Styleable, ?>> NODE_STYLEABLES;
     static CssMetaData<Node, Number> fxLayoutX, fxLayoutY;
+    static CssMetaData<Node, Pos> fxBorderPaneAlignment;
     static {
         try {
             inject();
@@ -27,6 +30,25 @@ public class AdvancedPseudoClass {
             AdvancedPseudoClass advancedPseudoClass = (AdvancedPseudoClass) n.getProperties().computeIfAbsent(n, x -> new AdvancedPseudoClass(n));
             return advancedPseudoClass.layoutY;
         }));
+        NODE_STYLEABLES.add(fxBorderPaneAlignment = new CssMetaData<>("-fx-border-pane-alignment", StyleConverter.getEnumConverter(Pos.class),
+                Pos.CENTER) {
+            @Override
+            public boolean isSettable(Node styleable) {
+                return !getStyleableProperty(styleable).isBound();
+            }
+
+            @Override
+            public StyleableObjectProperty<Pos> getStyleableProperty(Node styleable) {
+                StyleableObjectProperty<Pos> pos = (StyleableObjectProperty<Pos>) styleable.getProperties().computeIfAbsent(fxBorderPaneAlignment, key -> {
+                    StyleableObjectProperty<Pos> prop = new SimpleStyleableObjectProperty<>(fxBorderPaneAlignment, Pos.CENTER);
+                    prop.addListener((obs, old, val) -> {
+                        BorderPane.setAlignment(styleable, val);
+                    });
+                    return prop;
+                });
+                return pos;
+            }
+        });
     }
 
     public static void init() {}

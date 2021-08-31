@@ -13,6 +13,9 @@
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/BasePlugin/pom.xml" />
+        <option value="$PROJECT_DIR$/NodeFlowBuildHelper/pom.xml" />
+        <option value="$PROJECT_DIR$/BuildHelper/pom.xml" />
       </list>
     </option>
   </component>

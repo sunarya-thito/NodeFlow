@@ -26,6 +26,10 @@ public class SettingsItemSkin extends Skin {
         name.textProperty().bind(item.displayNameProperty());
         SettingsNodeFactory settingsNodeFactory = NodeFlow.getInstance().getSettingsManager().getNodeFactory(item.getType());
         SettingsNode node = settingsNodeFactory.createNode(item);
+        if (node instanceof SettingsNodePane) {
+            // specialize SettingsNodePane to have full viewport of the settings item row pane
+            ((Pane) name.getParent()).getChildren().remove(name);
+        }
         content.setCenter(node.getNode());
     }
 }

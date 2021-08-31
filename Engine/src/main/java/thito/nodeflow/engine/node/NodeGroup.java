@@ -26,6 +26,7 @@ public class NodeGroup extends CanvasElement {
     }
 
     protected void initialize(NodeCanvas canvas) {
+        if (this.canvas != null) return;
         this.canvas = canvas;
         this.id = UUID.randomUUID();
         this.skin = canvas.getHandler().createGroupSkin(this);

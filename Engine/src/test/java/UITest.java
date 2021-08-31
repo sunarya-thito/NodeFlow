@@ -7,6 +7,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.*;
 import javafx.stage.*;
 import thito.nodeflow.engine.node.*;
+import thito.nodeflow.engine.node.Node;
 import thito.nodeflow.engine.node.handler.*;
 import thito.nodeflow.engine.node.skin.*;
 import thito.nodeflow.engine.node.state.*;
@@ -25,6 +26,12 @@ public class UITest extends Application {
 
     public void start(Stage primaryStage) throws Exception {
         NodeCanvas canvas = new NodeCanvas(new NodeCanvasHandler() {
+
+            @Override
+            public EventNodeHandler createEventHandler(Node node, HandlerState state) {
+                return null;
+            }
+
             @Override
             public NodeHandler createHandler(thito.nodeflow.engine.node.Node node, HandlerState state) {
                 return new NodeHandler() {

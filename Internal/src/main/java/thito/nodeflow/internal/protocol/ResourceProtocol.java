@@ -9,7 +9,7 @@ import java.nio.charset.*;
 public class ResourceProtocol extends URLStreamHandler {
     @Override
     protected URLConnection openConnection(URL u) throws IOException {
-        File file = new File(NodeFlow.ROOT, URLDecoder.decode(u.getFile(), StandardCharsets.UTF_8));
+        File file = new File(NodeFlow.RESOURCES_ROOT, URLDecoder.decode(u.getFile(), StandardCharsets.UTF_8));
         return new URLConnection(u) {
 
             private InputStream inputStream;

@@ -2,11 +2,11 @@
     <Layout>
         <BorderPane class="settings-item">
             <Left>
-                <Label id="name"/>
+                <Label BorderPane.alignment="CENTER_LEFT" id="name"/>
             </Left>
-            <Center>
-                <BorderPane id="item"/>
-            </Center>
+            <Right>
+                <BorderPane BorderPane.alignment="CENTER_RIGHT" id="item"/>
+            </Right>
         </BorderPane>
     </Layout>
 </NodeFlow>

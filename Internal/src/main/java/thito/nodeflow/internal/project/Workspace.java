@@ -6,6 +6,7 @@ import javafx.collections.*;
 import thito.nodeflow.internal.*;
 import thito.nodeflow.library.config.*;
 import thito.nodeflow.library.resource.*;
+import thito.nodeflow.library.task.*;
 
 import java.io.*;
 import java.util.*;
@@ -51,6 +52,7 @@ public class Workspace {
     }
 
     public ProjectProperties createProject(String name) throws IOException {
+        TaskThread.IO().checkThread();
         Resource directory = resourceManager.getRoot().getChild(name);
         directory.toFile().mkdirs();
         Resource properties = directory.getChild("project.yml");

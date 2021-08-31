@@ -10,7 +10,7 @@ import thito.nodeflow.engine.node.*;
 
 public class NodeParameterSkin extends Skin {
     private final NodeParameter parameter;
-    private final BorderPane editorPane = new BorderPane();
+    protected final BorderPane editorPane = new BorderPane();
     private final Label title = new Label();
     private final HBox box = new HBox();
     private Node inputNode, outputNode;

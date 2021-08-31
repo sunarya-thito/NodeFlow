@@ -29,19 +29,8 @@ public abstract class ApplicationResources {
 
     private URLStreamHandler getProtocolHandler(String protocol) {
         return protocolHandlerMap.get(protocol);
-//        switch (protocol) {
-//            case "rsrc":
-//                return new URLStreamHandler() {
-//                    @Override
-//                    protected URLConnection openConnection(URL u) throws IOException {
-//                        return openResource(u);
-//                    }
-//                };
-//        }
-//        return null;
     }
 
-//    public abstract URLConnection openResource(URL u) throws IOException;
     public abstract Collection<? extends Language> getAvailableLanguages();
     public abstract Collection<? extends Theme> getAvailableThemes();
     public abstract Language getDefaultLanguage();

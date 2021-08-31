@@ -4,12 +4,23 @@ import javafx.collections.*;
 
 public class SettingsCategory {
     private SettingsDescription description;
+    private Class<? extends Settings> type;
+    private Settings settings;
     SettingsCategory parent;
     ObservableList<SettingsProperty<?>> settingsPropertyList = FXCollections.observableArrayList();
     ObservableList<SettingsCategory> subCategory = FXCollections.observableArrayList();
 
-    public SettingsCategory(SettingsDescription description) {
-        this.description = description;
+    public SettingsCategory(Class<? extends Settings> type, Settings settings) {
+        this.settings = settings;
+        this.description = settings.description();
+    }
+
+    public Settings getSettings() {
+        return settings;
+    }
+
+    public Class<? extends Settings> getType() {
+        return type;
     }
 
     public SettingsCategory getParent() {

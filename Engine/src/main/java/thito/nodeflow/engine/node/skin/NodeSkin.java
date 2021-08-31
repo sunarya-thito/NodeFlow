@@ -17,8 +17,8 @@ import thito.nodeflow.engine.node.util.*;
 
 public class NodeSkin extends Skin {
     public static final PseudoClass SELECTED = PseudoClass.getPseudoClass("selected");
-    private final Node node;
-    private final VBox nodeParameterBox = new VBox();
+    protected final Node node;
+    protected final VBox nodeParameterBox = new VBox();
     private final CalloutsPopup popup = new CalloutsPopup();
     private Label popupTitle;
     private NodeParameter parameterPopUp;
@@ -59,6 +59,11 @@ public class NodeSkin extends Skin {
         });
         skin(nodeParameterBox, "NodeParameterBox");
         initializeSkin();
+        addEventHandler(MouseEvent.ANY, Event::consume);
+        initializePopupListener();
+    }
+
+    protected void initializePopupListener() {
         addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
             event.consume();
             if (event.getButton() == MouseButton.PRIMARY) {
@@ -71,7 +76,6 @@ public class NodeSkin extends Skin {
                 }
             }
         });
-        addEventHandler(MouseEvent.ANY, Event::consume);
         layoutXProperty().addListener(o -> updatePopUpPositionLater());
         layoutYProperty().addListener(o -> updatePopUpPositionLater());
         heightProperty().addListener(o -> updatePopUpPositionLater());

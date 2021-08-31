@@ -50,6 +50,23 @@ public class General implements Settings {
         public SettingsDescription description() {
             return new SettingsDescription(I18n.$("settings.general.sub.appearance.name"));
         }
+
+        @Getter @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+        public class ColorScheme implements Settings {
+
+            SettingsProperty<ColorValues> palette = new SettingsProperty<>(I18n.$("settings.general.sub.appearance.sub.color-scheme.items.palette"), new ColorValues(ThemeManager.getInstance().getColorPalette().getColorMap()));
+
+            public ColorScheme() {
+                palette.addListener((obs, old, val) -> {
+                    ThemeManager.getInstance().getColorPalette().overrideMapProperty().set(val.getColorMap());
+                });
+            }
+
+            @Override
+            public SettingsDescription description() {
+                return new SettingsDescription(I18n.$("settings.general.sub.appearance.sub.color-scheme.name"));
+            }
+        }
     }
 
     @Override

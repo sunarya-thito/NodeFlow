@@ -50,6 +50,25 @@ public class SettingsManager {
         registerNodeFactory(String.class, new StringParser.Factory());
     }
 
+    public <T extends Settings> Optional<T> getSettings(Class<T> category) {
+        for (SettingsCategory settingsCategory : categoryList) {
+            T found = findSettings(settingsCategory, category);
+            if (found != null) return Optional.of(found);
+        }
+        return Optional.empty();
+    }
+
+    private <T extends Settings> T findSettings(SettingsCategory category, Class<T> type) {
+        if (category.getType().equals(type)) return (T) category.getSettings();
+        if (category != null) {
+            for (SettingsCategory sub : category.subCategory) {
+                T found = findSettings(sub, type);
+                if (found != null) return found;
+            }
+        }
+        return null;
+    }
+
     @SafeVarargs
     public final void addCategories(Class<? extends Settings>... rootCategories) {
         for (Class<? extends Settings> category : rootCategories) {
@@ -135,7 +154,7 @@ public class SettingsManager {
         }
     }
 
-    private SettingsCategory scan(Settings parentSettings, SettingsCategory parentCategory, Class<? extends Settings> settingsClass)
+    protected SettingsCategory scan(Settings parentSettings, SettingsCategory parentCategory, Class<? extends Settings> settingsClass)
             throws InvocationTargetException, InstantiationException, IllegalAccessException {
         Constructor<?> constructor = settingsClass.getDeclaredConstructors()[0];
         if (constructor == null) throw new IllegalArgumentException("no default constructor for "+settingsClass.getName());
@@ -143,7 +162,7 @@ public class SettingsManager {
         Settings settings = (Settings) (parentSettings != null && !Modifier.isStatic(settingsClass.getModifiers()) ?
                 constructor.newInstance(parentSettings) :
                 constructor.newInstance());
-        SettingsCategory category = new SettingsCategory(settings.description());
+        SettingsCategory category = new SettingsCategory(settingsClass, settings);
         category.parent = parentCategory;
         Class<?> parent = settingsClass;
         while (Settings.class.isAssignableFrom(parent)) {

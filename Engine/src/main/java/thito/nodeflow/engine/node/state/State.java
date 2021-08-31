@@ -1,4 +1,6 @@
 package thito.nodeflow.engine.node.state;
 
-public interface State {
+import java.io.*;
+
+public interface State extends Serializable {
 }

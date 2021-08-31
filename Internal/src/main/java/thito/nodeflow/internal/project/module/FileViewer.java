@@ -12,4 +12,5 @@ public interface FileViewer {
     FileModule getModule();
     Node getNode();
     ObservableList<Menu> getAdditionalMenus();
+    void reload(byte[] data);
 }

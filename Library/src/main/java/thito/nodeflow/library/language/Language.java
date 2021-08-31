@@ -3,8 +3,6 @@ package thito.nodeflow.library.language;
 import javafx.beans.*;
 import javafx.beans.property.*;
 import javafx.beans.value.*;
-import javafx.collections.*;
-import org.yaml.snakeyaml.*;
 import thito.nodeflow.library.config.*;
 
 import java.io.*;
@@ -59,14 +57,18 @@ public class Language {
 
     public void loadLanguage(Reader reader) {
         MapSection section = Section.parseToMap(reader);
-        load(section, null);
+        loadLanguage(section, null);
     }
 
-    void load(MapSection section, String parent) {
+    public void loadLanguage(MapSection section) {
+        loadLanguage(section, null);
+    }
+
+    public void loadLanguage(MapSection section, String parent) {
         section.forEach((key, value) -> {
             String fullKey = parent == null ? key : parent + "." + key;
             if (value instanceof Map) {
-                load(new MapSection((Map<String, ?>) value), fullKey);
+                loadLanguage(new MapSection((Map<String, ?>) value), fullKey);
                 return;
             }
             logger.log(Level.INFO, "Loaded language: "+fullKey);

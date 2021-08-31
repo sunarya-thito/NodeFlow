@@ -1,8 +1,16 @@
 #breadcrumb-label {
     -fx-content-display: right;
     -fx-graphic: url("rsrc:Themes/Dark/Icons/BreadcrumbSeparator.png");
+    -fx-graphic-text-gap: 8;
+    -fx-text-fill: rgb(255, 255, 255, 0.7);
+    -fx-font-family: Roboto;
+    -fx-padding: 2 4;
 }
 
-#breadcrumb-label:last .image-view {
+.image-view {
+    -fx-opacity: 0.4;
+}
+
+SettingsBreadcrumbSkin:last .image-view {
     -fx-opacity: 0;
 }

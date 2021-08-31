@@ -1,0 +1,6 @@
+id: baseplugin
+name: BasePlugin
+version: 1.0
+main: thito.nodeflow.plugin.base.BasePlugin
+authors:
+  - Thito Yalasatria Sunarya

@@ -1,0 +1,6 @@
+blueprint:
+  module-name: Blueprint
+  execution-param: Execution
+  settings:
+    name: Blueprint
+    link-style: Link Style

@@ -60,6 +60,9 @@ public abstract class Window {
             skin.get().pseudoClassStateChanged(MAXIMIZED, val);
         });
 
+        // Colors.json binding
+        root.styleProperty().bind(ThemeManager.getInstance().getColorPalette().styleProperty());
+
         Scene scene = new Scene(root, -1, -1, false, SceneAntialiasing.BALANCED);
         scene.setFill(Color.TRANSPARENT);
         scene.setOnKeyPressed(event -> {

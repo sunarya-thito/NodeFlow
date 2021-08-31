@@ -20,6 +20,11 @@ public class DialogWindow extends Window implements WindowHitTest {
         content = new BorderPane();
     }
 
+    @Override
+    public StringProperty titleProperty() {
+        return super.titleProperty();
+    }
+
     protected BorderPane getContent() {
         return content;
     }

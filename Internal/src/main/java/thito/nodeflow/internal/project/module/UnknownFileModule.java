@@ -22,7 +22,7 @@ public class UnknownFileModule implements FileModule {
     }
 
     @Override
-    public FileViewer createViewer(Project project, Resource resource, byte[] data) {
-        return new UnknownFileViewer(this, project, resource, data);
+    public FileViewer createViewer(Project project, Resource resource) {
+        return new UnknownFileViewer(this, project, resource);
     }
 }

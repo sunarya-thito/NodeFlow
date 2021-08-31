@@ -1,4 +1,7 @@
 name: English (US)
+# You can change this to your name for your own file
+credit: English Locale by Thito Yalasatria Sunarya
+#
 loading: Loading
 dashboard:
   title: Dashboard
@@ -6,6 +9,10 @@ dashboard:
   projects: PROJECTS
   about: ABOUT
   changelogs-title: What's New?
+  forms:
+    create-project: Create New Project
+    name: Project Name
+    description: Project Description
 search: Search
 browse: Browse
 open-directory: Select Directory
@@ -30,6 +37,8 @@ module:
     name: Unknown File
 settings:
   title: Settings
+  plugins:
+    enable: Enable
   general:
     name: General
     items:
@@ -39,10 +48,15 @@ settings:
     sub:
       appearance:
         name: Appearance
+        sub:
+          color-scheme:
+            name: Color Scheme
+            items:
+              palette: Palette
         items:
           theme: Theme
           language: Language
-          show-dashboard-at-start: Show Dashboard at start
+          show-dashboard-at-start: Show Dashboard at Start
 editor:
   title: NodeFlow - %s
   title-no-project: NodeFlow

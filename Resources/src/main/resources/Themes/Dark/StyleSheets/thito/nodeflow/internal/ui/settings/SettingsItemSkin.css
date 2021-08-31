@@ -1,8 +1,122 @@
 .settings-item {
+    -fx-min-height: 24;
 }
 
 #name {
+    -fx-font-family: Roboto;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 12;
 }
 
 #item {
+    -fx-pref-width: 250;
+    -fx-pref-height: 30;
+    -fx-alignment: center_right;
+}
+
+#item > * {
+    -fx-max-height: Infinity;
+}
+
+#item .check-box {
+    -fx-border-pane-alignment: center_right;
+}
+
+.spinner, .combo-box {
+    -fx-max-width: Infinity;
+}
+
+#item .settings-file {
+    -fx-fill-height: true;
+}
+
+#item .button {
+    -fx-max-height: Infinity;
+    -fx-max-width: Infinity;
+    -fx-background-color: #4F56EE;
+    -fx-background-radius: 5;
+    -fx-background-insets: 0;
+    -fx-font-family: Roboto;
+    -fx-font-size: 13;
+    -fx-text-fill: rgb(255, 255, 255, 0.7);
+}
+
+#item .button:hover {
+    -fx-background-color: #7E84F2;
+}
+
+#item .text-field {
+    -fx-background-color: #1A202C;
+    -fx-background-radius: 5;
+    -fx-background-insets: 0;
+    -fx-text-fill: rgb(255, 255, 255, 0.75);
+    -fx-font-family: Roboto;
+    -fx-padding: 5 15;
+    -fx-max-height: Infinity;
+    -fx-max-width: Infinity;
+    -fx-highlight-fill: #4F56EE;
+}
+
+#item .spinner {
+    -fx-background-color: transparent;
+}
+
+#item .spinner .text-field {
+    -fx-background-radius: 5 0 0 5;
+}
+
+#item .settings-file .button {
+    -fx-background-radius: 0 5 5 0;
+}
+
+#item .settings-file .text-field {
+    -fx-background-radius: 5 0 0 5;
+}
+
+#item .settings-file .text-field:invalid {
+    -fx-text-fill: rgb(255, 100, 100);
+}
+
+#item .spinner .decrement-arrow-button, #item .spinner .increment-arrow-button {
+    -fx-background-color: #4F56EE;
+}
+
+#item .spinner .decrement-arrow-button:hover, #item .spinner .increment-arrow-button:hover {
+    -fx-background-color: #7E84F2;
+}
+
+#item .spinner .increment-arrow, #item .spinner .decrement-arrow {
+    -fx-background-color: white;
+    -fx-effect: none;
+}
+
+#item .check-box .box {
+    -fx-background-color: #4F56EE;
+}
+
+#item .check-box:selected .mark {
+    -fx-background-color: white;
+}
+
+#item .combo-box .arrow-button {
+    -fx-background-color: #4F56EE;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0 5 5 0;
+}
+
+#item .combo-box .arrow-button .arrow {
+    -fx-background-color: white;
+    -fx-effect: none;
+}
+
+#item .combo-box {
+    -fx-background-insets: 0;
+    -fx-background-color: transparent;
+}
+
+#item .combo-box > .cell {
+    -fx-background-color: #1A202C;
+    -fx-background-radius: 5 0 0 5;
+    -fx-text-fill: rgb(255, 255, 255, 0.75);
 }

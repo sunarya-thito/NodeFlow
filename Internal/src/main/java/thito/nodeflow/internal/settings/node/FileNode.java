@@ -67,6 +67,7 @@ public class FileNode extends SettingsNode<File> {
         this.directory = directory;
         this.save = save;
         TextField field = new TextField();
+        HBox.setHgrow(field, Priority.ALWAYS);
         Button button = new Button();
         button.textProperty().bind(I18n.$("browse"));
         selectedFile.set(item.get().getAbsoluteFile());

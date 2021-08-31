@@ -181,6 +181,23 @@ public class NodeCanvasSkin extends Skin {
 
     public void stopLinkingDrag(double sceneX, double sceneY, boolean proceed) {
         if (proceed) {
+            EventNode eventNode = getCanvas().getEventNode();
+            if (eventNode != null) {
+                for (NodeParameter parameter : eventNode.getParameters()) {
+                    NodeParameterSkin skin = parameter.getSkin();
+                    if (skin.contains(skin.sceneToLocal(sceneX, sceneY))) {
+                        for (NodeLinking linking : linkingList) {
+                            if (linking.getSource() != null) {
+                                getCanvas().connect(linking.getSource(), parameter, false);
+                            } else {
+                                getCanvas().connect(parameter, linking.getTarget(), false);
+                            }
+                        }
+                        linkingList.clear();
+                        return;
+                    }
+                }
+            }
             for (Node node : getCanvas().getNodeList()) {
                 for (NodeParameter parameter : node.getParameters()) {
                     NodeParameterSkin skin = parameter.getSkin();
@@ -232,10 +249,20 @@ public class NodeCanvasSkin extends Skin {
 
     public void onNodeAdded(Node node) {
         nodeLayer.getChildren().add(node.getSkin());
+        if (node instanceof EventNode) {
+            node.xProperty().set(0);
+            node.yProperty().set(0);
+            EventNodeSkin skin = ((EventNode) node).getSkin();
+            skin.prefHeightProperty().bind(heightProperty());
+        }
     }
 
     public void onNodeRemoved(Node node) {
         nodeLayer.getChildren().remove(node.getSkin());
+        if (node instanceof EventNode) {
+            EventNodeSkin skin = ((EventNode) node).getSkin();
+            skin.prefHeightProperty().unbind();
+        }
     }
 
     public void onGroupAdded(NodeGroup group) {

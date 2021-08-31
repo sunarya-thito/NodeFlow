@@ -230,13 +230,13 @@ public class LayoutDebugger {
             List<String> target = new ArrayList<>(list.size());
             Map<String, Double> searchValue = new HashMap<>();
             for (String t : list) {
-                double value = searchValue.computeIfAbsent(t, s -> Toolkit.similarity(s, search.getText()));
+                double value = searchValue.computeIfAbsent(t, s -> Toolkit.searchScore(s, search.getText()));
                 if (value > 0) target.add(t);
             }
             filtered.retainAll(target);
             target.removeAll(filtered);
             filtered.addAll(target);
-            filtered.sort(Comparator.<String>comparingDouble(x -> searchValue.computeIfAbsent(x, s -> Toolkit.similarity(s, search.getText()))).reversed());
+            filtered.sort(Comparator.<String>comparingDouble(x -> searchValue.computeIfAbsent(x, s -> Toolkit.searchScore(s, search.getText()))).reversed());
         }
     }
 

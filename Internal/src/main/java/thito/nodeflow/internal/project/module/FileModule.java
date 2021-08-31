@@ -9,5 +9,5 @@ public interface FileModule {
     I18n getDisplayName();
     String getIconURL(Theme theme);
     boolean acceptResource(Resource resource);
-    FileViewer createViewer(Project project, Resource resource, byte[] data);
+    FileViewer createViewer(Project project, Resource resource);
 }

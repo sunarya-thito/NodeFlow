@@ -1,21 +1,119 @@
 .settings-root {
+    -fx-background-color: #1A202C;
+    -fx-padding: 5 15 15 15;
+}
+
+.settings-buttons {
+    -fx-alignment: center_right;
+    -fx-padding: 10;
+    -fx-background-color: #0E121A;
+    -fx-background-radius: 10;
+    -fx-spacing: 7;
+}
+
+.settings-buttons .button {
+    -fx-padding: 6 0;
+    -fx-pref-width: 80;
+    -fx-background-color: transparent;
+    -fx-background-radius: 4;
+    -fx-background-insets: 0;
+    -fx-text-fill: white;
+    -fx-font-size: 13;
+    -fx-font-family: Roboto;
+    -fx-border-width: 1.5;
+    -fx-border-color: rgb(255, 255, 255, 0.3);
+    -fx-border-insets: -1.5;
+    -fx-border-radius: 5;
+}
+
+.settings-buttons .button:hover {
+    -fx-background-color: rgb(255, 255, 255, 0.1);
+}
+
+.settings-buttons .button:default {
+    -fx-background-color: #4F56EE;
+    -fx-border-color: #7E84F2;
+}
+
+.settings-buttons .button:default:hover {
+    -fx-background-color: #7E84F2;
+}
+
+.settings-buttons .button:disable {
+    -fx-text-fill: rgb(255, 255, 255, 0.5);
 }
 
 .settings-panel {
+    -fx-orientation: HORIZONTAL;
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-skin: "thito.nodeflow.library.ui.SplitPaneSkin";
+}
+
+.settings-panel .split-pane-divider {
+    -fx-background-color: transparent;
+    -fx-padding: 0 5;
 }
 
 .settings-navigation {
+    -fx-background-color: transparent;
+    -fx-spacing: 15;
+    -fx-padding: 0 7.5 0 0;
+}
+
+#category-view .cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-size: 13;
+    -fx-font-family: Roboto;
+    -fx-padding: 10 15;
+    -fx-font-weight: bold;
+}
+
+#category-view .cell .arrow {
+    -fx-background-color: rgb(255, 255, 255, 0.6);
+}
+
+#category-view .cell:selected {
+    -fx-background-color: #4F56EE;
+    -fx-background-insets: 0 5;
+    -fx-background-radius: 8;
+}
+
+#content {
+    -fx-spacing: 10;
+    -fx-padding: 15 15 15 25;
+    -fx-background-color: #0E121A;
+    -fx-background-radius: 10;
 }
 
 #search {
+    -fx-background-color: #0E121A;
+    -fx-background-radius: 10;
+    -fx-padding: 5 15;
+    -fx-pref-height: 35;
+    -fx-font-family: Roboto;
+    -fx-font-size: 13;
+    -fx-text-fill: white;
+    -fx-highlight-fill: #4F56EE;
 }
 
 #category-view {
+    -fx-background-color: #0E121A;
+    -fx-background-radius: 10;
+    -fx-background-insets: 0;
+    -fx-padding: 5 0;
 }
 
 .settings-content {
+    -fx-spacing: 15;
+    -fx-padding: 0 0 0 7.5;
 }
 
 #path {
+    -fx-background-color: #0E121A;
+    -fx-background-radius: 10;
+    -fx-padding: 5 15;
+    -fx-pref-height: 35;
 }
 

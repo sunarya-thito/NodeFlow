@@ -17,8 +17,9 @@ public class ThemeManager {
         return instance;
     }
 
-    private ObjectProperty<Theme> theme = new SimpleObjectProperty<>();
-    private Map<Class<?>, StyleSheet> sheetMap = new HashMap<>();
+    private final ObjectProperty<Theme> theme = new SimpleObjectProperty<>();
+    private final Map<Class<?>, StyleSheet> sheetMap = new HashMap<>();
+    private final ColorPalette colorPalette = new ColorPalette();
 
     public static void init() {
         if (instance != null) throw new IllegalStateException("already initialized");
@@ -27,17 +28,23 @@ public class ThemeManager {
 
     public ThemeManager() {
         theme.addListener((obs, old, val) -> {
-//            if (old != null) {
-////                StyleManager.getInstance().removeUserAgentStylesheet(
-////                        "rsrc:Themes/"+URLEncoder.encode(old.getName(), StandardCharsets.UTF_8)+"/StyleSheets/"+Skin.class.getName().replace('.', '/')+".css");
-//            }
             updateTheme(val);
-//            StyleManager.getInstance().addUserAgentStylesheet(
-//                    "rsrc:Themes/"+URLEncoder.encode(val.getName(), StandardCharsets.UTF_8)+"/StyleSheets/"+Skin.class.getName().replace('.', '/')+".css");
         });
     }
 
+    public ColorPalette getColorPalette() {
+        return colorPalette;
+    }
+
     protected void updateTheme(Theme theme) {
+        try {
+            URL styleJson = new URL("rsrc:Themes/" + URLEncoder.encode(theme.getName(), StandardCharsets.UTF_8) + "/Colors.json");
+            try (InputStream inputStream = styleJson.openStream()) {
+                colorPalette.load(inputStream);
+            }
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
         sheetMap.forEach((key, sheet) -> {
             setSheetContents(theme, sheet, key);
         });

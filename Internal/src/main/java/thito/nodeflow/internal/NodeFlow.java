@@ -19,10 +19,19 @@ import java.util.logging.*;
 public class NodeFlow extends ApplicationResources {
 
     public static final File ROOT;
+    public static final File RESOURCES_ROOT;
 
     static {
         String rootProp = System.getProperty("nodeflow.rootDirectory", "");
+        String resourcesRootProp = System.getProperty("nodeflow.resourcesRootDirectory", "");
+        if (!new File(rootProp).exists()) {
+            rootProp = "";
+        }
+        if (!new File(resourcesRootProp).exists()) {
+            resourcesRootProp = "";
+        }
         ROOT = new File(rootProp).getAbsoluteFile();
+        RESOURCES_ROOT = new File(resourcesRootProp).getAbsoluteFile();
     }
 
     private static final Logger logger = Logger.getLogger("NodeFlow");
@@ -44,17 +53,14 @@ public class NodeFlow extends ApplicationResources {
     private ObservableList<Editor> activeEditors = FXCollections.observableArrayList();
 
     public NodeFlow() {
-        try (FileReader reader = new FileReader(new File(ROOT, "Locales/en_us.yml"))) {
-            defaultLanguage.loadLanguage(reader);
-            Language.setLanguage(defaultLanguage);
-        } catch (Throwable t) {
-            throw new RuntimeException("failed to load default language (en_us.yml)", t);
-        }
+        getAvailableLanguages();
+        Language.setLanguage(defaultLanguage = getLanguage("en_us"));
         activeEditors.addListener((InvalidationListener) obs -> {
             if (activeEditors.isEmpty()) {
                 shutdown();
             }
         });
+        getAvailableLanguages();
     }
 
     public Editor createNewEditor() {
@@ -107,10 +113,18 @@ public class NodeFlow extends ApplicationResources {
         return defaultLanguage;
     }
 
+    public Language getLanguage(String code) {
+        return getAvailableLanguages().stream().filter(l -> l.getCode().equals(code)).findAny().orElseGet(() -> {
+            Language language = new Language(code);
+            cached.add(language);
+            return language;
+        });
+    }
+
     @Override
     public Collection<? extends Theme> getAvailableThemes() {
         List<Theme> themes = new ArrayList<>();
-        File[] list = new File(ROOT, "Themes").listFiles();
+        File[] list = new File(RESOURCES_ROOT, "Themes").listFiles();
         if (list != null) {
             for (File f : list) {
                 themes.add(new Theme(f.getName()));
@@ -121,15 +135,16 @@ public class NodeFlow extends ApplicationResources {
 
     private List<Language> cached;
     @Override
-    public Collection<? extends Language> getAvailableLanguages() {
+    public Collection<Language> getAvailableLanguages() {
         if (cached != null) return cached;
         List<Language> languages = new ArrayList<>();
-        File[] list = new File(ROOT, "Locales").listFiles();
+        File[] list = new File(RESOURCES_ROOT, "Locales").listFiles();
         if (list != null) {
             for (File f : list) {
                 Language l = new Language(f.getName().replace(".yml", ""));
                 try (FileReader reader = new FileReader(f)) {
                     l.loadLanguage(reader);
+                    languages.add(l);
                 } catch (Throwable t) {
                     t.printStackTrace();
                 }

@@ -40,6 +40,7 @@ StandardWindowSkin:maximized {
 #window-title {
     -fx-text-fill: white;
     -fx-font-family: Roboto;
+    -fx-font-size: 14;
 }
 
 .control-container {

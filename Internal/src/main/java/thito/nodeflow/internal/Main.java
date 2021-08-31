@@ -6,6 +6,7 @@ import javafx.beans.binding.*;
 import javafx.beans.property.*;
 import javafx.stage.*;
 import thito.nodeflow.internal.protocol.*;
+import thito.nodeflow.internal.settings.*;
 import thito.nodeflow.internal.settings.general.*;
 import thito.nodeflow.internal.ui.*;
 import thito.nodeflow.internal.ui.dashboard.*;
@@ -43,6 +44,7 @@ public class Main extends Application {
 
         logger.log(Level.INFO, "Loading application...");
         logger.log(Level.INFO, "Root directory at "+NodeFlow.ROOT);
+        logger.log(Level.INFO, "Resources Root directory at "+NodeFlow.RESOURCES_ROOT);
 
         NodeFlow nodeFlow = new NodeFlow();
         nodeFlow.registerProtocol("rsrc", new ResourceProtocol());
@@ -52,8 +54,11 @@ public class Main extends Application {
 
         try (InputStreamReader reader = new InputStreamReader(new URL("rsrc:ChangeLogs.txt").openStream())) {
             Version.read(reader);
-            String deployVersion = System.getProperty("nodeflow.version", "RELEASE");
-            Version.getCurrentVersion().setVersion(Version.getCurrentVersion().getVersion() + "-" + deployVersion);
+            String deployVersion = System.getProperty("nodeflow.version", "");
+            if (deployVersion.equals("${env.NODEFLOW_VERSION}")) deployVersion = "B";
+            if (!deployVersion.isEmpty()) {
+                Version.getCurrentVersion().setVersion(Version.getCurrentVersion().getVersion() + "-" + deployVersion);
+            }
         } catch (Throwable t) {
             t.printStackTrace();
         }
@@ -92,7 +97,10 @@ public class Main extends Application {
                     DashboardWindow dashboardWindow = new DashboardWindow();
                     EditorWindow editorWindow = new Editor().getEditorWindow();
                     editorWindow.show();
-                    dashboardWindow.show();
+
+                    if (Settings.get(General.Appearance.class).getShowDashboardAtStart().get()) {
+                        dashboardWindow.show();
+                    }
 
                     splashScreen.close();
                 });
