@@ -38,8 +38,8 @@ public class ThemeManager {
 
     protected void updateTheme(Theme theme) {
         try {
-            URL styleJson = new URL("rsrc:Themes/" + URLEncoder.encode(theme.getName(), StandardCharsets.UTF_8) + "/Colors.json");
-            try (InputStream inputStream = styleJson.openStream()) {
+//            URL styleJson = new URL("rsrc:Themes/" + URLEncoder.encode(theme.getName(), StandardCharsets.UTF_8) + "/Colors.json");
+            try (InputStream inputStream = new FileInputStream("Themes/" + theme.getName() + "/Colors.json")) {
                 colorPalette.load(inputStream);
             }
         } catch (Throwable t) {

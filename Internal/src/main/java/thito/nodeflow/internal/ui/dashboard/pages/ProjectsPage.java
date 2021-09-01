@@ -51,16 +51,15 @@ public class ProjectsPage extends DashboardPage {
         });
         workspaceChangeListener = (obs, old, val) -> {
             if (old != null) {
-                Bindings.unbindContent(projectList, old.getProjectPropertiesList());
+                ThreadBinding.unbindContent(projectList, old.getProjectPropertiesList(), TaskThread.UI());
             }
             if (val != null) {
-                Bindings.bindContent(projectList, val.getProjectPropertiesList());
-                workspaceCount.textProperty().bind(I18n.direct("(%s)").format(Bindings.size(val.getProjectPropertiesList())));
+                ThreadBinding.bindContent(projectList, val.getProjectPropertiesList(), TaskThread.UI());
             }
         };
         shownProjects = new FilteredList<>(projectList);
         sortedProject = new SortedList<>(shownProjects, (a, b) -> Long.compare(b.getLastModified(), a.getLastModified()));
-        Bindings.bindContent(projectList, NodeFlow.getInstance().workspaceProperty().get().getProjectPropertiesList());
+        ThreadBinding.bindContent(projectList, NodeFlow.getInstance().workspaceProperty().get().getProjectPropertiesList(), TaskThread.UI());
         NodeFlow.getInstance().workspaceProperty().addListener(workspaceChangeListener);
         registerActionHandler("dashboard.project-list.masonry-view", ActionEvent.ACTION, event -> {
             content.setCenter(new ProjectMasonrySkin(this));
@@ -71,10 +70,11 @@ public class ProjectsPage extends DashboardPage {
         registerActionHandler("project.create", ActionEvent.ACTION, event -> {
             FormDialog.create(I18n.$("dashboard.forms.create-project"), new CreateProjectForm())
                     .show(form -> {
+                        if (form == null) return;
                         TaskThread.IO().schedule(() -> {
                             try {
                                 ProjectProperties projectProperties = NodeFlow.getInstance().workspaceProperty().get()
-                                        .createProject(form.name.get());
+                                        .createProject(form.name.get(), form.folderName.get());
                                 String description = form.description.get();
                                 if (description != null && !description.trim().isEmpty()) {
                                     projectProperties.setDescription(description);
@@ -112,10 +112,7 @@ public class ProjectsPage extends DashboardPage {
             }
         });
         workspaceName.textProperty().bind(MappedBinding.map(NodeFlow.getInstance().workspaceProperty(), workspace -> workspace.getRoot().getName()));
-        Workspace workspace = NodeFlow.getInstance().workspaceProperty().get();
-        if (workspace != null) {
-            workspaceCount.textProperty().bind(I18n.direct("(%s)").format(Bindings.size(workspace.getProjectPropertiesList())));
-        }
+        workspaceCount.textProperty().bind(Bindings.createStringBinding(() -> "(" + projectList.size() + ")", projectList));
     }
 
 }

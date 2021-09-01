@@ -32,11 +32,11 @@
 
 .settings-buttons .button:default {
     -fx-background-color: #4F56EE;
-    -fx-border-color: #7E84F2;
+    -fx-border-color: derive(#4F56EE, 50%);
 }
 
 .settings-buttons .button:default:hover {
-    -fx-background-color: #7E84F2;
+    -fx-background-color: derive(#4F56EE, 50%);
 }
 
 .settings-buttons .button:disable {

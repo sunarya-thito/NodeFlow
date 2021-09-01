@@ -96,7 +96,7 @@ public class FileNode extends SettingsNode<File> {
         box = new HBox(field, button);
         box.getStyleClass().add("settings-file");
 
-        hasChangedPropertyProperty().bind(selectedFile.isNotEqualTo(item));
+        hasChangedProperty().bind(selectedFile.isNotEqualTo(item));
     }
 
     @Override

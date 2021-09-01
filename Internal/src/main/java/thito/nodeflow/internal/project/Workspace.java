@@ -29,7 +29,7 @@ public class Workspace {
         List<ProjectProperties> added = new ArrayList<>();
         for (Resource res : resource.getChildren()) {
             Resource child = res.getChild("project.yml");
-            if (child.exists()) {
+            if (child.getType() == ResourceType.FILE) {
                 ProjectProperties existing = projectPropertiesList.stream().filter(x -> x.getDirectory().equals(res)).findAny().orElse(null);
                 if (existing != null) {
                     added.add(existing);
@@ -45,19 +45,20 @@ public class Workspace {
                     NodeFlow.getLogger().log(Level.WARNING, "failed to read project properties of "+res.getFileName(), e);
                 }
             } else {
-                NodeFlow.getLogger().log(Level.INFO, "Unable to load directory "+res+" as project, no "+child+" to be found!");
+                NodeFlow.getLogger().log(Level.INFO, "Unable to load directory "+res+" as project, no "+child+" to be found! "+child.getType());
             }
         }
         projectPropertiesList.retainAll(added);
     }
 
-    public ProjectProperties createProject(String name) throws IOException {
+    public ProjectProperties createProject(String name, String directoryName) throws IOException {
         TaskThread.IO().checkThread();
-        Resource directory = resourceManager.getRoot().getChild(name);
+        Resource directory = resourceManager.getRoot().getChild(directoryName);
         directory.toFile().mkdirs();
         Resource properties = directory.getChild("project.yml");
         Section section = new MapSection();
         section.set("name", name);
+        section.set("last-modified", System.currentTimeMillis());
         try (Writer writer = properties.openWriter()) {
             writer.write(Section.toString(section));
         }

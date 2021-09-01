@@ -43,11 +43,23 @@
 }
 
 #item .button:hover {
-    -fx-background-color: #7E84F2;
+    -fx-background-color: derive(#4F56EE, 50%);
 }
 
 #item .text-field {
     -fx-background-color: #1A202C;
+    -fx-background-radius: 5;
+    -fx-background-insets: 0;
+    -fx-text-fill: rgb(255, 255, 255, 0.75);
+    -fx-font-family: Roboto;
+    -fx-padding: 5 15;
+    -fx-max-height: Infinity;
+    -fx-max-width: Infinity;
+    -fx-highlight-fill: #4F56EE;
+}
+
+#full-item .text-field {
+    -fx-background-color: #3F4757;
     -fx-background-radius: 5;
     -fx-background-insets: 0;
     -fx-text-fill: rgb(255, 255, 255, 0.75);
@@ -83,7 +95,7 @@
 }
 
 #item .spinner .decrement-arrow-button:hover, #item .spinner .increment-arrow-button:hover {
-    -fx-background-color: #7E84F2;
+    -fx-background-color: derive(#4F56EE, 50%);
 }
 
 #item .spinner .increment-arrow, #item .spinner .decrement-arrow {
@@ -119,4 +131,35 @@
     -fx-background-color: #1A202C;
     -fx-background-radius: 5 0 0 5;
     -fx-text-fill: rgb(255, 255, 255, 0.75);
+}
+
+#full-item .custom-color-dialog {
+    -fx-background-color: transparent;
+}
+
+#full-item .customcolor-controls-background {
+    -fx-background-color: #1A202C;
+}
+
+#full-item .custom-color-dialog .label {
+    -fx-text-fill: rgb(255, 255, 255, 0.75);
+}
+
+#full-item .custom-color-dialog .left-pill, #full-item .custom-color-dialog .center-pill, #full-item .custom-color-dialog .right-pill {
+    -fx-background-color: #3F4757;
+    -fx-font-family: Roboto;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+#full-item .custom-color-dialog .left-pill:selected, #full-item .custom-color-dialog .center-pill:selected, #full-item .custom-color-dialog .right-pill:selected {
+    -fx-background-color: #4F56EE;
+}
+
+#full-item .slider .track {
+    -fx-background-color: #3F4757;
+}
+
+#full-item .slider .thumb {
+    -fx-background-color: #4F56EE;
 }

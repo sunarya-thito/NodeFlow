@@ -1,6 +1,5 @@
 package thito.nodeflow.library.resource;
 
-import javafx.beans.*;
 import javafx.collections.*;
 
 import java.io.*;
@@ -10,10 +9,13 @@ import java.nio.file.*;
 import java.nio.file.attribute.*;
 import java.util.*;
 import java.util.concurrent.atomic.*;
+import java.util.logging.*;
 
 public class ResourceManager {
+    protected static final Logger logger = Logger.getLogger(ResourceManager.class.getName());
     protected Resource root;
     protected final ObservableList<WeakReference<Resource>> watchedResources = FXCollections.observableArrayList();
+
     public ResourceManager(File root) {
         Objects.requireNonNull(root);
         this.root = new Resource(this, root);

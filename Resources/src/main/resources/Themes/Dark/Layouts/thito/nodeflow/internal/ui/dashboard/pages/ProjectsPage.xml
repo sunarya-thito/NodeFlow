@@ -21,7 +21,7 @@
                     <Label id="workspace-name"></Label>
                     <Label id="workspace-count"></Label>
                 </HBox>
-                <Button id="add-button"/>
+                <Button id="add-button" action="project.create"/>
             </HBox>
             <BorderPane VBox.grow="ALWAYS" id="content">
 

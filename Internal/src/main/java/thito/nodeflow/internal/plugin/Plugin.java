@@ -37,6 +37,10 @@ public class Plugin {
         this.logger = Logger.getLogger(name);
     }
 
+    public PluginSettings getPluginSettings() {
+        return pluginSettings;
+    }
+
     public Logger getLogger() {
         return logger;
     }

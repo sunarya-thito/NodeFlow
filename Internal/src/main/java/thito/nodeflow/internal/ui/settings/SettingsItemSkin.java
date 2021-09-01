@@ -15,21 +15,43 @@ public class SettingsItemSkin extends Skin {
     @Component("item")
     BorderPane content;
 
-    private SettingsProperty<?> item;
+    @Component("full-item")
+    BorderPane contentFull;
 
-    public SettingsItemSkin(SettingsProperty<?> item) {
+    private SettingsProperty<?> item;
+    private SettingsSkin parent;
+
+    public SettingsItemSkin(SettingsSkin parent, SettingsProperty<?> item) {
+        this.parent = parent;
         this.item = item;
     }
+
+    private SettingsNode settingsNode;
 
     @Override
     protected void onLayoutLoaded() {
         name.textProperty().bind(item.displayNameProperty());
         SettingsNodeFactory settingsNodeFactory = NodeFlow.getInstance().getSettingsManager().getNodeFactory(item.getType());
-        SettingsNode node = settingsNodeFactory.createNode(item);
-        if (node instanceof SettingsNodePane) {
+        settingsNode = settingsNodeFactory.createNode(item);
+        settingsNode.hasChangedProperty().addListener((obs, old, val) -> {
+            if (val) {
+                parent.getChangedList().add(this);
+            } else {
+                parent.getChangedList().remove(this);
+            }
+        });
+        if (settingsNode instanceof SettingsNodePane) {
             // specialize SettingsNodePane to have full viewport of the settings item row pane
             ((Pane) name.getParent()).getChildren().remove(name);
+            ((Pane) content.getParent()).getChildren().remove(content);
+            contentFull.setCenter(settingsNode.getNode());
+        } else {
+            ((Pane) contentFull.getParent()).getChildren().remove(contentFull);
+            content.setCenter(settingsNode.getNode());
         }
-        content.setCenter(node.getNode());
+    }
+
+    public SettingsNode getSettingsNode() {
+        return settingsNode;
     }
 }

@@ -11,7 +11,7 @@ public abstract class SettingsNode<T> {
         this.item = item;
     }
 
-    public BooleanProperty hasChangedPropertyProperty() {
+    public BooleanProperty hasChangedProperty() {
         return hasChangedProperty;
     }
 

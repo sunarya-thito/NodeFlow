@@ -15,6 +15,7 @@ public class FormPane extends VBox {
     private static final PseudoClass INVALID = PseudoClass.getPseudoClass("invalid");
     private Form form;
 
+    private ObservableSet<FormProperty<?>> invalidFormPropertyList = FXCollections.observableSet();
     private ObservableList<FormProperty<?>> formPropertyList = FXCollections.observableArrayList();
 
     public FormPane(Form form) {
@@ -31,6 +32,24 @@ public class FormPane extends VBox {
                 t.printStackTrace();
             }
         }
+        validate();
+    }
+
+    private void validate() {
+        for (FormProperty<?> formProperty : formPropertyList) {
+            for (Validator validator : formProperty.getValidatorList()) {
+                I18n inv = validator.validate(formProperty.getValue());
+                if (inv != null) {
+                    invalidFormPropertyList.add(formProperty);
+                } else {
+                    invalidFormPropertyList.remove(formProperty);
+                }
+            }
+        }
+    }
+
+    public ObservableSet<FormProperty<?>> getInvalidFormPropertyList() {
+        return invalidFormPropertyList;
     }
 
     public Form getForm() {
@@ -65,6 +84,8 @@ public class FormPane extends VBox {
                 fieldName.getStyleClass().add("form-field-name");
                 invalid.getStyleClass().add("form-field-invalid");
 
+                fieldName.textProperty().bind(formProperty.nameProperty());
+
                 formProperty.addListener(new WeakChangeListener<>(this));
             }
 
@@ -86,10 +107,12 @@ public class FormPane extends VBox {
                     this.invalid.textProperty().set(null);
                     this.invalid.pseudoClassStateChanged(INVALID, false);
                     formProperty.validProperty().set(true);
+                    invalidFormPropertyList.remove(formProperty);
                 } else {
                     this.invalid.textProperty().bind(invalid);
                     this.invalid.pseudoClassStateChanged(INVALID, true);
                     formProperty.validProperty().set(false);
+                    invalidFormPropertyList.add(formProperty);
                 }
             }
         }

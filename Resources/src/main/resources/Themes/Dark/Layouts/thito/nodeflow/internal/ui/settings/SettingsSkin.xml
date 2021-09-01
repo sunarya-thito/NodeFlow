@@ -14,13 +14,13 @@
                         <VBox id="content"/>
                     </ScrollPane>
                     <HBox class="settings-buttons">
-                        <Button default="true">
+                        <Button id="ok" action="settings.ok" default="true">
                             <Label>${ok}</Label>
                         </Button>
-                        <Button cancel="true">
+                        <Button id="cancel" action="settings.cancel" cancel="true">
                             <Label>${cancel}</Label>
                         </Button>
-                        <Button disable="true">
+                        <Button id="apply" action="settings.apply" disable="true">
                             <Label>
                                 ${apply}
                             </Label>

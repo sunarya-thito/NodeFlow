@@ -22,7 +22,7 @@ public class CharacterNode extends SettingsNode<Character> {
             if (val.length() > 1) {
                 textField.setText(Character.toString(val.charAt(0)));
             }
-            hasChangedPropertyProperty().set(val.isEmpty() ? item.get() == null : val.charAt(0) == item.get());
+            hasChangedProperty().set(val.isEmpty() ? item.get() == null : val.charAt(0) == item.get());
         });
     }
 

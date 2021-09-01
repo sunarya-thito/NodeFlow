@@ -1,14 +1,19 @@
 package thito.nodeflow.buildhelper;
 
 import com.google.gson.*;
-import cz.vutbr.web.css.*;
-import cz.vutbr.web.csskit.*;
+import com.helger.commons.system.*;
+import com.helger.css.*;
+import com.helger.css.decl.*;
+import com.helger.css.reader.*;
+import com.helger.css.utils.*;
+import com.helger.css.writer.*;
 import org.apache.maven.plugin.*;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.*;
 import org.apache.maven.project.*;
 
-import java.awt.Color;
+import java.awt.*;
+import java.awt.color.*;
 import java.io.*;
 import java.nio.charset.*;
 import java.nio.file.*;
@@ -42,58 +47,36 @@ public class ExtractStyleMojo extends AbstractMojo {
         if (output.exists()) {
             collectResources(files, output);
         } else throw new MojoExecutionException("Invalid output", new FileNotFoundException(output.getPath()));
-        AtomicInteger colorCounter = new AtomicInteger();
         Set<Named> colors = new HashSet<>();
         for (File file : files) {
             try {
-                StyleSheet sheet = CSSFactory.parse(file.getAbsolutePath(), "UTF-8");
-                for (RuleBlock<?> ruleBlock : sheet) {
-                    for (Object style : ruleBlock) {
-                        if (style instanceof Declaration) {
-                            List<Term> replacement = new ArrayList<>();
-                            for (Term term : (Declaration) style) {
-                                Object value = term.getValue();
-                                if (value instanceof cz.vutbr.web.csskit.Color) {
-                                    Color awt = new Color(((cz.vutbr.web.csskit.Color) value).getRed(),
-                                            ((cz.vutbr.web.csskit.Color) value).getGreen(),
-                                            ((cz.vutbr.web.csskit.Color) value).getBlue(),
-                                            ((cz.vutbr.web.csskit.Color) value).getAlpha());
-                                    String name = putCounter(colors, new JsonColor(awt), colorCounter);
-                                    replacement.add(new TermString(name));
-                                } else {
-                                    String string = term.toString().replace(" ", "");
-                                    if (string.startsWith("rgb(") && string.endsWith(")")) {
-                                        string = string.substring(4, string.length() - 1);
-                                        String[] split = string.split(",");
-                                        if (split.length == 4) {
-                                            Color awt = new Color(Integer.parseInt(split[0]),
-                                                    Integer.parseInt(split[1]),
-                                                    Integer.parseInt(split[2]),
-                                                    (int) (Double.parseDouble(split[3]) * 255d));
-                                            String name = putCounter(colors, new JsonColor(awt), colorCounter);
-                                            replacement.add(new TermString(name));
-                                            continue;
-                                        } else if (split.length == 3) {
-                                            Color awt = new Color(Integer.parseInt(split[0]),
-                                                    Integer.parseInt(split[1]),
-                                                    Integer.parseInt(split[2]));
-                                            String name = putCounter(colors, new JsonColor(awt), colorCounter);
-                                            replacement.add(new TermString(name));
-                                            continue;
-                                        } else throw new MojoExecutionException("Invalid color: "+term);
-                                    }
-                                    replacement.add(term);
-                                }
+                CSSReaderSettings settings = new CSSReaderSettings();
+                settings.setCSSVersion(ECSSVersion.CSS30);
+                CascadingStyleSheet css = CSSReader.readFromFile(file, settings);
+                for (ICSSTopLevelRule rule : css.getAllRules()) {
+                    if (rule instanceof CSSStyleRule) {
+                        CSSStyleRule styleRule = (CSSStyleRule) rule;
+                        for (CSSDeclaration dec : styleRule.getAllDeclarations()) {
+                            List<ICSSExpressionMember> expressionMembers = new ArrayList<>();
+                            CSSExpression expression = dec.getExpression();
+                            for (int i = 0; i < expression.getMemberCount(); i++) {
+                                ICSSExpressionMember mem = expression.getMemberAtIndex(i);
+                                mem = replace(mem, colors);
+                                expressionMembers.add(mem);
                             }
-                            // also making sure that we don't miss anything
-                            for (int i = 0; i < ((Declaration) style).size(); i++) {
-                                ((Declaration) style).set(i, replacement.get(i));
-                            }
+                            expression.removeAllMembers();
+                            expressionMembers.forEach(expression::addMember);
                         }
                     }
                 }
-                Files.writeString(file.toPath(), sheet.stream().map(String::valueOf).collect(Collectors.joining("\n")), StandardCharsets.UTF_8);
-            } catch (CSSException | IOException e) {
+                CSSWriterSettings writerSettings = new CSSWriterSettings();
+                writerSettings.setCSSVersion(ECSSVersion.CSS30);
+                writerSettings.setQuoteURLs(true);
+                CSSWriter writer = new CSSWriter(writerSettings);
+                try (FileWriter fileWriter = new FileWriter(file)) {
+                    writer.writeCSS(css, fileWriter);
+                }
+            } catch (Exception e) {
                 throw new MojoExecutionException("Failed to parse "+file, e);
             }
         }
@@ -106,13 +89,69 @@ public class ExtractStyleMojo extends AbstractMojo {
         }
     }
 
-    private String putCounter(Set<Named> set, Object value, AtomicInteger counter) {
+    private ICSSExpressionMember replace(ICSSExpressionMember member, Set<Named> colors) {
+        if (member instanceof CSSExpressionMemberTermSimple) {
+            String value = ((CSSExpressionMemberTermSimple) member).getValue();
+            if (CSSColorHelper.isHexColorValue(value)) {
+                Color color = Color.decode(value);
+                String replacement = putCounter(colors, new JsonColor(color));
+                ((CSSExpressionMemberTermSimple) member).setValue(replacement);
+            }
+        } else if (member instanceof CSSExpressionMemberFunction) {
+            CSSExpressionMemberFunction function = (CSSExpressionMemberFunction) member;
+            CSSExpression expression = function.getExpression();
+            if (function.getFunctionName().equals("hsb") || function.getFunctionName().equals("hsba")) {
+                Color rgb = Color.getHSBColor(Integer.parseInt(expression.getAllSimpleMembers().get(0).getAsCSSString()) / 360f,
+                        Integer.parseInt(expression.getAllSimpleMembers().get(1).getAsCSSString().replace("%", "")) / 100f,
+                        Integer.parseInt(expression.getAllSimpleMembers().get(2).getAsCSSString().replace("%", "")) / 100f);
+                String replacement;
+                if (expression.getAllSimpleMembers().size() > 3) {
+                    replacement = putCounter(colors, new JsonColor(new Color(rgb.getRed(), rgb.getGreen(), rgb.getBlue(),
+                            (int) (Double.parseDouble(expression.getAllSimpleMembers().get(3).getAsCSSString()) * 255))));
+                } else {
+                    replacement = putCounter(colors, new JsonColor(rgb));
+                }
+                return new CSSExpressionMemberTermSimple(replacement);
+            } else if (function.getFunctionName().equals("rgb") || function.getFunctionName().equals("rgba")) {
+                String redString = expression.getAllSimpleMembers().get(0).getAsCSSString();
+                String blueString = expression.getAllSimpleMembers().get(1).getAsCSSString();
+                String greenString = expression.getAllSimpleMembers().get(2).getAsCSSString();
+                double red = redString.contains("%") ? Double.parseDouble(redString.replace("%", "")) / 100d * 255d :
+                        Integer.parseInt(redString);
+                double green = greenString.contains("%") ? Double.parseDouble(greenString.replace("%", "")) / 100d * 255d :
+                        Integer.parseInt(greenString);
+                double blue = blueString.contains("%") ? Double.parseDouble(blueString.replace("%", "")) / 100d * 255d :
+                        Integer.parseInt(blueString);
+                String replacement;
+                if (expression.getAllSimpleMembers().size() > 3) {
+                    String alphaString = expression.getAllSimpleMembers().get(3).getAsCSSString();
+                    double alpha = Double.parseDouble(alphaString) * 255;
+                    replacement = putCounter(colors, new JsonColor(new Color((int) red, (int) green, (int) blue, (int) alpha)));
+                } else {
+                    replacement = putCounter(colors, new JsonColor(new Color((int) red, (int) green, (int) blue)));
+                }
+                return new CSSExpressionMemberTermSimple(replacement);
+            } else {
+                List<ICSSExpressionMember> expressionMembers = new ArrayList<>();
+                for (int i = 0; i < expression.getMemberCount(); i++) {
+                    ICSSExpressionMember mem = expression.getMemberAtIndex(i);
+                    mem = replace(mem, colors);
+                    expressionMembers.add(mem);
+                }
+                expression.removeAllMembers();
+                expressionMembers.forEach(expression::addMember);
+            }
+        }
+        return member;
+    }
+
+    private String putCounter(Set<Named> set, JsonColor value) {
         for (Named t : set) {
             if (t.getValue().equals(value)) {
                 return t.getName();
             }
         }
-        int index = counter.getAndIncrement();
+        int index = set.size();
         String name = String.format(pattern, index);
         set.add(new Named(name, value));
         return name;
@@ -143,8 +182,7 @@ public class ExtractStyleMojo extends AbstractMojo {
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
-            if (!(o instanceof JsonColor)) return false;
-            JsonColor jsonColor = (JsonColor) o;
+            if (!(o instanceof JsonColor jsonColor)) return false;
             return red == jsonColor.red && green == jsonColor.green && blue == jsonColor.blue && alpha == jsonColor.alpha;
         }
 
@@ -156,9 +194,9 @@ public class ExtractStyleMojo extends AbstractMojo {
 
     public static class Named {
         private String name;
-        private Object value;
+        private JsonColor value;
 
-        public Named(String name, Object value) {
+        public Named(String name, JsonColor value) {
             this.name = name;
             this.value = value;
         }
@@ -167,7 +205,7 @@ public class ExtractStyleMojo extends AbstractMojo {
             return name;
         }
 
-        public Object getValue() {
+        public JsonColor getValue() {
             return value;
         }
 
@@ -177,18 +215,6 @@ public class ExtractStyleMojo extends AbstractMojo {
                     "name='" + name + '\'' +
                     ", value=" + value +
                     '}';
-        }
-    }
-
-    public static class TermString extends TermStringImpl {
-        public TermString(String value) {
-            super();
-            setValue(value);
-        }
-
-        @Override
-        public String toString() {
-            return getValue();
         }
     }
 }

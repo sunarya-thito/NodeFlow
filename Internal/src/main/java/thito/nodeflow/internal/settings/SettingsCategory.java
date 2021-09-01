@@ -11,6 +11,7 @@ public class SettingsCategory {
     ObservableList<SettingsCategory> subCategory = FXCollections.observableArrayList();
 
     public SettingsCategory(Class<? extends Settings> type, Settings settings) {
+        this.type = type;
         this.settings = settings;
         this.description = settings.description();
     }

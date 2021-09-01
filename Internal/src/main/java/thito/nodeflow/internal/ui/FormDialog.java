@@ -1,5 +1,6 @@
 package thito.nodeflow.internal.ui;
 
+import javafx.beans.binding.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import thito.nodeflow.library.language.*;
@@ -33,6 +34,7 @@ public class FormDialog<T extends Form> {
         borderPane.getStyleClass().add("form-root");
         Button okButton = new Button();
         okButton.getStyleClass().add("ok-button");
+        okButton.disableProperty().bind(Bindings.isNotEmpty(formPane.getInvalidFormPropertyList()));
         okButton.setDefaultButton(true);
         okButton.textProperty().bind(I18n.$("ok"));
         Button cancelButton = new Button();

@@ -1,17 +1,14 @@
 package thito.nodeflow.library.ui;
 
-import com.sun.javafx.css.*;
 import javafx.application.*;
+import javafx.beans.*;
 import javafx.beans.property.*;
-import javafx.beans.value.*;
 import javafx.css.*;
 import javafx.scene.*;
-import javafx.scene.image.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.*;
 import javafx.stage.*;
-import thito.nodeflow.library.application.*;
 import thito.nodeflow.library.binding.*;
 import thito.nodeflow.library.platform.*;
 import thito.nodeflow.library.task.*;
@@ -60,6 +57,17 @@ public abstract class Window {
             skin.get().pseudoClassStateChanged(MAXIMIZED, val);
         });
 
+//        InvalidationListener update = obs -> {
+//            stage.setMinWidth(root.minWidth(-1));
+//            stage.setMinHeight(root.minHeight(-1));
+//            stage.centerOnScreen();
+//        };
+//
+//        skin.addListener((obs, old, val) -> {
+//            if (old != null) val.layoutBoundsProperty().removeListener(update);
+//            if (val != null) val.layoutBoundsProperty().addListener(update);
+//        });
+
         // Colors.json binding
         root.styleProperty().bind(ThemeManager.getInstance().getColorPalette().styleProperty());
 
@@ -80,11 +88,6 @@ public abstract class Window {
         });
         stage.setScene(scene);
         skin.set(createSkin());
-
-        root.layoutBoundsProperty().addListener(obs -> {
-            stage.setMinWidth(root.minWidth(root.getHeight()));
-            stage.setMinHeight(root.minHeight(root.getWidth()));
-        });
 
         ThreadBinding.bind(stage.titleProperty(), titleProperty(), TaskThread.UI());
     }
@@ -109,6 +112,8 @@ public abstract class Window {
         Platform.runLater(() -> {
             stage.show();
             stage.toFront();
+            stage.sizeToScene();
+            stage.centerOnScreen();
         });
     }
 

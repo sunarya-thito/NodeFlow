@@ -51,7 +51,7 @@ public class NumberNode extends SettingsNode<Number> {
             updating = false;
         });
         spinner.getStyleClass().add("settings-number");
-        hasChangedPropertyProperty().bind(value.isNotEqualTo(item));
+        hasChangedProperty().bind(value.isNotEqualTo(item));
     }
 
     @Override

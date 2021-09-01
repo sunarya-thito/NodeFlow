@@ -1,0 +1,156 @@
+.standard-window {
+    -fx-background-color: #0E121A;
+}
+
+.standard-window-header {
+    -fx-background-color: #1A202C;
+    -fx-min-height: 30;
+    -fx-max-height: 30;
+    -fx-pref-height: 30;
+}
+
+#caption {
+}
+
+.shadow-background {
+    -fx-effect: dropshadow(gaussian, rgb(0, 0, 0, 0.5), 10, 0, 0, 0);
+    -fx-padding: 10;
+}
+
+DialogWindowSkin {
+    -fx-background-color: transparent;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(gaussian, rgb(0, 0, 0, 0.7), 20, 0, 0, 0);
+}
+
+DialogWindowSkin:maximized {
+    -fx-padding: 8;
+    -fx-effect: none;
+}
+
+.caption-container {
+    -fx-alignment: center;
+    -fx-padding: 0 15;
+}
+
+#window-title {
+    -fx-text-fill: white;
+    -fx-font-family: Roboto;
+}
+
+.control-container {
+    -fx-alignment: center_right;
+}
+
+.control-button {
+    -fx-padding: 0 10;
+    -fx-background-radius: 0;
+    -fx-max-height: Infinity;
+    -fx-max-width: Infinity;
+}
+
+.control-button:hover {
+    -fx-background-color: rgb(255, 255, 255, 0.08);
+}
+
+#close-button {
+    -fx-graphic: url("rsrc:Themes/Dark/Icons/CloseButton2.png");
+}
+
+#maximize-button {
+    -fx-graphic: url("rsrc:Themes/Dark/Icons/MaximizeButton.png");
+}
+
+#minimize-button {
+    -fx-graphic: url("rsrc:Themes/Dark/Icons/MinimizeButton.png");
+}
+
+#close-button:hover {
+    -fx-background-color: #C44B4B;
+    -fx-graphic: url("rsrc:Themes/Dark/Icons/CloseButton3.png");
+}
+
+.form-field-name {
+    -fx-font-family: Roboto;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14;
+}
+
+.form-field-information {
+    -fx-alignment: center_left;
+    -fx-spacing: 10;
+}
+
+.form-field-invalid {
+    -fx-text-fill: rgb(255, 100, 100);
+    -fx-font-family: Roboto;
+    -fx-graphic-text-gap: 8;
+}
+
+.form-field-invalid:invalid {
+    -fx-graphic: url("rsrc:Themes/Dark/Icons/FormsInvalid.png");
+}
+
+.form-field {
+    -fx-spacing: 5;
+}
+
+FormPane {
+    -fx-padding: 25;
+    -fx-spacing: 20;
+}
+
+.buttons {
+    -fx-alignment: center_right;
+    -fx-padding: 15;
+    -fx-spacing: 10;
+}
+
+.buttons .button {
+    -fx-padding: 7 20;
+    -fx-background-color: transparent;
+    -fx-border-width: 1.5;
+    -fx-border-insets: -1.5;
+    -fx-border-radius: 5;
+    -fx-border-color: rgb(255, 255, 255, 0.3);
+    -fx-font-family: Roboto;
+    -fx-font-size: 14;
+    -fx-text-fill: rgb(255, 255, 255, 0.7);
+}
+
+.buttons .button:hover {
+    -fx-background-color: rgb(255, 255, 255, 0.1);
+}
+
+.buttons .button:default {
+    -fx-background-color: #4F56EE;
+    -fx-border-color: derive(#4F56EE, 50%);
+}
+
+.buttons .button:default:hover {
+    -fx-background-color: derive(#4F56EE, 50%);
+}
+
+.form-field-container .text-field, .form-field-container .text-area {
+    -fx-background-color: #1A202C;
+    -fx-control-inner-background: #1A202C;
+    -fx-faint-focus-color: transparent;
+    -fx-focus-color: transparent;
+    -fx-highlight-fill: #4F56EE;
+    -fx-text-fill: white;
+    -fx-font-size: 13;
+    -fx-font-family: Roboto;
+}
+
+.form-field-container .text-field {
+    -fx-padding: 10 15;
+}
+
+.form-field-container .text-area .content {
+    -fx-padding: 10 15;
+}
+
+.form-field-container .text-area .content, .form-field-container .text-area .scroll-pane, .form-field-container .text-area .viewport {
+    -fx-background-color: transparent;
+}

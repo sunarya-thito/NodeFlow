@@ -26,9 +26,7 @@ public class Skin extends StackPane {
         styleSheet = ThemeManager.getInstance().getStyleSheet(this);
         Bindings.bindContent(getStylesheets(), styleSheet.getCssFiles());
         initializeSkin();
-        Platform.runLater(() -> {
-            load(requestSkinParser());
-        });
+        load(requestSkinParser());
     }
 
     protected Window getWindow() {

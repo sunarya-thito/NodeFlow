@@ -13,7 +13,7 @@ public class StringNode extends SettingsNode<String> {
         field = new TextField(item.get());
         field.getStyleClass().add("string-node");
         value.bind(field.textProperty());
-        hasChangedPropertyProperty().bind(value.isNotEqualTo(item));
+        hasChangedProperty().bind(value.isNotEqualTo(item));
     }
 
     @Override

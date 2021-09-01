@@ -3,6 +3,7 @@ package thito.nodeflow.plugin.base.blueprint.handler.parameter;
 import javafx.beans.property.*;
 import thito.nodeflow.engine.node.*;
 import thito.nodeflow.engine.node.skin.*;
+import thito.nodeflow.plugin.base.blueprint.*;
 import thito.nodeflow.plugin.base.blueprint.state.*;
 
 import java.lang.reflect.*;
@@ -14,6 +15,7 @@ public class VarArgsParameterHandler extends ConstantHolderParameterHandler {
     private Type type;
 
     public VarArgsParameterHandler(Parameter parameter, NodeParameter nodeParameter) {
+        super(nodeParameter);
         this.parameter = parameter;
         this.nodeParameter = nodeParameter;
         Type type = parameter.getParameterizedType();
@@ -36,6 +38,11 @@ public class VarArgsParameterHandler extends ConstantHolderParameterHandler {
 
     @Override
     public NodeParameter getParameter() {
+        return null;
+    }
+
+    @Override
+    public GenericStorage getGenericStorage() {
         return null;
     }
 

@@ -1,6 +1,5 @@
 package thito.nodeflow.internal.settings.node;
 
-import javafx.beans.property.*;
 import javafx.collections.*;
 import javafx.scene.*;
 import javafx.scene.control.*;
@@ -31,7 +30,7 @@ public class SelectionNode<T> extends SettingsNode<T> {
         comboBox = new ComboBox<>(selections);
         comboBox.setValue(item.get());
         comboBox.getStyleClass().add("settings-list");
-        hasChangedPropertyProperty().bind(comboBox.valueProperty().isNotEqualTo(item));
+        hasChangedProperty().bind(comboBox.valueProperty().isNotEqualTo(item));
     }
 
     @Override

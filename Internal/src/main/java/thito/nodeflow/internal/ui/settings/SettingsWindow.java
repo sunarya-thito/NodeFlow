@@ -16,6 +16,13 @@ public class SettingsWindow extends StandardWindow {
         return opened;
     }
 
+    public static void closeWindow() {
+        if (opened != null) {
+            opened.close();
+            opened = null;
+        }
+    }
+
     public SettingsWindow() {
         titleProperty().bind(I18n.$("settings.title"));
     }

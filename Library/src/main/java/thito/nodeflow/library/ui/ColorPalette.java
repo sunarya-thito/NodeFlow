@@ -17,7 +17,13 @@ public class ColorPalette {
         int green = (int) (color.getGreen() * 255);
         int blue = (int) (color.getBlue() * 255);
         int alpha = (int) (color.getOpacity() * 255);
-        return "#" + Integer.toHexString(red) + Integer.toHexString(green) + Integer.toHexString(blue) + Integer.toHexString(alpha);
+        return "#" + hex(red) + hex(green) + hex(blue) + hex(alpha);
+    }
+
+    public static String hex(int num) {
+        StringBuilder x = new StringBuilder(Integer.toHexString(num));
+        while (x.length() < 2) x.insert(0, "0");
+        return x.toString();
     }
 
     private ObservableMap<String, Color> colorMap = FXCollections.observableMap(new LinkedHashMap<>()); // to keep it sorted
@@ -35,7 +41,7 @@ public class ColorPalette {
                         color = replacement;
                     }
                 }
-                builder.append("color-palette-").append(var).append(": ").append(toHex(color)).append("; ");
+                builder.append(var).append(": ").append(toHex(color)).append("; ");
             });
             return builder.toString();
         }, colorMap, overrideMap));

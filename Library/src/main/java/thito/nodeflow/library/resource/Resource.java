@@ -15,6 +15,7 @@ import java.nio.charset.*;
 import java.nio.file.*;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.logging.*;
 
 public class Resource {
     protected LongProperty size = new SimpleLongProperty();
@@ -53,7 +54,9 @@ public class Resource {
         String[] children = file.list();
         if (children != null) {
             for (String child : children) {
-                this.children.add(resourceManager.getResource(new File(file, child)));
+                Resource resource = resourceManager.getResource(new File(file, child));
+                this.children.add(resource);
+                resource.updateProperties();
             }
         }
     }
@@ -122,7 +125,7 @@ public class Resource {
             if (file.exists() && file.isDirectory()) {
                 type.set(ResourceType.DIRECTORY);
                 size.set(ResourceManager.directorySize(toFile().toPath()));
-            } else if (file.exists() && file.isFile()) {
+            } else if (file.exists()) {
                 type.set(ResourceType.FILE);
                 size.set(file.length());
             } else {

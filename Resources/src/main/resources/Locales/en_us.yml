@@ -3,6 +3,20 @@ name: English (US)
 credit: English Locale by Thito Yalasatria Sunarya
 #
 loading: Loading
+forms:
+  validate-not-empty: Field must not be empty
+color-chooser:
+  hue: "Hue:"
+  saturation: "Saturation:"
+  brightness: "Brightness:"
+  opacity: "Opacity:"
+  red: "Red:"
+  green: "Green:"
+  blue: "Blue:"
+  web-color: "HEX Color:"
+  hsb: HSB
+  rgb: RGB
+  web: Web
 dashboard:
   title: Dashboard
   changelogs: CHANGE LOGS
@@ -13,6 +27,8 @@ dashboard:
     create-project: Create New Project
     name: Project Name
     description: Project Description
+    folder-name: Folder Name
+    validate-already-exist: Project with that folder name is already exist
 search: Search
 browse: Browse
 open-directory: Select Directory

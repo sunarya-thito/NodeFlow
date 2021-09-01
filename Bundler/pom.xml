@@ -14,15 +14,6 @@
         <maven.compiler.target>16</maven.compiler.target>
     </properties>
 
-    <distributionManagement>
-        <repository>
-            <id>github</id>
-            <name>Github sunarya-thito Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/sunarya-thito/NodeFlowSoftware</url>
-            <uniqueVersion>false</uniqueVersion>
-        </repository>
-    </distributionManagement>
-
     <dependencies>
         <dependency>
             <groupId>org.openjfx</groupId>

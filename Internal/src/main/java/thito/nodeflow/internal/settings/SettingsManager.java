@@ -35,6 +35,7 @@ public class SettingsManager {
         registerParser(Short.class, new ShortParser());
         registerParser(Theme.class, new ThemeParser());
         registerParser(String.class, new StringParser());
+        registerParser(ColorValues.class, new ColorValuesParser());
 
         registerNodeFactory(Boolean.class, new BooleanNode.Factory());
         registerNodeFactory(Byte.class, new NumberNode.Factory());
@@ -48,6 +49,7 @@ public class SettingsManager {
         registerNodeFactory(Short.class, new NumberNode.Factory());
         registerNodeFactory(Theme.class, new SelectionNode.ThemeFactory());
         registerNodeFactory(String.class, new StringParser.Factory());
+        registerNodeFactory(ColorValues.class, new ColorPaletteNode.Factory());
     }
 
     public <T extends Settings> Optional<T> getSettings(Class<T> category) {
@@ -59,8 +61,8 @@ public class SettingsManager {
     }
 
     private <T extends Settings> T findSettings(SettingsCategory category, Class<T> type) {
-        if (category.getType().equals(type)) return (T) category.getSettings();
         if (category != null) {
+            if (category.getType().equals(type)) return (T) category.getSettings();
             for (SettingsCategory sub : category.subCategory) {
                 T found = findSettings(sub, type);
                 if (found != null) return found;

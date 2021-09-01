@@ -6,6 +6,7 @@ import java.io.*;
 import java.lang.ref.*;
 import java.nio.file.*;
 import java.util.*;
+import java.util.logging.*;
 
 public class ResourceWatcher {
     static ResourceWatcher resourceWatcher = new ResourceWatcher();
@@ -73,12 +74,14 @@ public class ResourceWatcher {
                                         Resource target = resource.getChild(targetFile.getPath());
                                         resource.children.add(target);
                                         resource.updateProperties();
+                                        target.updateProperties();
                                     });
                                 } else if (kind == StandardWatchEventKinds.ENTRY_DELETE) {
                                     TaskThread.IO().schedule(() -> {
                                         Resource target = resource.getChild(targetFile.getPath());
                                         resource.children.remove(target);
                                         resource.updateProperties();
+                                        target.updateProperties();
                                     });
                                 } else if (kind == StandardWatchEventKinds.ENTRY_MODIFY) {
                                     TaskThread.IO().schedule(() -> {
@@ -86,6 +89,7 @@ public class ResourceWatcher {
                                         target.updateProperties();
                                         target.fireEvent(new ResourceEvent(ResourceEvent.FILE_MODIFIED, target));
                                         resource.updateProperties();
+                                        target.updateProperties();
                                     });
                                 }
                             }

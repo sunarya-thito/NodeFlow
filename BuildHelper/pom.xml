@@ -45,9 +45,9 @@
             <version>3.6.3</version>
         </dependency>
         <dependency>
-            <groupId>net.sf.cssbox</groupId>
-            <artifactId>jstyleparser</artifactId>
-            <version>4.0.0</version>
+            <groupId>com.helger</groupId>
+            <artifactId>ph-css</artifactId>
+            <version>6.3.4</version>
         </dependency>
         <dependency>
             <groupId>org.apache.maven.plugin-tools</groupId>

@@ -125,24 +125,23 @@ public class Toolkit {
         String[] split = search.split("\\s+");
         String ignoreCaseTarget = target.toLowerCase();
         double score = 0;
-        double maxScore = target.split("\\s+").length * 2;
         int previousIndex = -1;
         int ignoreCasePreviousIndex = -1;
-        for (int i = 0; i < split.length; i++) {
-            int index = target.indexOf(split[i]);
+        for (String s : split) {
+            int index = target.indexOf(s);
             if (previousIndex < index) {
                 score += 2;
                 previousIndex = index;
                 continue;
             }
-            String ignoreCaseSearch = split[i].toLowerCase();
+            String ignoreCaseSearch = s.toLowerCase();
             int ignoreCaseIndex = ignoreCaseTarget.indexOf(ignoreCaseSearch);
             if (ignoreCasePreviousIndex < ignoreCaseIndex) {
                 score++;
                 ignoreCasePreviousIndex = ignoreCaseIndex;
             }
         }
-        return score / maxScore;
+        return score;
     }
 
     public static double distance(String s1, String s2) {

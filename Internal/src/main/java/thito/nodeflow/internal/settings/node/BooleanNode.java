@@ -20,7 +20,7 @@ public class BooleanNode extends SettingsNode<Boolean> {
         checkBox.getStyleClass().add("settings-boolean");
         checkBox.setSelected(item.get());
 
-        hasChangedPropertyProperty().bind(checkBox.selectedProperty().asObject().isNotEqualTo(item));
+        hasChangedProperty().bind(checkBox.selectedProperty().asObject().isNotEqualTo(item));
     }
 
     @Override

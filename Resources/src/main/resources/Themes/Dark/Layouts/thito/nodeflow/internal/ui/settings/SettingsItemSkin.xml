@@ -4,6 +4,9 @@
             <Left>
                 <Label BorderPane.alignment="CENTER_LEFT" id="name"/>
             </Left>
+            <Center>
+                <BorderPane BorderPane.alignment="CENTER" id="full-item"/>
+            </Center>
             <Right>
                 <BorderPane BorderPane.alignment="CENTER_RIGHT" id="item"/>
             </Right>
