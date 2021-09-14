@@ -18,7 +18,7 @@ public class Condition {
     public Reference NotNull() {
         return new Reference(boolean.class) {
             @Override
-            public void write() {
+            public void writeByteCode() {
                 MethodContext context = MethodContext.getContext();
                 Label other = new Label();
                 Label end = new Label();
@@ -45,7 +45,7 @@ public class Condition {
     public Reference Null() {
         return new Reference(boolean.class) {
             @Override
-            public void write() {
+            public void writeByteCode() {
                 MethodContext context = MethodContext.getContext();
                 Label other = new Label();
                 Label end = new Label();
@@ -70,8 +70,8 @@ public class Condition {
     }
 
     private void validateNumbers(Object compare) {
-        if (!Java.Class(Number.class).isAssignableFrom(BCHelper.getType(object)) ||
-            !Java.Class(Number.class).isAssignableFrom(BCHelper.getType(compare))) {
+        if (!Java.Class(Number.class).isAssignableFrom(BCHelper.primitiveToWrapper(BCHelper.getType(object))) ||
+            !Java.Class(Number.class).isAssignableFrom(BCHelper.primitiveToWrapper(BCHelper.getType(compare)))) {
             throw new IllegalArgumentException("compared objects must be a number");
         }
     }
@@ -80,7 +80,7 @@ public class Condition {
         validateNumbers(compare);
         return new Reference(boolean.class) {
             @Override
-            public void write() {
+            public void writeByteCode() {
                 MethodContext context = MethodContext.getContext();
                 Label other = new Label();
                 Label end = new Label();
@@ -118,7 +118,7 @@ public class Condition {
         if (compare == null) return Null();
         return new Reference(boolean.class) {
             @Override
-            public void write() {
+            public void writeByteCode() {
                 MethodContext context = MethodContext.getContext();
                 Label other = new Label();
                 Label end = new Label();
@@ -148,7 +148,7 @@ public class Condition {
         if (compare == null) return NotNull();
         return new Reference(boolean.class) {
             @Override
-            public void write() {
+            public void writeByteCode() {
                 MethodContext context = MethodContext.getContext();
                 Label other = new Label();
                 Label end = new Label();
@@ -179,7 +179,7 @@ public class Condition {
         validateNumbers(compare);
         return new Reference(boolean.class) {
             @Override
-            public void write() {
+            public void writeByteCode() {
                 MethodContext context = MethodContext.getContext();
                 Label other = new Label();
                 Label end = new Label();
@@ -217,7 +217,7 @@ public class Condition {
         validateNumbers(compare);
         return new Reference(boolean.class) {
             @Override
-            public void write() {
+            public void writeByteCode() {
                 MethodContext context = MethodContext.getContext();
                 Label other = new Label();
                 Label end = new Label();
@@ -255,7 +255,7 @@ public class Condition {
         validateNumbers(compare);
         return new Reference(boolean.class) {
             @Override
-            public void write() {
+            public void writeByteCode() {
                 MethodContext context = MethodContext.getContext();
                 Label other = new Label();
                 Label end = new Label();
@@ -293,7 +293,7 @@ public class Condition {
         validateNumbers(compare);
         return new Reference(boolean.class) {
             @Override
-            public void write() {
+            public void writeByteCode() {
                 MethodContext context = MethodContext.getContext();
                 Label other = new Label();
                 Label end = new Label();
@@ -331,7 +331,7 @@ public class Condition {
         validateNumbers(compare);
         return new Reference(boolean.class) {
             @Override
-            public void write() {
+            public void writeByteCode() {
                 MethodContext context = MethodContext.getContext();
                 Label other = new Label();
                 Label end = new Label();

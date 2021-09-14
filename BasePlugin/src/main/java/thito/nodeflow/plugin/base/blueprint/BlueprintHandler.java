@@ -14,7 +14,6 @@ public class BlueprintHandler implements NodeCanvasHandler {
         NodeProvider nodeProvider = manager.getNodeProviders().stream()
                 .filter(provider -> provider.getId().equals(((BlueprintNodeState) state).providerId))
                 .findAny().orElse(manager.getUnknownNodeProvider());
-        ((BlueprintNodeState) state).provider = nodeProvider;
         return nodeProvider.createHandler(node, (BlueprintNodeState) state);
     }
 
@@ -23,7 +22,6 @@ public class BlueprintHandler implements NodeCanvasHandler {
         EventNodeProvider eventNodeProvider = manager.getEventNodeProviders().stream()
                 .filter(provider -> provider.getId().equals(((BlueprintNodeState) state).providerId))
                 .findAny().orElse(manager.getUnknownEventNodeProvider());
-        ((BlueprintNodeState) state).provider = eventNodeProvider;
         return eventNodeProvider.createHandler(node, (BlueprintNodeState) state);
     }
 

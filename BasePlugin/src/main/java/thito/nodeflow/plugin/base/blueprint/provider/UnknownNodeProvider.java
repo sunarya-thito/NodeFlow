@@ -21,4 +21,9 @@ public class UnknownNodeProvider implements NodeProvider {
     public NodeHandler createHandler(Node node, BlueprintNodeState handlerState) {
         return null;
     }
+
+    @Override
+    public Node createNode() {
+        return null;
+    }
 }

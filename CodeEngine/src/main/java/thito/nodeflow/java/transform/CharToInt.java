@@ -7,8 +7,8 @@ public class CharToInt implements ObjectTransformation {
     public Reference transform(Reference source) {
         return new Reference(int.class) {
             @Override
-            public void write() {
-                source.write();
+            public void writeByteCode() {
+                source.writeByteCode();
             }
 
             @Override

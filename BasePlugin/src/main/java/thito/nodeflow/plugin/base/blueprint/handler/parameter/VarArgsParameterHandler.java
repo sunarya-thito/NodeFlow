@@ -1,64 +1,62 @@
 package thito.nodeflow.plugin.base.blueprint.handler.parameter;
 
 import javafx.beans.property.*;
+import javafx.scene.paint.*;
 import thito.nodeflow.engine.node.*;
-import thito.nodeflow.engine.node.skin.*;
 import thito.nodeflow.plugin.base.blueprint.*;
-import thito.nodeflow.plugin.base.blueprint.state.*;
+import thito.nodeflow.plugin.base.blueprint.state.parameter.*;
 
 import java.lang.reflect.*;
 
 public class VarArgsParameterHandler extends ConstantHolderParameterHandler {
 
     private Parameter parameter;
-    private NodeParameter nodeParameter;
     private Type type;
+    private NodePort inputPort;
+    private GenericStorage genericStorage;
 
-    public VarArgsParameterHandler(Parameter parameter, NodeParameter nodeParameter) {
+    public VarArgsParameterHandler(GenericStorage genericStorage, Parameter parameter, NodeParameter nodeParameter) {
         super(nodeParameter);
         this.parameter = parameter;
-        this.nodeParameter = nodeParameter;
+        this.genericStorage = genericStorage;
         Type type = parameter.getParameterizedType();
         if (type instanceof GenericArrayType) {
             this.type = ((GenericArrayType) type).getGenericComponentType();
         } else if (type instanceof Class && ((Class<?>) type).isArray()) {
             this.type = ((Class<?>) type).getComponentType();
         } else throw new UnsupportedOperationException(type.getTypeName());
+        this.inputPort = new NodePort(false, Color.BLACK, PortShape.CIRCLE);
+        this.inputPort.colorProperty().bind(BlueprintManager.getBlueprintManager().getTypeColor(genericStorage, type));
     }
+
 
     @Override
     protected ConstantHolderParameterHandlerState subSaveState() {
-        return null;
+        VarArgsParameterHandlerState state = new VarArgsParameterHandlerState();
+        Parameter[] parameters = parameter.getDeclaringExecutable().getParameters();
+        for (int i = 0; i < parameters.length; i++) {
+            if (parameters[i].equals(parameter)) {
+                state.parameterIndex = i;
+                break;
+            }
+        }
+        if (state.parameterIndex == -1) throw new IllegalArgumentException("invalid parameter index");
+        return state;
     }
 
     @Override
     public StringProperty displayNameProperty() {
-        return null;
-    }
-
-    @Override
-    public NodeParameter getParameter() {
-        return null;
+        return new SimpleStringProperty(parameter.getName());
     }
 
     @Override
     public GenericStorage getGenericStorage() {
-        return null;
-    }
-
-    @Override
-    public NodeParameterSkin createSkin() {
-        return null;
+        return genericStorage;
     }
 
     @Override
     public Type getType() {
         return type;
-    }
-
-    @Override
-    public boolean acceptPairing(NodeParameter parameter, boolean asInput) {
-        return false;
     }
 
     @Override

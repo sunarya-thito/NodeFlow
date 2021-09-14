@@ -24,7 +24,7 @@ public class LField {
     public Reference get() {
         return new Reference(getType()) {
             @Override
-            public void write() {
+            public void writeByteCode() {
                 final MethodContext context = MethodContext.getContext();
                 context.pushNode(new VarInsnNode(BCHelper.getASMType(getType()).getOpcode(Opcodes.ILOAD), getVirtualIndex()));
             }
@@ -71,7 +71,7 @@ public class LField {
             SourceCode sourceCode = SourceCode.getContext();
             StringBuilder line = sourceCode.getLine();
             if (!sourceCode.getVariables().contains(index)) {
-                line.append(sourceCode.generalizeType(getType()));
+                line.append(sourceCode.simplifyType(getType()));
                 line.append(' ');
                 sourceCode.getVariables().add(index);
             }

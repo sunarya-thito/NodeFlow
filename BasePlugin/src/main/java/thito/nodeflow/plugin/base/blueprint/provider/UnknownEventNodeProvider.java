@@ -19,6 +19,11 @@ public class UnknownEventNodeProvider implements EventNodeProvider {
     }
 
     @Override
+    public EventNode createNode() {
+        return null;
+    }
+
+    @Override
     public I18n displayNameProperty() {
         return null;
     }

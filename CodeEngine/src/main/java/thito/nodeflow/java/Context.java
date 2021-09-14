@@ -9,6 +9,8 @@ import thito.nodeflow.java.util.*;
 import java.lang.reflect.Array;
 import java.lang.reflect.*;
 import java.util.*;
+import java.util.concurrent.*;
+import java.util.function.*;
 
 public class Context implements AutoCloseable {
 
@@ -38,11 +40,21 @@ public class Context implements AutoCloseable {
     }
 
     private Set<GClass> generatedClasses = new HashSet<>();
-    protected Map<Class<?>, IClass> cachedClassMap = new HashMap<>();
+    protected Map<Class<?>, IClass> cachedClassMap = new ConcurrentHashMap<>();
 
     public GClass declareClass(String pkg, String name, IClass declaringClass) {
         if (declaringClass != null && !isSamePackage(pkg, declaringClass.getPackageName())) throw new IllegalArgumentException("wrong package for declaring class "+pkg+" != "+declaringClass.getPackageName());
-        GClass clazz = new GClass(this, pkg, name, declaringClass);
+        String nameNoPackage = null;
+        String canonName = null;
+        if (declaringClass != null) {
+            nameNoPackage = declaringClass.getName();
+            if (pkg != null) {
+                int index = nameNoPackage.indexOf(pkg + ".");
+                nameNoPackage = nameNoPackage.substring(index);
+            }
+            canonName = declaringClass.getCanonicalName();
+        }
+        GClass clazz = new GClass(this, pkg, nameNoPackage == null ? name : nameNoPackage + "$" + name, canonName == null ? name : canonName + "." + name, declaringClass);
         generatedClasses.add(clazz);
         return clazz;
     }
@@ -63,7 +75,7 @@ public class Context implements AutoCloseable {
             sourceCode.getImportMap().forEach((simpleName, type) -> {
                 String pkg = type.getPackageName();
                 if (isSamePackage("java.lang", pkg)) return;
-                sourceCode.getLines().add(0, new StringBuilder("import ").append(type.getName()).append(';'));
+                sourceCode.getLines().add(0, new StringBuilder("import ").append(type.getCanonicalName()).append(';'));
             });
             String pkg = gClass.getPackageName();
             if (pkg != null && !pkg.isEmpty()) {
@@ -90,13 +102,13 @@ public class Context implements AutoCloseable {
         sourceCode.getLine().append(gClass.getSimpleName());
         if (superClass != null && !superClass.getName().equals("java.lang.Object")) {
             sourceCode.getLine().append(" extends ");
-            sourceCode.getLine().append(sourceCode.generalizeType(superClass));
+            sourceCode.getLine().append(sourceCode.simplifyType(superClass));
         }
         if (interfaces != null && interfaces.length > 0) {
             sourceCode.getLine().append(" implements ");
             for (int i = 0; i < interfaces.length; i++) {
                 if (i != 0) sourceCode.getLine().append(", ");
-                sourceCode.getLine().append(sourceCode.generalizeType(interfaces[i]));
+                sourceCode.getLine().append(sourceCode.simplifyType(interfaces[i]));
             }
         }
         sourceCode.getLine().append(" {");
@@ -124,7 +136,7 @@ public class Context implements AutoCloseable {
 
     private void writeAnnotationSourceCode(IMember member, SourceCode code) {
         for (Annotated annotated : member.getAnnotations()) {
-            code.getLine().append("@").append(code.generalizeType(annotated.getType()));
+            code.getLine().append("@").append(code.simplifyType(annotated.getType()));
             List<Annotated.Value> values = annotated.getValues();
             if (!values.isEmpty()) {
                 code.getLine().append('(');
@@ -139,11 +151,11 @@ public class Context implements AutoCloseable {
                         for (int index = 0; index < length; index++) {
                             Object element = Array.get(val, index);
                             if (element instanceof Enum) {
-                                code.getLine().append(code.generalizeType(Java.Class(((Enum<?>) element).getDeclaringClass())))
+                                code.getLine().append(code.simplifyType(Java.Class(((Enum<?>) element).getDeclaringClass())))
                                         .append('.')
                                         .append(((Enum<?>) element).name());
                             } else if (element instanceof EnumType.Value) {
-                                code.getLine().append(code.generalizeType(((EnumType.Value) element).getType()))
+                                code.getLine().append(code.simplifyType(((EnumType.Value) element).getType()))
                                         .append('.')
                                         .append(((EnumType.Value) element).name());
                             } else {
@@ -151,11 +163,11 @@ public class Context implements AutoCloseable {
                             }
                         }
                     } else if (val instanceof Enum) {
-                        code.getLine().append(code.generalizeType(Java.Class(((Enum<?>) val).getDeclaringClass())))
+                        code.getLine().append(code.simplifyType(Java.Class(((Enum<?>) val).getDeclaringClass())))
                                 .append('.')
                                 .append(((Enum<?>) val).name());
                     } else if (val instanceof EnumType.Value) {
-                        code.getLine().append(code.generalizeType(((EnumType.Value) val).getType()))
+                        code.getLine().append(code.simplifyType(((EnumType.Value) val).getType()))
                                 .append('.')
                                 .append(((EnumType.Value) val).name());
                     } else {
@@ -172,7 +184,7 @@ public class Context implements AutoCloseable {
         if (!modifiers.isEmpty()) {
             code.getLine().append(modifiers).append(' ');
         }
-        code.getLine().append(code.generalizeType(field.getType()))
+        code.getLine().append(code.simplifyType(field.getType()))
                 .append(' ')
                 .append(field.getName()).append(';');
     }
@@ -189,7 +201,7 @@ public class Context implements AutoCloseable {
         IClass[] paramTypes = method.getParameterTypes();
         for (int i = 0; i < paramTypes.length; i++) {
             if (i != 0) code.getLine().append(", ");
-            code.getLine().append(code.generalizeType(paramTypes[i]))
+            code.getLine().append(code.simplifyType(paramTypes[i]))
                     .append(' ')
                     .append("var")
                     .append(paramStartIndex + i);
@@ -200,7 +212,7 @@ public class Context implements AutoCloseable {
             code.getLine().append(" throws ");
             for (int i = 0; i < throwsClass.length; i++) {
                 if (i != 0) code.getLine().append(", ");
-                code.getLine().append(code.generalizeType(throwsClass[i]));
+                code.getLine().append(code.simplifyType(throwsClass[i]));
             }
         }
         code.getLine().append(" {");
@@ -218,7 +230,7 @@ public class Context implements AutoCloseable {
             code.getLine().append(modifiers).append(' ');
         }
         code.getLine()
-                .append(code.generalizeType(method.getReturnType()))
+                .append(code.simplifyType(method.getReturnType()))
                 .append(' ')
                 .append(method.getName())
                 .append('(');
@@ -226,7 +238,7 @@ public class Context implements AutoCloseable {
         int paramStartIndex = Modifier.isStatic(method.getModifiers()) ? 0 : 1;
         for (int i = 0; i < paramTypes.length; i++) {
             if (i != 0) code.getLine().append(", ");
-            code.getLine().append(code.generalizeType(paramTypes[i]))
+            code.getLine().append(code.simplifyType(paramTypes[i]))
                     .append(' ')
                     .append("var")
                     .append(paramStartIndex + i);
@@ -237,7 +249,7 @@ public class Context implements AutoCloseable {
             code.getLine().append(" throws ");
             for (int i = 0; i < throwsClass.length; i++) {
                 if (i != 0) code.getLine().append(", ");
-                code.getLine().append(code.generalizeType(throwsClass[i]));
+                code.getLine().append(code.simplifyType(throwsClass[i]));
             }
         }
         code.getLine().append(" {");
@@ -249,15 +261,16 @@ public class Context implements AutoCloseable {
         code.endLine();
     }
 
-    public byte[] writeClassByteCode(GClass gClass) {
-        ClassWriter writer = new ClassWriter(Opcodes.ASM4);
+    public byte[] writeClassByteCode(GClass gClass, int javaVersion) {
+        ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
+        writer.visit(javaVersion, gClass.getModifiers(), gClass.getName(), null, BCHelper.getClassPath(gClass.getSuperClass()), Arrays.stream(gClass.getInterfaces()).map(BCHelper::getClassPath).toArray(String[]::new));
         writeAnnotationByteCode(gClass, null, null, writer);
         GConstructor[] declaredConstructors = gClass.getDeclaredConstructors();
         if (declaredConstructors.length == 0) {
             GConstructor constructor = new GConstructor(gClass);
             constructor.setModifier(Modifier.PUBLIC);
             constructor.setBody(body -> {
-                body.Super().invokeVoid();
+                body.Super().invoke();
             });
             MethodVisitor visitor = writer.visitMethod(constructor.getModifiers(),
                     "<init>",
@@ -265,7 +278,9 @@ public class Context implements AutoCloseable {
                     null,
                     constructor.getThrowsClasses().stream().map(BCHelper::getClassPath).toArray(String[]::new));
             writeAnnotationByteCode(constructor, visitor, null, null);
+            visitor.visitCode();
             writeConstructorByteCode(visitor, constructor);
+            visitor.visitEnd();
         } else {
             for (GConstructor constructor : declaredConstructors) {
                 MethodVisitor visitor = writer.visitMethod(constructor.getModifiers(),
@@ -274,7 +289,9 @@ public class Context implements AutoCloseable {
                         null,
                         constructor.getThrowsClasses().stream().map(BCHelper::getClassPath).toArray(String[]::new));
                 writeAnnotationByteCode(constructor, visitor, null, null);
+                visitor.visitCode();
                 writeConstructorByteCode(visitor, constructor);
+                visitor.visitEnd();
             }
         }
         for (GMethod method : gClass.getDeclaredMethods()) {
@@ -324,16 +341,30 @@ public class Context implements AutoCloseable {
     }
 
     private void writeConstructorByteCode(MethodVisitor visitor, GConstructor constructor) {
-        ConstructorBodyAccessor bodyAccessor = new ConstructorBodyAccessor(constructor);
-        try (MethodContext methodContext = MethodContext.open(bodyAccessor)) {
-            methodContext.write(visitor);
+        Consumer<ConstructorBodyAccessor> body = constructor.getBody();
+        if (body != null) {
+            ConstructorBodyAccessor bodyAccessor = new ConstructorBodyAccessor(constructor);
+            visitor.visitCode();
+            try (MethodContext methodContext = MethodContext.open(bodyAccessor)) {
+                body.accept(bodyAccessor);
+                methodContext.write(visitor);
+            }
+            visitor.visitMaxs(-1, -1);
+            visitor.visitEnd();
         }
     }
 
     private void writeMethodByteCode(MethodVisitor visitor, GMethod method) {
-        MethodBodyAccessor bodyAccessor = new MethodBodyAccessor(method);
-        try (MethodContext methodContext = MethodContext.open(bodyAccessor)) {
-            methodContext.write(visitor);
+        Consumer<MethodBodyAccessor> body = method.getBody();
+        if (body != null) {
+            MethodBodyAccessor bodyAccessor = new MethodBodyAccessor(method);
+            visitor.visitCode();
+            try (MethodContext methodContext = MethodContext.open(bodyAccessor)) {
+                body.accept(bodyAccessor);
+                methodContext.write(visitor);
+            }
+            visitor.visitMaxs(-1, -1);
+            visitor.visitEnd();
         }
     }
 

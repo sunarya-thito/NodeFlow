@@ -1,10 +1,10 @@
 package thito.nodeflow.plugin.base.blueprint.handler.parameter;
 
 import javafx.beans.property.*;
+import javafx.scene.paint.*;
 import thito.nodeflow.engine.node.*;
-import thito.nodeflow.engine.node.skin.*;
 import thito.nodeflow.plugin.base.blueprint.*;
-import thito.nodeflow.plugin.base.blueprint.state.*;
+import thito.nodeflow.plugin.base.blueprint.state.parameter.*;
 
 import java.lang.reflect.*;
 
@@ -17,7 +17,8 @@ public class InputParameterHandler extends ConstantHolderParameterHandler {
         super(nodeParameter);
         this.genericStorage = genericStorage;
         this.parameter = parameter;
-        inputPort = new NodePort(false, BlueprintManager.getBlueprintManager().getTypeColor(parameter.getType()), PortShape.CIRCLE);
+        inputPort = new NodePort(false, Color.BLACK, PortShape.CIRCLE);
+        inputPort.colorProperty().bind(BlueprintManager.getBlueprintManager().getTypeColor(genericStorage, parameter.getParameterizedType()));
     }
 
     @Override

@@ -12,7 +12,7 @@ public class Java {
     public static Reference Null() {
         return new Reference(Java.Class(Object.class)) {
             @Override
-            public void write() {
+            public void writeByteCode() {
                 MethodContext context = MethodContext.getContext();
                 context.pushNode(new InsnNode(Opcodes.ACONST_NULL));
             }
@@ -31,7 +31,7 @@ public class Java {
     public static Reference Type(IClass clazz) {
         return new Reference(Class.class) {
             @Override
-            public void write() {
+            public void writeByteCode() {
                 MethodContext.getContext().pushNode(new LdcInsnNode(BCHelper.getASMType(clazz)));
             }
 
@@ -39,7 +39,7 @@ public class Java {
             public void writeSourceCode() {
                 SourceCode sourceCode = SourceCode.getContext();
                 StringBuilder line = sourceCode.getLine();
-                line.append(sourceCode.generalizeType(clazz));
+                line.append(sourceCode.simplifyType(clazz));
                 line.append(".class");
             }
         };
@@ -76,7 +76,7 @@ public class Java {
         IClass type = Class(obj.getClass());
         return new Reference(type) {
             @Override
-            public void write() {
+            public void writeByteCode() {
                 BCHelper.writeToContext(getType(), obj);
             }
 

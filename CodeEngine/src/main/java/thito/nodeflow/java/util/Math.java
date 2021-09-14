@@ -11,7 +11,7 @@ public class Math {
         IClass type = BCHelper.getType(a);
         return new Reference(type) {
             @Override
-            public void write() {
+            public void writeByteCode() {
                 BCHelper.writeToContext(type, a);
                 MethodContext.getContext().pushNode(new InsnNode(BCHelper.getASMType(type).getOpcode(Opcodes.INEG)));
             }
@@ -71,8 +71,9 @@ public class Math {
     private static Reference mathOperation(int opcode, Object a, Object b) {
         IClass priority = BCHelper.getPrioritized(BCHelper.getType(a), BCHelper.getType(b));
         return new Reference(priority) {
+
             @Override
-            public void write() {
+            public void writeByteCode() {
                 BCHelper.writeToContext(priority, a);
                 BCHelper.writeToContext(priority, b);
                 MethodContext.getContext().pushNode(new InsnNode(BCHelper.getASMType(priority).getOpcode(opcode)));

@@ -1,9 +1,12 @@
 package thito.nodeflow.plugin.base.blueprint;
 
+import javafx.beans.binding.*;
+import javafx.beans.property.*;
 import javafx.collections.*;
 import javafx.scene.paint.*;
 import thito.nodeflow.plugin.base.blueprint.provider.*;
 
+import java.lang.reflect.*;
 import java.util.*;
 
 public class BlueprintManager {
@@ -18,6 +21,11 @@ public class BlueprintManager {
     private final ObservableList<EventNodeProvider> eventNodeProviders = FXCollections.observableArrayList();
     private final ObservableList<NodeProvider> nodeProviders = FXCollections.observableArrayList();
     private final Map<Class<?>, Color> typeColorMap = new HashMap<>();
+
+    public ObjectBinding<Color> getTypeColor(GenericStorage genericStorage, Type type) {
+        GenericStorage.GenericBinding genericBinding = genericStorage.genericBinding(type);
+        return Bindings.createObjectBinding(() -> getTypeColor(genericStorage.getRawClass(genericBinding.get())), genericBinding);
+    }
 
     public Color getTypeColor(Class<?> type) {
         return typeColorMap.computeIfAbsent(type, t -> {

@@ -5,6 +5,7 @@ import thito.nodeflow.engine.node.handler.*;
 import thito.nodeflow.plugin.base.blueprint.state.*;
 
 public interface EventNodeProvider extends NodeProvider {
+    EventNode createNode();
     @Override
     EventNodeHandler createHandler(Node node, BlueprintNodeState handlerState);
 }

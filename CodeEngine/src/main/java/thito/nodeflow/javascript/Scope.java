@@ -20,6 +20,13 @@ public abstract class Scope extends Reference {
 
     public abstract void body();
 
+    protected Reference letOrSet(String name, Reference value) {
+        if (isVariableDefined(name)) {
+            return set(name, value);
+        }
+        return let(name, value);
+    }
+
     protected Reference let(String name) {
         if (!variableScope.add(name)) throw new IllegalArgumentException("already defined in this scope");
         lines.add("let " + name + ";");
@@ -42,7 +49,7 @@ public abstract class Scope extends Reference {
         };
     }
 
-    protected boolean findVariable(String name) {
+    protected boolean isVariableDefined(String name) {
         Scope current = this;
         while (current != null) {
             if (current.variableScope.contains(name)) return true;
@@ -52,7 +59,7 @@ public abstract class Scope extends Reference {
     }
 
     protected Reference set(String name, Reference value) {
-        if (!findVariable(name)) throw new IllegalArgumentException("no variable found with name "+name);
+        if (!isVariableDefined(name)) throw new IllegalArgumentException("no variable found with name "+name);
         lines.add(name + " = " + value.toSourceCode());
         return new Reference() {
             @Override

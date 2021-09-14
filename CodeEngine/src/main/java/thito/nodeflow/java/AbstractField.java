@@ -4,6 +4,8 @@ import org.objectweb.asm.*;
 import org.objectweb.asm.tree.*;
 
 import java.lang.reflect.*;
+import java.util.*;
+import java.util.stream.*;
 
 public abstract class AbstractField extends AbstractMember implements IField {
     public AbstractField(String name, IClass declaringClass) {
@@ -14,7 +16,7 @@ public abstract class AbstractField extends AbstractMember implements IField {
     public Reference get(Object instance) {
         return new Reference(getType()) {
             @Override
-            public void write() {
+            public void writeByteCode() {
                 final MethodContext context = MethodContext.getContext();
                 if (!Modifier.isStatic(getModifiers())) {
                     if (instance == null) throw new IllegalArgumentException("non-static field requires instance");
@@ -36,7 +38,7 @@ public abstract class AbstractField extends AbstractMember implements IField {
                     if (instance == null) throw new IllegalStateException("non-static field requires instance");
                     BCHelper.writeToSourceCode(getType(), instance);
                 } else {
-                    line.append(code.generalizeType(getDeclaringClass()));
+                    line.append(code.simplifyType(getDeclaringClass()));
                 }
                 line.append('.');
                 line.append(getName());
@@ -66,7 +68,7 @@ public abstract class AbstractField extends AbstractMember implements IField {
                 if (instance == null) throw new IllegalStateException("non-static method requires instance");
                 BCHelper.writeToSourceCode(getType(), instance);
             } else {
-                line.append(code.generalizeType(getDeclaringClass()));
+                line.append(code.simplifyType(getDeclaringClass()));
             }
             line.append('.');
             line.append(getName());
@@ -75,5 +77,10 @@ public abstract class AbstractField extends AbstractMember implements IField {
             line.append(';');
             code.endLine();
         } else throw new IllegalStateException("no context");
+    }
+    @Override
+    public String toString() {
+        String toString = getDeclaringClass().getName() + " " + getType().getName() + " " + getName();
+        return getModifiers() == 0 ? toString : Modifier.toString(getModifiers()) + " " + toString;
     }
 }

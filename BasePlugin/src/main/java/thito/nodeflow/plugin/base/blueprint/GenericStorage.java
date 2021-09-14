@@ -68,6 +68,11 @@ public class GenericStorage {
         return genericBinding;
     }
 
+    public Class<?> getRawClass(Type type) {
+        Class<?> rawType = TypeUtils.getRawType(type, null);
+        return rawType == null ? Object.class : rawType;
+    }
+
     public Type fillOut(Type type) {
         return TypeUtils.unrollVariables(getMapping(), type);
     }

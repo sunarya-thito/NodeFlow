@@ -1,46 +1,46 @@
 package thito.nodeflow.plugin.base.blueprint.handler.parameter;
 
 import javafx.beans.property.*;
+import javafx.scene.paint.*;
 import thito.nodeflow.engine.node.*;
 import thito.nodeflow.engine.node.skin.*;
 import thito.nodeflow.engine.node.state.*;
+import thito.nodeflow.library.language.*;
 import thito.nodeflow.plugin.base.blueprint.*;
+import thito.nodeflow.plugin.base.blueprint.state.parameter.*;
 
 import java.lang.reflect.*;
 
 public class OutputParameterHandler extends JavaParameterHandler {
-    public OutputParameterHandler(NodeParameter parameter) {
+    private GenericStorage genericStorage;
+    private Type type;
+    private NodePort outputPort;
+    public OutputParameterHandler(GenericStorage genericStorage, Type type, NodeParameter parameter) {
         super(parameter);
+        this.type = type;
+        this.genericStorage = genericStorage;
+        this.outputPort = new NodePort(true, Color.BLACK, PortShape.CIRCLE);
+        this.outputPort.colorProperty().bind(BlueprintManager.getBlueprintManager().getTypeColor(genericStorage, type));
     }
 
     @Override
     public GenericStorage getGenericStorage() {
-        return null;
+        return genericStorage;
     }
 
     @Override
     public Type getType() {
-        return null;
+        return type;
     }
 
     @Override
     public StringProperty displayNameProperty() {
-        return null;
-    }
-
-    @Override
-    public NodeParameter getParameter() {
-        return null;
+        return I18n.$("baseplugin.blueprint.return-param");
     }
 
     @Override
     public NodeParameterSkin createSkin() {
-        return null;
-    }
-
-    @Override
-    public boolean acceptPairing(NodeParameter parameter, boolean asInput) {
-        return false;
+        return new NodeParameterSkin(getParameter());
     }
 
     @Override
@@ -50,11 +50,11 @@ public class OutputParameterHandler extends JavaParameterHandler {
 
     @Override
     public NodePort getOutputPort() {
-        return null;
+        return outputPort;
     }
 
     @Override
     public HandlerState saveState() {
-        return null;
+        return new OutputParameterHandlerState();
     }
 }

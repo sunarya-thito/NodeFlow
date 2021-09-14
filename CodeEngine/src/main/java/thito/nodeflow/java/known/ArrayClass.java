@@ -24,6 +24,11 @@ public class ArrayClass extends AbstractClass {
     }
 
     @Override
+    public String getCanonicalName() {
+        return getName();
+    }
+
+    @Override
     public String getPackageName() {
         return component.getPackageName();
     }

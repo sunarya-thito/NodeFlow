@@ -8,7 +8,7 @@ public class Logic {
     public static Reference And(Object a, Object b) {
         return new Reference(boolean.class) {
             @Override
-            public void write() {
+            public void writeByteCode() {
                 MethodContext context = MethodContext.getContext();
                 If.IsTrue(a).Then(() -> {
                     If.IsTrue(b).Then(() -> {
@@ -35,7 +35,7 @@ public class Logic {
     public static Reference Or(Object a, Object b) {
         return new Reference(boolean.class) {
             @Override
-            public void write() {
+            public void writeByteCode() {
                 MethodContext context = MethodContext.getContext();
                 If.IsTrue(a).Then(() -> {
                     context.pushNode(new InsnNode(Opcodes.ICONST_1));
@@ -62,7 +62,7 @@ public class Logic {
     public static Reference ExclusiveOr(Object a, Object b) {
         return new Reference(boolean.class) {
             @Override
-            public void write() {
+            public void writeByteCode() {
                 MethodContext context = MethodContext.getContext();
                 If.IsTrue(a).Then(() -> {
                     If.IsFalse(b).Then(() -> {
@@ -94,7 +94,7 @@ public class Logic {
     public static Reference Negate(Object a) {
         return new Reference(boolean.class) {
             @Override
-            public void write() {
+            public void writeByteCode() {
                 MethodContext context = MethodContext.getContext();
                 If.IsTrue(a).Then(() -> {
                     context.pushNode(new InsnNode(Opcodes.ICONST_0));

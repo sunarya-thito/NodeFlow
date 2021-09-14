@@ -1,53 +1,31 @@
 package thito.nodeflow.plugin.base.blueprint.handler.parameter;
 
-import javafx.beans.property.*;
+import javafx.scene.paint.*;
 import thito.nodeflow.engine.node.*;
-import thito.nodeflow.engine.node.handler.*;
-import thito.nodeflow.engine.node.skin.*;
 import thito.nodeflow.engine.node.state.*;
-import thito.nodeflow.library.language.*;
+import thito.nodeflow.plugin.base.blueprint.state.parameter.*;
 
-public class ExecutionParameterHandler implements NodeParameterHandler {
-
-    private NodeParameter nodeParameter;
+public class ExecutionParameterHandler extends AbstractExecutionParameterHandler {
+    private NodePort input, output;
 
     public ExecutionParameterHandler(NodeParameter nodeParameter) {
-        this.nodeParameter = nodeParameter;
-    }
-
-    @Override
-    public StringProperty displayNameProperty() {
-        return I18n.$("baseplugin.blueprint.execution-param");
-    }
-
-    @Override
-    public NodeParameter getParameter() {
-        return null;
-    }
-
-    @Override
-    public NodeParameterSkin createSkin() {
-        return new NodeParameterSkin(nodeParameter);
-    }
-
-    @Override
-    public boolean acceptPairing(NodeParameter parameter, boolean asInput) {
-        NodeParameterHandler handler = parameter.getHandler();
-        return handler instanceof ExecutionParameterHandler;
+        super(nodeParameter);
+        this.input = new NodePort(true, Color.WHITE, PortShape.RHOMBUS);
+        this.output = new NodePort(false, Color.WHITE, PortShape.RHOMBUS);
     }
 
     @Override
     public NodePort getInputPort() {
-        return null;
+        return input;
     }
 
     @Override
     public NodePort getOutputPort() {
-        return null;
+        return output;
     }
 
     @Override
     public HandlerState saveState() {
-        return null;
+        return new ExecutionParameterHandlerState();
     }
 }

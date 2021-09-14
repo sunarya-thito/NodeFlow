@@ -37,8 +37,8 @@ public class CableLinkStyle implements LinkStyle {
                 NodeParameter any = link.getSource() == null ? link.getTarget() : link.getSource();
                 helper = new ActiveLinkHelper(line, any.getHandler().getInputPort().getShape());
                 helper.setContainer(link.getCanvas().getSkin().getLinkTrailLayer());
-                helper.setTargetColor(link.getSource() == null ? link.getTarget().getHandler().getInputPort().getColor() : link.getSource().getHandler().getOutputPort().getColor());
-                helper.setSourceColor(link.getTarget() == null ? link.getSource().getHandler().getOutputPort().getColor() : link.getTarget().getHandler().getInputPort().getColor());
+                helper.toProperty().bind(link.getSource() == null ? link.getTarget().getHandler().getInputPort().colorProperty() : link.getSource().getHandler().getOutputPort().colorProperty());
+                helper.fromProperty().bind(link.getTarget() == null ? link.getSource().getHandler().getOutputPort().colorProperty() : link.getTarget().getHandler().getInputPort().colorProperty());
                 highlight.addListener((obs, old, val) -> {
                     line.pseudoClassStateChanged(pseudoClass, val);
                     if (val) {

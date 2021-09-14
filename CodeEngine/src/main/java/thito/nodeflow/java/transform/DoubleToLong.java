@@ -9,8 +9,8 @@ public class DoubleToLong implements ObjectTransformation {
     public Reference transform(Reference source) {
         return new Reference(long.class) {
             @Override
-            public void write() {
-                source.write();
+            public void writeByteCode() {
+                source.writeByteCode();
                 MethodContext.getContext().pushNode(new InsnNode(Opcodes.D2L));
             }
 

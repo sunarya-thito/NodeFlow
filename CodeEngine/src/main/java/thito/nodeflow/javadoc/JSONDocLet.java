@@ -8,12 +8,11 @@ import java.util.*;
 public class JSONDocLet implements Doclet {
     @Override
     public void init(Locale locale, Reporter reporter) {
-
     }
 
     @Override
     public String getName() {
-        return null;
+        return "JSONDocLet";
     }
 
     @Override

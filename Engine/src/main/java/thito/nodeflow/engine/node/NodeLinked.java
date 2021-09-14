@@ -18,6 +18,10 @@ public class NodeLinked implements NodeLink {
         this.canvas = canvas;
         this.source = source;
         this.target = target;
+        initialize();
+    }
+
+    private void initialize() {
         this.styleHandler.set(canvas.linkStyleProperty().get().createHandler(this));
         for (Region affecting : new Region[] {source.getSkin(), target.getSkin(), source.getNode().getSkin(), target.getNode().getSkin()}) {
             affecting.layoutXProperty().addListener(obs -> update());
@@ -25,6 +29,8 @@ public class NodeLinked implements NodeLink {
             affecting.widthProperty().addListener(obs -> update());
             affecting.heightProperty().addListener(obs -> update());
         }
+        source.getHandler().getOutputPort().colorProperty().addListener(obs -> update());
+        target.getHandler().getInputPort().colorProperty().addListener(obs -> update());
         update();
     }
 
@@ -32,6 +38,7 @@ public class NodeLinked implements NodeLink {
         this.canvas = canvas;
         source = canvas.findParameter(state.sourceId);
         target = canvas.findParameter(state.targetId);
+        initialize();
     }
 
     private void update() {
@@ -43,7 +50,6 @@ public class NodeLinked implements NodeLink {
             point = target.getSkin().localToScene(0, target.getSkin().getHeight() / 2d);
             handler.targetXProperty().set(point.getX());
             handler.targetYProperty().set(point.getY());
-//            double distanceY = Math.abs(handler.targetYProperty().get() - handler.sourceYProperty().get());
             double distanceX = handler.targetXProperty().get() - handler.sourceXProperty().get();
             handler.fillProperty().set(new LinearGradient(0, 0, 1, 0, true,
                     CycleMethod.NO_CYCLE,

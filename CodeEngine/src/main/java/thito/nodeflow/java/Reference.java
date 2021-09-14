@@ -4,6 +4,13 @@ import thito.nodeflow.java.util.*;
 
 public abstract class Reference {
     private final IClass type;
+    private final SourceCode sourceCodeContext;
+    private final MethodContext methodContext;
+
+    {
+        sourceCodeContext = SourceCode.hasContext() ? SourceCode.getContext() : null;
+        methodContext = MethodContext.hasContext() ? MethodContext.getContext() : null;
+    }
 
     public Reference(Class<?> clazz) {
         this(Java.Class(clazz));
@@ -16,18 +23,26 @@ public abstract class Reference {
         return type;
     }
 
-    public abstract void write();
+    public abstract void writeByteCode();
     public abstract void writeSourceCode();
 
-    public final void impl_write(IClass expectation) {
+    public MethodContext getMethodContext() {
+        return methodContext;
+    }
+
+    public SourceCode getSourceCodeContext() {
+        return sourceCodeContext;
+    }
+
+    public void impl_write(IClass expectation) {
         if (expectation.isAssignableFrom(getType())) {
-            write();
+            writeByteCode();
         } else {
-            Conversion.cast(this, expectation).write();
+            Conversion.cast(this, expectation).writeByteCode();
         }
     }
 
-    public final void impl_writeSourceCode(IClass expectation) {
+    public void impl_writeSourceCode(IClass expectation) {
         if (expectation.isAssignableFrom(getType())) {
             writeSourceCode();
         } else {

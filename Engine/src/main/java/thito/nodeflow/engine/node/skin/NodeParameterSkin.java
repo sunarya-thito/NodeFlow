@@ -45,7 +45,7 @@ public class NodeParameterSkin extends Skin {
         }
         if (inputPort != null) {
             PortShape.Handler handler = inputPort.getShape().createHandler();
-            handler.colorProperty().set(inputPort.getColor());
+            handler.colorProperty().bind(inputPort.colorProperty());
             inputNode = handler.impl_getPeer();
             inputNode.setPickOnBounds(false);
             inputNode.translateXProperty().bind(((Region) inputNode).widthProperty().divide(2).negate());
@@ -83,7 +83,7 @@ public class NodeParameterSkin extends Skin {
         }
         if (outputPort != null) {
             PortShape.Handler handler = outputPort.getShape().createHandler();
-            handler.colorProperty().set(outputPort.getColor());
+            handler.colorProperty().bind(outputPort.colorProperty());
             outputNode = handler.impl_getPeer();
             outputNode.setPickOnBounds(false);
             outputNode.addEventHandler(MouseEvent.MOUSE_ENTERED, event -> {

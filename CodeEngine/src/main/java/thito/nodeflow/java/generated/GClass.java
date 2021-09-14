@@ -15,11 +15,22 @@ public class GClass extends AbstractClass {
     private List<Annotated> annotatedList = new ArrayList<>();
     private Context context;
     private String pkg;
+    private String canonicalName;
 
-    public GClass(Context context, String pkg, String name, IClass declaringClass) {
+    public GClass(Context context, String pkg, String name, String canonicalName, IClass declaringClass) {
         super(name, declaringClass);
         this.context = context;
+        this.canonicalName = canonicalName;
         this.pkg = pkg;
+    }
+
+    @Override
+    public String getCanonicalName() {
+        return getName();
+    }
+
+    public Context getContext() {
+        return context;
     }
 
     @Override

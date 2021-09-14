@@ -1,4 +1,4 @@
-package thito.nodeflow.plugin.base.blueprint.state;
+package thito.nodeflow.plugin.base.blueprint.state.parameter;
 
 import java.io.*;
 

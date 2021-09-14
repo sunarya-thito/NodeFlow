@@ -44,6 +44,10 @@ public class BCHelper {
         return primitiveToWrapper.containsKey(iClass);
     }
 
+    public static boolean isWrapper(IClass iClass) {
+        return wrapperToPrimitive.containsKey(iClass);
+    }
+
     public static String toStringParams(IClass[] classes) {
         return Arrays.stream(classes).map(IClass::getName).collect(Collectors.joining(","));
     }
@@ -138,9 +142,10 @@ public class BCHelper {
         if (type.equals(Java.Class(boolean.class))) {
             return "B";
         }
+        if (type.isArray()) return type.getName().replace('.', '/');
         return "L"+getClassPath(type)+";";
     }
-    public static Reference toReference(Object object) {
+    public static Reference toReference(Object object, IClass expectation) {
         if (object == null) return Java.Null();
         if (object instanceof Reference) return (Reference) object;
         if (object instanceof Enum) {
@@ -148,9 +153,9 @@ public class BCHelper {
         }
         if (object instanceof Boolean) {
             if ((Boolean) object) {
-                return new Reference(boolean.class) {
+                return new ConstantReference(boolean.class, object) {
                     @Override
-                    public void write() {
+                    public void writeByteCode() {
                         MethodContext.getContext().pushNode(new InsnNode(Opcodes.ICONST_1));
                     }
 
@@ -160,9 +165,9 @@ public class BCHelper {
                     }
                 };
             } else {
-                return new Reference(boolean.class) {
+                return new ConstantReference(boolean.class, object) {
                     @Override
-                    public void write() {
+                    public void writeByteCode() {
                         MethodContext.getContext().pushNode(new InsnNode(Opcodes.ICONST_0));
                     }
 
@@ -173,60 +178,85 @@ public class BCHelper {
                 };
             }
         }
+        if (object instanceof Long) {
+            if (Integer.MIN_VALUE <= (Long) object && (Long) object <= Integer.MAX_VALUE) {
+                object = ((Long) object).intValue();
+            }
+        }
+        Object finalObject;
         if (object instanceof Integer || object instanceof Byte || object instanceof Short) {
-            IClass primitive = wrapperToPrimitive(Java.Class(object.getClass()));
-            int value = ((Number) object).intValue();
-            if (value >= Short.MIN_VALUE && value <= Short.MAX_VALUE) {
-                if (value >= Byte.MIN_VALUE && value <= Byte.MAX_VALUE) {
-                    return new Reference(primitive) {
+            String name = expectation.getName();
+            if (name.equals("java.lang.Double") || name.equals("double")) {
+                finalObject = ((Number) object).doubleValue();
+            } else if (name.equals("java.lang.Float") || name.equals("float")) {
+                finalObject = ((Number) object).floatValue();
+            } else {
+                finalObject = object;
+                IClass primitive = wrapperToPrimitive(Java.Class(object.getClass()));
+                int value = ((Number) object).intValue();
+                if (value >= Short.MIN_VALUE && value <= Short.MAX_VALUE) {
+                    if (value >= Byte.MIN_VALUE && value <= Byte.MAX_VALUE) {
+                        return new ConstantReference(primitive, object) {
+                            @Override
+                            public void writeByteCode() {
+                                MethodContext.getContext()
+                                        .pushNode(new IntInsnNode(Opcodes.BIPUSH, ((Number) finalObject).intValue()));
+                            }
+
+                            @Override
+                            public void writeSourceCode() {
+                                StringBuilder line = SourceCode.getContext().getLine();
+                                if (primitive.equals(Java.Class(byte.class))) {
+                                    line.append("(byte) ");
+                                }
+                                line.append(finalObject);
+                            }
+                        };
+                    }
+                    return new ConstantReference(primitive, object) {
                         @Override
-                        public void write() {
+                        public void writeByteCode() {
                             MethodContext.getContext()
-                                    .pushNode(new IntInsnNode(Opcodes.BIPUSH, ((Number) object).intValue()));
+                                    .pushNode(new IntInsnNode(Opcodes.SIPUSH, ((Number) finalObject).intValue()));
                         }
 
                         @Override
                         public void writeSourceCode() {
-                            SourceCode.getContext().getLine().append("(byte) ").append(object);
+                            StringBuilder line = SourceCode.getContext().getLine();
+                            if (primitive.equals(Java.Class(short.class)) || primitive.equals(Java.Class(byte.class))) {
+                                line.append("(short) ");
+                            }
+                            line.append(finalObject);
                         }
                     };
                 }
-                return new Reference(primitive) {
-                    @Override
-                    public void write() {
-                        MethodContext.getContext()
-                                .pushNode(new IntInsnNode(Opcodes.SIPUSH, ((Number) object).intValue()));
-                    }
-
-                    @Override
-                    public void writeSourceCode() {
-                        SourceCode.getContext().getLine().append("(short) ").append(object);
-                    }
-                };
             }
+        } else {
+            finalObject = object;
         }
-        return new Reference(Java.Class(object.getClass())) {
+        IClass primitive = BCHelper.wrapperToPrimitive(Java.Class(finalObject.getClass()));
+        return new ConstantReference(primitive == null ? Java.Class(finalObject.getClass()) : primitive, object) {
             @Override
-            public void write() {
-                MethodContext.getContext().pushNode(new LdcInsnNode(object));
+            public void writeByteCode() {
+                MethodContext.getContext().pushNode(new LdcInsnNode(finalObject));
             }
 
             @Override
             public void writeSourceCode() {
                 StringBuilder line = SourceCode.getContext().getLine();
-                if (object instanceof String) {
+                if (finalObject instanceof String) {
                     line.append('"');
-                    line.append(StringEscapeUtils.unescapeJava((String) object));
+                    line.append(StringEscapeUtils.unescapeJava((String) finalObject));
                     line.append('"');
-                } else if (object instanceof Long) {
-                    line.append(object);
+                } else if (finalObject instanceof Long) {
+                    line.append(finalObject);
                     line.append("L");
-                } else if (object instanceof Float) {
-                    line.append(object);
+                } else if (finalObject instanceof Float) {
+                    line.append(finalObject);
                     line.append("F");
                 } else {
                     // what else could this be?
-                    line.append(object);
+                    line.append(finalObject);
                 }
             }
         };
@@ -234,17 +264,23 @@ public class BCHelper {
 
     public static void writeToSourceCode(IClass expectation, Object object) {
         if (object instanceof Reference) {
+            SourceCode code = SourceCode.getContext();
+            if (code != ((Reference) object).getSourceCodeContext())
+                throw new IllegalStateException("invalid context scope");
             ((Reference) object).impl_writeSourceCode(expectation);
         } else {
-            toReference(object).impl_writeSourceCode(expectation);
+            toReference(object, expectation).impl_writeSourceCode(expectation);
         }
     }
 
     public static void writeToContext(IClass expectation, Object object) {
         if (object instanceof Reference) {
+            MethodContext methodContext = MethodContext.getContext();
+            if (methodContext != ((Reference) object).getMethodContext())
+                throw new IllegalStateException("invalid context scope");
             ((Reference) object).impl_write(expectation);
         } else {
-            toReference(object).impl_write(expectation);
+            toReference(object, expectation).impl_write(expectation);
         }
     }
 
@@ -261,6 +297,6 @@ public class BCHelper {
         b = wrapperToPrimitive(b);
         int indexA = indexOf(PRIMITIVE_PRIORITY, a.getName());
         int indexB = indexOf(PRIMITIVE_PRIORITY, b.getName());
-        return indexA < 0 || indexB < indexA ? a : b;
+        return indexA < 0 || indexB < indexA ? b : a;
     }
 }

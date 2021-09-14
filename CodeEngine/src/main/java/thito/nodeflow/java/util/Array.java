@@ -9,7 +9,7 @@ public class Array {
         IClass finalComponent = BCHelper.getType(array).getComponentType();
         return new Reference(finalComponent) {
             @Override
-            public void write() {
+            public void writeByteCode() {
                 BCHelper.writeToContext(Java.Class(Object.class), array);
                 BCHelper.writeToContext(Java.Class(int.class), index);
                 MethodContext.getContext().pushNode(new InsnNode(Opcodes.AALOAD));
@@ -48,7 +48,7 @@ public class Array {
     public static Reference getLength(Object array) {
         return new Reference(int.class) {
             @Override
-            public void write() {
+            public void writeByteCode() {
                 BCHelper.writeToContext(Java.Class(Object.class), array);
                 MethodContext.getContext().pushNode(new InsnNode(Opcodes.ARRAYLENGTH));
             }
@@ -64,7 +64,7 @@ public class Array {
         if (dimensions.length == 1) {
             return new Reference(Java.ArrayClass(type, 1)) {
                 @Override
-                public void write() {
+                public void writeByteCode() {
                     BCHelper.writeToContext(Java.Class(int.class), dimensions[0]);
                     MethodContext.getContext().pushNode(new TypeInsnNode(Opcodes.ANEWARRAY, BCHelper.getClassPath(type)));
                 }
@@ -74,7 +74,7 @@ public class Array {
                     SourceCode sourceCode = SourceCode.getContext();
                     StringBuilder line = sourceCode.getLine();
                     line.append("new ");
-                    line.append(sourceCode.generalizeType(type));
+                    line.append(sourceCode.simplifyType(type));
                     line.append('[');
                     BCHelper.writeToSourceCode(Java.Class(int.class), dimensions[0]);
                     line.append(']');
@@ -83,7 +83,7 @@ public class Array {
         }
         return new Reference(Java.ArrayClass(type, dimensions.length)) {
             @Override
-            public void write() {
+            public void writeByteCode() {
                 for (Object dim : dimensions) {
                     BCHelper.writeToContext(Java.Class(int.class), dim);
                 }
@@ -95,7 +95,7 @@ public class Array {
                 SourceCode sourceCode = SourceCode.getContext();
                 StringBuilder line = sourceCode.getLine();
                 line.append("new ");
-                line.append(sourceCode.generalizeType(type));
+                line.append(sourceCode.simplifyType(type));
                 line.append('[');
                 for (int i = 0; i < dimensions.length; i++) {
                     if (i != 0) line.append("][");

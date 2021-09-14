@@ -7,6 +7,7 @@ public interface IClass extends IMember {
     IClass[] getInterfaces();
     IClass getSuperClass();
     String getSimpleName();
+    String getCanonicalName();
     IField[] getFields();
     IField getField(String name);
     IField[] getDeclaredFields();

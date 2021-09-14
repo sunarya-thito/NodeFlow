@@ -3,7 +3,7 @@ package thito.nodeflow.plugin.base.blueprint.handler.parameter;
 import javafx.beans.property.*;
 import thito.nodeflow.engine.node.*;
 import thito.nodeflow.engine.node.skin.*;
-import thito.nodeflow.plugin.base.blueprint.state.*;
+import thito.nodeflow.plugin.base.blueprint.state.parameter.*;
 
 public abstract class ConstantHolderParameterHandler extends JavaParameterHandler {
     private ObjectProperty<Object> value = new SimpleObjectProperty<>();

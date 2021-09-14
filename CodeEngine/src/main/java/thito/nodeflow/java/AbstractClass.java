@@ -2,6 +2,7 @@ package thito.nodeflow.java;
 
 import thito.nodeflow.java.known.*;
 
+import java.lang.reflect.*;
 import java.util.*;
 
 public abstract class AbstractClass extends AbstractMember implements IClass {
@@ -58,4 +59,8 @@ public abstract class AbstractClass extends AbstractMember implements IClass {
         return Arrays.stream(getClasses()).filter(clazz -> clazz.getName().equals(name)).findAny().orElseThrow(() -> new NoSuchElementException(name+" in "+getName()));
     }
 
+    @Override
+    public String toString() {
+        return getModifiers() == 0 ? getName() : Modifier.toString(getModifiers()) + " " + getName();
+    }
 }

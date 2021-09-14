@@ -16,6 +16,19 @@ public class MethodBodyAccessor extends BodyAccessor {
         this.method = method;
     }
 
+    public void Return(Object object) {
+        if (MethodContext.hasContext()) {
+            MethodContext context = MethodContext.getContext();
+            BCHelper.writeToContext(method.getReturnType(), object);
+            context.pushNode(new InsnNode(BCHelper.getASMType(BCHelper.getType(object)).getOpcode(Opcodes.IRETURN)));
+        } else if (SourceCode.hasContext()) {
+            StringBuilder line = SourceCode.getContext().getLine();
+            line.append("return ");
+            BCHelper.writeToSourceCode(method.getReturnType(), object);
+            line.append(';');
+        } else throw new IllegalStateException("no context");
+    }
+
     @Override
     public LField getParameter(int index) {
         return new LField(method.getParameterTypeList().get(index), index + 1);
@@ -34,7 +47,7 @@ public class MethodBodyAccessor extends BodyAccessor {
     }
 
     @Override
-    public void write() {
+    public void writeByteCode() {
         if (Modifier.isStatic(method.getModifiers())) throw new IllegalStateException("static method doesn't have instance");
         MethodContext context = MethodContext.getContext();
         context.pushNode(new VarInsnNode(Opcodes.ALOAD, 0));

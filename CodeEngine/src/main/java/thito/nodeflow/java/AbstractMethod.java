@@ -5,6 +5,7 @@ import org.objectweb.asm.tree.*;
 
 import java.lang.reflect.*;
 import java.util.*;
+import java.util.stream.*;
 
 public abstract class AbstractMethod extends AbstractMember implements IMethod {
     public AbstractMethod(String name, IClass declaringClass) {
@@ -25,7 +26,7 @@ public abstract class AbstractMethod extends AbstractMember implements IMethod {
         }
         return new Reference(getReturnType()) {
             @Override
-            public void write() {
+            public void writeByteCode() {
                 final MethodContext context = MethodContext.getContext();
                 if (!Modifier.isStatic(getModifiers())) {
                     if (instance == null) throw new IllegalArgumentException("non-static method requires instance");
@@ -59,9 +60,9 @@ public abstract class AbstractMethod extends AbstractMember implements IMethod {
                 StringBuilder line = code.getLine();
                 if (!Modifier.isStatic(getModifiers())) {
                     if (instance == null) throw new IllegalStateException("non-static method requires instance");
-                    BCHelper.writeToSourceCode(getType(), instance);
+                    BCHelper.writeToSourceCode(getDeclaringClass(), instance);
                 } else {
-                    line.append(code.generalizeType(getDeclaringClass()));
+                    line.append(code.simplifyType(getDeclaringClass()));
                 }
                 line.append('.');
                 line.append(getName());
@@ -117,7 +118,7 @@ public abstract class AbstractMethod extends AbstractMember implements IMethod {
                 if (instance == null) throw new IllegalStateException("non-static method requires instance");
                 BCHelper.writeToSourceCode(getReturnType(), instance);
             } else {
-                line.append(code.generalizeType(getDeclaringClass()));
+                line.append(code.simplifyType(getDeclaringClass()));
             }
             line.append('.');
             line.append(getName());
@@ -140,5 +141,11 @@ public abstract class AbstractMethod extends AbstractMember implements IMethod {
     @Override
     public int hashCode() {
         return 31 * super.hashCode() + Arrays.hashCode(getParameterTypes());
+    }
+
+    @Override
+    public String toString() {
+        String toString = getDeclaringClass().getName() + " " + getName() + "(" + Arrays.stream(getParameterTypes()).map(String::valueOf).collect(Collectors.joining(","))+") " + getReturnType().getName();
+        return getModifiers() == 0 ? toString : Modifier.toString(getModifiers()) + " " + toString;
     }
 }

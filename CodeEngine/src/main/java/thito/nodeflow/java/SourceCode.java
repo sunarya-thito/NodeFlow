@@ -58,7 +58,7 @@ public class SourceCode implements AutoCloseable {
         return variables;
     }
 
-    public String generalizeType(IClass type) {
+    public String simplifyType(IClass type) {
         if (type.getName().equals("void")) return "void";
         if (BCHelper.isPrimitive(type)) return type.getName();
         IClass other = importMap.get(type.getSimpleName());

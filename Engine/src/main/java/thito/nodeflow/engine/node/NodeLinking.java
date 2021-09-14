@@ -28,16 +28,16 @@ public class NodeLinking implements NodeLink {
             source.getSkin().widthProperty().addListener(o -> update());
             source.getSkin().heightProperty().addListener(o -> update());
             shape = source.getHandler().getOutputPort().getShape().createHandler();
-            shape.colorProperty().set(source.getHandler().getOutputPort().getColor());
-            styleHandler.get().fillProperty().set(source.getHandler().getOutputPort().getColor());
+            shape.colorProperty().bind(source.getHandler().getOutputPort().colorProperty());
+            styleHandler.get().fillProperty().bind(source.getHandler().getOutputPort().colorProperty());
         } else if (target != null) {
             target.getSkin().layoutXProperty().addListener(o -> update());
             target.getSkin().layoutYProperty().addListener(o -> update());
             target.getSkin().widthProperty().addListener(o -> update());
             target.getSkin().heightProperty().addListener(o -> update());
             shape = target.getHandler().getInputPort().getShape().createHandler();
-            shape.colorProperty().set(target.getHandler().getInputPort().getColor());
-            styleHandler.get().fillProperty().set(target.getHandler().getInputPort().getColor());
+            shape.colorProperty().bind(target.getHandler().getInputPort().colorProperty());
+            styleHandler.get().fillProperty().bind(target.getHandler().getInputPort().colorProperty());
         }
 
         if (styleHandler.get() != null) {

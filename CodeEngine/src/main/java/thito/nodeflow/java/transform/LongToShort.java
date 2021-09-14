@@ -9,8 +9,8 @@ public class LongToShort implements ObjectTransformation {
     public Reference transform(Reference source) {
         return new Reference(short.class) {
             @Override
-            public void write() {
-                source.write();
+            public void writeByteCode() {
+                source.writeByteCode();
                 MethodContext.getContext().pushNode(new InsnNode(Opcodes.L2I));
                 MethodContext.getContext().pushNode(new InsnNode(Opcodes.I2S));
             }

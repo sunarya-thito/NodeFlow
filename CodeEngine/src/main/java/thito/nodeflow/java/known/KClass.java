@@ -14,6 +14,16 @@ public class KClass extends AbstractClass {
     }
 
     @Override
+    public boolean isArray() {
+        return wrapped.isArray();
+    }
+
+    @Override
+    public String getCanonicalName() {
+        return wrapped.getCanonicalName();
+    }
+
+    @Override
     public String getSimpleName() {
         return wrapped.getSimpleName();
     }

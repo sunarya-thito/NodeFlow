@@ -6,19 +6,16 @@ import thito.nodeflow.engine.node.skin.*;
 import thito.nodeflow.engine.node.state.*;
 import thito.nodeflow.plugin.base.blueprint.*;
 import thito.nodeflow.plugin.base.blueprint.handler.parameter.*;
-import thito.nodeflow.plugin.base.blueprint.state.*;
+import thito.nodeflow.plugin.base.blueprint.state.parameter.*;
 
 import java.lang.reflect.*;
 
 public abstract class AbstractMethodCallNodeHandler extends JavaNodeHandler {
 
     private boolean varargs;
-    private BlueprintNodeState state;
-    private GenericStorage genericStorage = new GenericStorage();
 
-    public AbstractMethodCallNodeHandler(Node node, BlueprintNodeState state, boolean varargs) {
-        super(node);
-        this.state = state;
+    public AbstractMethodCallNodeHandler(Node node, NodeProvider nodeProvider, boolean varargs) {
+        super(node, nodeProvider);
         this.varargs = varargs;
     }
 
@@ -31,22 +28,29 @@ public abstract class AbstractMethodCallNodeHandler extends JavaNodeHandler {
 
     @Override
     public NodeParameterHandler createParameterHandler(NodeParameter parameter, HandlerState state) {
+        if (state instanceof ExecutionParameterHandlerState) {
+            return new ExecutionParameterHandler(parameter);
+        }
         if (state instanceof ParameterHandlerState) {
             int index = ((ParameterHandlerState) state).parameterIndex;
             Parameter param = getExecutable().getParameters()[index];
             if (varargs && param.isVarArgs()) {
-                return new VarArgsParameterHandler(param, parameter);
+                VarArgsParameterHandler handler = new VarArgsParameterHandler(getGenericStorage(), param, parameter);
+                handler.setValue(((ParameterHandlerState) state).value);
+                return handler;
             }
-            return new InputParameterHandler(genericStorage, param, parameter);
+            InputParameterHandler handler = new InputParameterHandler(getGenericStorage(), param, parameter);
+            handler.setValue(((ParameterHandlerState) state).value);
+            return handler;
         }
         if (state instanceof InstanceParameterHandlerState) {
-            return new InstanceParameterHandler(genericStorage, getExecutable().getDeclaringClass(), parameter);
+            InstanceParameterHandler handler = new InstanceParameterHandler(getGenericStorage(), getExecutable().getDeclaringClass(), parameter);
+            handler.setValue(((InstanceParameterHandlerState) state).value);
+            return handler;
+        }
+        if (state instanceof OutputParameterHandlerState) {
+            return new OutputParameterHandler(getGenericStorage(), ((Method) getExecutable()).getGenericReturnType(), parameter);
         }
         return null;
-    }
-
-    @Override
-    public HandlerState saveState() {
-        return state;
     }
 }

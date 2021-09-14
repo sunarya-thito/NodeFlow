@@ -4,18 +4,45 @@ import org.yaml.snakeyaml.*;
 
 import java.io.*;
 import java.util.*;
+import java.util.regex.*;
 
 public interface Section {
+    String SEPARATOR = ".";
     static Object wrap(Object o) {
-        if (!(o instanceof Section)) {
-            if (o instanceof List) {
-                return new ListSection((List) o);
-            }
-            if (o instanceof Map) {
-                return new MapSection((Map) o);
-            }
+        if (o instanceof Section) return o;
+        if (o instanceof List) {
+            return new ListSection((List<?>) o);
+        }
+        if (o instanceof Map) {
+            return new MapSection((Map<?, ?>) o);
         }
         return o;
+    }
+    static String getName(String path) {
+        String[] split = path.split(Pattern.quote(SEPARATOR));
+        return split[split.length - 1];
+    }
+    static Section wrapParent(Section parent, String name, Section current) {
+        if (current.getParent() != parent) {
+            if (current instanceof MapSection) {
+                MapSection mapSection = new MapSection((MapSection) current);
+                mapSection.setParent(parent, name);
+                return mapSection;
+            }
+            if (current instanceof ListSection) {
+                ListSection objects = new ListSection((ListSection) current);
+                objects.setParent(parent, name);
+                return objects;
+            }
+        } else {
+            if (current instanceof MapSection) {
+                ((MapSection) current).setParent(parent, name);
+            }
+            if (current instanceof ListSection) {
+                ((ListSection) current).setParent(parent, name);
+            }
+        }
+        return current;
     }
     static String toString(Section section) {
         DumperOptions options = new DumperOptions();
@@ -43,11 +70,20 @@ public interface Section {
         }
         return paths;
     }
+    String getName();
+    default String getPath() {
+        StringBuilder path = new StringBuilder(getName());
+        Section parent;
+        while ((parent = getParent()) != null) {
+            path.insert(0, parent.getName() + SEPARATOR);
+        }
+        return path.toString();
+    }
     Section getParent();
     Optional<?> getInScope(String key);
     void setInScope(String key, Object value);
     default void set(String path, Object value) {
-        String[] paths = path.split("\\.");
+        String[] paths = path.split(Pattern.quote(SEPARATOR));
         Object lookup = this;
         for (int i = 0; i < paths.length - 1; i++) {
             Section oldLookup = (Section) lookup;
@@ -61,7 +97,7 @@ public interface Section {
         }
     }
     default Optional<?> getObject(String path) {
-        String[] paths = path.split("\\.");
+        String[] paths = path.split(Pattern.quote(SEPARATOR));
         Object lookup = this;
         for (String s : paths) {
             if (lookup instanceof Section) {
@@ -147,15 +183,15 @@ public interface Section {
     default Optional<Boolean> getBoolean(String path) {
         return getObject(path).map(o -> {
             String text = String.valueOf(o);
-            return text.equals("true") ? true : text.equals("false") ? false : null;
+            return text.equals("true") ? Boolean.TRUE : text.equals("false") ? Boolean.FALSE : null;
         });
     }
     default Optional<MapSection> getMap(String path) {
         return getObject(path).map(o -> {
             if (o instanceof Map) {
                 if (o instanceof MapSection) return (MapSection) o;
-                MapSection mapSection = new MapSection((Map<String, ?>) o);
-                mapSection.setParent(this);
+                MapSection mapSection = new MapSection((Map<?, ?>) o);
+                mapSection.setParent(this, Section.getName(path));
                 return mapSection;
             }
             return null;
@@ -168,11 +204,11 @@ public interface Section {
                     return (ListSection) o;
                 }
                 ListSection list = new ListSection((List<?>) o);
-                list.setParent(this);
+                list.setParent(this, Section.getName(path));
                 return list;
             }
             ListSection list = new ListSection(Collections.singleton(o));
-            list.setParent(this);
+            list.setParent(this, Section.getName(path));
             return list;
         });
     }

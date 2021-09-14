@@ -19,10 +19,13 @@ public class NodeParameter {
     public NodeParameter() {
     }
 
+    public void setHandler(NodeParameterHandler handler) {
+        this.handler = handler;
+    }
+
     protected void initialize(Node node) {
         this.node = node;
         id = UUID.randomUUID();
-        handler = node.getHandler().createParameterHandler(this, null);
         skin = handler.createSkin();
     }
 

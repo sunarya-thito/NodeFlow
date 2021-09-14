@@ -1,6 +1,15 @@
 blueprint:
   module-name: Blueprint
   execution-param: Execution
+  return-param: Result
+  instance-param: Target
+  method-node: Execute %s
+  constructor-node: Create %s
+  unknown-node: Unknown
+  unknown-param: Unknown Param
+  field-value-param: Value
+  get-field-node: Get %s
+  set-field-node: Set %s
   settings:
     name: Blueprint
     link-style: Link Style

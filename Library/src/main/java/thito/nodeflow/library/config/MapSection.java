@@ -4,18 +4,34 @@ import java.util.*;
 
 public class MapSection extends HashMap<String, Object> implements Section {
     private Section parent;
+    private String name;
 
     public MapSection() {
         super();
     }
 
-    public MapSection(Map<? extends String, ?> m) {
+    public MapSection(Map<?, ?> m) {
         super();
-        putAll(m);
+        m.forEach((key, value) -> put(String.valueOf(key), value));
     }
 
-    protected void setParent(Section parent) {
+    protected void setParent(Section parent, String name) {
         this.parent = parent;
+        this.name = name;
+    }
+
+    @Override
+    public String getName() {
+        if (name == null && parent != null) {
+            if (parent instanceof ListSection) {
+                return String.valueOf(((ListSection) parent).indexOf(this));
+            }
+            if (parent instanceof MapSection) {
+                return ((MapSection) parent).entrySet().stream().filter(e -> Objects.equals(e.getValue(), this))
+                        .findAny().map(Entry::getKey).orElse(null);
+            }
+        }
+        return name;
     }
 
     @Override
@@ -31,12 +47,13 @@ public class MapSection extends HashMap<String, Object> implements Section {
     @Override
     public Object put(String key, Object value) {
         value = Section.wrap(value);
+        if (value instanceof Section) value = Section.wrapParent(this, key, (Section) value);
         return super.put(key, value);
     }
 
     @Override
     public void putAll(Map<? extends String, ?> m) {
-        m.forEach((key, value) -> put(key, value));
+        m.forEach(this::put);
     }
 
     @Override

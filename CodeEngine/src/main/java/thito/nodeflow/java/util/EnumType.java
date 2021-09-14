@@ -42,14 +42,14 @@ public class EnumType {
         }
 
         @Override
-        public void write() {
-            getType().field(name).write();
+        public void writeByteCode() {
+            getType().field(name).writeByteCode();
         }
 
         @Override
         public void writeSourceCode() {
             SourceCode code = SourceCode.getContext();
-            code.getLine().append(code.generalizeType(getEnumType()))
+            code.getLine().append(code.simplifyType(getEnumType()))
                     .append('.')
                     .append(name);
         }

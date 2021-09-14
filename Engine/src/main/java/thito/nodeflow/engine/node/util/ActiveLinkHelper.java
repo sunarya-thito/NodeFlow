@@ -1,6 +1,7 @@
 package thito.nodeflow.engine.node.util;
 
 import javafx.animation.*;
+import javafx.beans.property.*;
 import javafx.scene.Node;
 import javafx.scene.layout.*;
 import javafx.scene.paint.*;
@@ -14,7 +15,8 @@ public class ActiveLinkHelper {
     private final Shape shape;
     private Trail[] trails;
     private ParallelTransition parallelTransition;
-    private Color from = Color.WHITE, to = Color.WHITE;
+    private ObjectProperty<Color> from = new SimpleObjectProperty<>(Color.WHITE);
+    private ObjectProperty<Color> to = new SimpleObjectProperty<>(Color.WHITE);
     private Pane container;
     private final PortShape handler;
     public ActiveLinkHelper(Shape shape, PortShape handler) {
@@ -30,12 +32,12 @@ public class ActiveLinkHelper {
         });
     }
 
-    public void setSourceColor(Color from) {
-        this.from = from;
+    public ObjectProperty<Color> fromProperty() {
+        return from;
     }
 
-    public void setTargetColor(Color to) {
-        this.to = to;
+    public ObjectProperty<Color> toProperty() {
+        return to;
     }
 
     private void init() {
@@ -55,6 +57,7 @@ public class ActiveLinkHelper {
         }
         parallelTransition = new ParallelTransition(Arrays.stream(trails).map(Trail::getComposite).toArray(Animation[]::new));
     }
+
 
     public void play() {
         if (playing) return;
@@ -117,19 +120,13 @@ public class ActiveLinkHelper {
             PortShape.Handler handler = ActiveLinkHelper.this.handler.createHandler();
             handler.unbind();
             node = handler.impl_getShapePeer();
-//            node = new Polygon();
-//            node.getPoints().addAll(
-//                    0d, -6d, // top left
-//                    0d, 6d, // bottom left
-//                    12d, 0d); // center right
-//            node.setFill(Color.WHITE);
             node.setScaleX(0);
             node.setScaleY(0);
             transition = new PathTransition(Duration.millis(Math.sqrt(Math.pow(shape.getLayoutBounds().getWidth(), 2) + Math.pow(shape.getLayoutBounds().getHeight(), 2)) * 10), shape, node);
             transition.setInterpolator(Interpolator.LINEAR);
             transition.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
             double target = transition.getDuration().toMillis();
-            fill = new FillTransition(transition.getDuration(), node, to, from);
+            fill = new FillTransition(transition.getDuration(), node, to.get(), from.get());
             composite = new ParallelTransition(transition, fill);
             composite.setCycleCount(-1);
             composite.setDelay(Duration.millis(target / trails.length * index));

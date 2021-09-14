@@ -9,8 +9,8 @@ public class DoubleToShort implements ObjectTransformation {
     public Reference transform(Reference source) {
         return new Reference(short.class) {
             @Override
-            public void write() {
-                source.write();
+            public void writeByteCode() {
+                source.writeByteCode();
                 MethodContext.getContext().pushNode(new InsnNode(Opcodes.D2I));
                 MethodContext.getContext().pushNode(new InsnNode(Opcodes.I2S));
             }
