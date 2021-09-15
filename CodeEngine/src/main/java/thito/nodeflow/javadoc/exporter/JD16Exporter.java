@@ -89,24 +89,32 @@ public class JD16Exporter {
     private JavaClass readClass(String url) throws IOException {
         Document doc = Jsoup.parse(htmlSupplier.apply(url), url);
         JavaClass javaClass = new JavaClass();
-        Element module = doc.selectFirst("body > div.flex-box > div > main > div.header > div:nth-child(1) > a");
-        if (module != null) {
-            String text = module.ownText();
-            if (text != null && !text.isEmpty()) {
-                javaClass.setModuleName(text);
+        Elements subTitle = doc.select(".header .sub-title");
+        for (Element e : subTitle) {
+            String text = e.text();
+            if (text != null) {
+                if (text.toLowerCase().startsWith("package ")) {
+                    javaClass.setPackageName(text.substring("package ".length()));
+                } else if (text.toLowerCase().startsWith("module ")) {
+                    javaClass.setModuleName(text.substring("module ".length()));
+                }
             }
         }
-        Element pkg = doc.selectFirst("body > div.flex-box > div > main > div.header > div:nth-child(2) > a");
-        if (pkg != null) {
-            String text = pkg.ownText();
-            if (text != null && !text.isEmpty()) {
-                javaClass.setPackageName(text);
-            }
-        }
-        Element title = doc.selectFirst("body > div.flex-box > div > main > div > h1");
+        Element title = doc.selectFirst(".header > h1");
         Objects.requireNonNull(title);
-        String[] s = title.ownText().split(" ");
-        String simpleName = s[1].split("<")[0].replace('.', '$'); // also handles the $ for inner classes
+        String s = title.ownText();
+        if (s.startsWith("Class ")) {
+            s = s.substring("Class ".length());
+        } else if (s.startsWith("Record Class ")) {
+            s = s.substring("Record Class ".length());
+        } else if (s.startsWith("Enum Class ")) {
+            s = s.substring("Enum Class ".length());
+        } else if (s.startsWith("Interface ")) {
+            s = s.substring("Interface ".length());
+        } else if (s.startsWith("Enum ")) {
+            s = s.substring("Enum ".length());
+        }
+        String simpleName = s.split("<")[0].replace('.', '$'); // also handles the $ for inner classes
         urlMap.put(url, javaClass.getPackageName() != null ? javaClass.getPackageName() + "." + simpleName : simpleName);
         String signatureData = extractData(doc.selectFirst(".type-signature")).toString();
         TypeTokenizer declaration = new TypeTokenizer(0, signatureData.toCharArray());
@@ -166,7 +174,6 @@ public class JD16Exporter {
         for (Element e : nestedClasses) {
             String href = e.attr("abs:href");
             if (href != null && !href.isEmpty()) {
-                System.out.println("READING INNER "+href);
                 subCl.add(readClass(href).getName());
             }
         }
