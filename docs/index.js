@@ -53,7 +53,7 @@ $(document).ready(() => {
             });
         });
     });
-    fetch('https://raw.githubusercontent.com/sunarya-thito/NodeFlow/master/changelogs.txt')
+    fetch('https://raw.githubusercontent.com/sunarya-thito/NodeFlow/master/Resources/src/main/resources/ChangeLogs.txt')
     .then(result => result.text())
     .then(text => {
         $('#changelogs').html(marked(parseVersionHeader(text)));
