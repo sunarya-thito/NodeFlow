@@ -20,8 +20,6 @@ public class JD16Exporter {
     public static void main(String[] args) {
         String outDir = System.getProperty("outputDirectory");
         String javaDocsUrl = System.getProperty("javaDocsUrl");
-        if (outDir == null) outDir = "testdocs";
-        if (javaDocsUrl == null) javaDocsUrl = "https://hub.spigotmc.org/javadocs/bukkit/";
         System.out.println("Output Directory: "+outDir);
         System.out.println("Java Docs URL: "+javaDocsUrl);
         if (outDir == null || javaDocsUrl == null) return;
@@ -36,6 +34,9 @@ public class JD16Exporter {
         try {
             exporter.export(outputDirectory);
         } catch (Exception e) {
+            if (exporter.pool != null) {
+                exporter.pool.shutdown();
+            }
             throw new RuntimeException("Failed to export", e);
         }
     }
@@ -103,7 +104,7 @@ public class JD16Exporter {
         for (CompletableFuture<?> f : downloaded.values()) {
             f.get();
         }
-        for (String u : downloaded.keySet()) readClass(u);
+        for (String u : new HashSet<>(downloaded.keySet())) readClass(u);
         pool.shutdown();
     }
 
