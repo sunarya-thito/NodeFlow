@@ -42,6 +42,7 @@
                 <groupId>thito.nodeflow</groupId>
                 <artifactId>nodeflow-build-helper</artifactId>
                 <version>1.0-SNAPSHOT</version>
+                <inherited>false</inherited>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

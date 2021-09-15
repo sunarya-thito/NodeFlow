@@ -2,17 +2,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>thito.nodeflow</groupId>
-  <artifactId>code-engine</artifactId>
-  <version>2.0</version>
+  <artifactId>nodeflow-build-helper</artifactId>
+  <packaging>maven-plugin</packaging>
+  <name>NodeFlow BuildHelper Maven Mojo</name>
+  <version>1.0-SNAPSHOT</version>
   <build>
     <plugins>
       <plugin>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>3.2.0</version>
-        <configuration>
-          <finalName>${project.artifactId}</finalName>
-          <outputDirectory>../target/Libraries</outputDirectory>
-        </configuration>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.1</version>
       </plugin>
       <plugin>
         <artifactId>maven-shade-plugin</artifactId>
@@ -26,8 +24,35 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <artifactId>maven-plugin-plugin</artifactId>
+        <version>3.6.1</version>
+        <configuration>
+          <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-plugin-api</artifactId>
+      <version>3.6.3</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.plugin-tools</groupId>
+      <artifactId>maven-plugin-annotations</artifactId>
+      <version>3.6.0</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-project</artifactId>
+      <version>2.2.1</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
   <distributionManagement>
     <repository>
       <uniqueVersion>false</uniqueVersion>

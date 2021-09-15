@@ -10,13 +10,16 @@ import java.io.*;
 
 @Mojo(name = "generate-docs")
 public class GenerateDocs extends AbstractMojo {
-    @Parameter
+
+    @Parameter(required = true, property = "javaDocsUrl")
     String javaDocsUrl;
 
-    @Parameter
+    @Parameter(required = true, property = "outputDirectory")
     File outputDirectory;
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
+        getLog().info("Generating Java Docs from "+javaDocsUrl);
+        getLog().info("Output Directory: "+outputDirectory);
         JD16Exporter exporter = new JD16Exporter(javaDocsUrl, url -> {
             try {
                 return Jsoup.connect(url).execute().body();
