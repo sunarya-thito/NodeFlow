@@ -49,6 +49,6 @@ jobs:
         with:
           source-directory: target
           destination-github-username: sunarya-thito
-          destination-repository-name: NodeFlow
+          destination-repository-name: NodeFlowDistribution
           target-branch: deploy
           user-email: septogeddon@gmail.com
