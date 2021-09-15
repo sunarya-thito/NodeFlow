@@ -34,7 +34,7 @@ jobs:
         id: vars
         run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
       - name: Change Version
-        run: mvn --batch-mode versions:set -DgenerateBackupPoms=false -DnewVersion=${{ steps.vars.outputs.sha_short }}
+        run: mvn --batch-mode versions:set -DgenerateBackupPoms=false -DprocessAllModules -DnewVersion=${{ steps.vars.outputs.sha_short }}
       - name: Build and Deploy with Maven
         run: mvn --batch-mode --update-snapshots deploy
         env:
@@ -49,6 +49,6 @@ jobs:
         with:
           source-directory: target
           destination-github-username: sunarya-thito
-          destination-repository-name: NodeFlow
+          destination-repository-name: NodeFlowDistribution
           target-branch: deploy
           user-email: septogeddon@gmail.com
