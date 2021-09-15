@@ -32,8 +32,10 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
+      - name: Create Executable
+        run: mvn package -pl CodeEngine
       - name: Generate Docs
-        run: mvn thito.nodeflow:nodeflow-build-helper:generate-docs "-DjavaDocsUrl=${{ env.JAVADOCS_URL }}" "-DoutputDirectory=Generated Docs/${{ env.OUTPUT_DIRECTORY }}" -f pom.xml
+        run: java -cp CodeEngine/target/code-engine.jar thito.nodeflow.javadoc.exporter.JD16Exporter
       - name: Publish Docs
         uses: cpina/github-action-push-to-another-repository@v1.3
         env:
