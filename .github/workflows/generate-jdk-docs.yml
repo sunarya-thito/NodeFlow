@@ -33,7 +33,7 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
       - name: Generate Docs
-        run: cd BuildHelper & mvn thito.nodeflow:nodeflow-build-helper:generate-docs "-DjavaDocsUrl=${{ env.JAVADOCS_URL }}" "-DoutputDirectory=Generated Docs/${{ env.OUTPUT_DIRECTORY }}" -f pom.xml
+        run: mvn thito.nodeflow:nodeflow-build-helper:generate-docs "-DjavaDocsUrl=${{ env.JAVADOCS_URL }}" "-DoutputDirectory=Generated Docs/${{ env.OUTPUT_DIRECTORY }}" -f pom.xml
       - name: Publish Docs
         uses: cpina/github-action-push-to-another-repository@v1.3
         env:
