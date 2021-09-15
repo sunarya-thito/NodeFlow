@@ -11,10 +11,12 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  generate:
+  generate-jdk16-docs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
+    env:
+      JAVADOCS_URL: https://docs.oracle.com/en/java/javase/16/docs/api/
+      OUTPUT_DIRECTORY: jdk-16
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -31,14 +33,14 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
       - name: Generate Docs
-        run: mvn nodeflow-build-helper:generate-docs -DjavaDocsUrl="https://docs.oracle.com/en/java/javase/16/docs/api/" -DoutputDirectory="Generated Docs/JDK 16/"
+        run: mvn thito.nodeflow:nodeflow-build-helper:generate-docs "-DjavaDocsUrl=${{ env.JAVADOCS_URL }}" "-DoutputDirectory=Generated Docs/${{ env.OUTPUT_DIRECTORY }}" -f pom.xml
       - name: Publish Docs
         uses: cpina/github-action-push-to-another-repository@v1.3
         env:
           API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
         with:
-          source-directory: target
+          source-directory: Generated Docs/${{ env.OUTPUT_DIRECTORY }}
           destination-github-username: sunarya-thito
           destination-repository-name: GeneralizedJavaDocs
-          target-branch: jdk-16
+          target-branch: ${{ env.OUTPUT_DIRECTORY }}
           user-email: septogeddon@gmail.com
