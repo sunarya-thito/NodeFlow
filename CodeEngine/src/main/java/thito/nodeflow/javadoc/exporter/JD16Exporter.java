@@ -15,6 +15,24 @@ import java.util.*;
 import java.util.function.*;
 
 public class JD16Exporter {
+    public static void main(String[] args) {
+        File outputDirectory = new File(System.getProperty("outputDirectory"));
+        String javaDocsUrl = System.getProperty("javaDocsUrl");
+        System.out.println("Output Directory: "+outputDirectory);
+        System.out.println("Java Docs URL: "+javaDocsUrl);
+        JD16Exporter exporter = new JD16Exporter(javaDocsUrl, url -> {
+            try {
+                return Jsoup.connect(url).execute().body();
+            } catch (Throwable t) {
+                throw new RuntimeException(t);
+            }
+        });
+        try {
+            exporter.export(outputDirectory);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to export", e);
+        }
+    }
 //    private String local = "jdk-16.0.2_doc-all/docs/api/";
     private String local = "spigot-api-jd/";
     private Gson gson = new GsonBuilder().setPrettyPrinting().create();
