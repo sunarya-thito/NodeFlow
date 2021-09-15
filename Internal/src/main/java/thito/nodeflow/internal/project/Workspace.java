@@ -1,10 +1,8 @@
 package thito.nodeflow.internal.project;
 
-import javafx.beans.*;
-import javafx.beans.value.*;
 import javafx.collections.*;
+import thito.nodeflow.config.*;
 import thito.nodeflow.internal.*;
-import thito.nodeflow.library.config.*;
 import thito.nodeflow.library.resource.*;
 import thito.nodeflow.library.task.*;
 

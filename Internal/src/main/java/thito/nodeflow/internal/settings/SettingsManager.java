@@ -1,11 +1,11 @@
 package thito.nodeflow.internal.settings;
 
 import javafx.collections.*;
+import thito.nodeflow.config.*;
 import thito.nodeflow.internal.plugin.*;
 import thito.nodeflow.internal.plugin.event.application.*;
 import thito.nodeflow.internal.settings.node.*;
 import thito.nodeflow.internal.settings.parser.*;
-import thito.nodeflow.library.config.*;
 import thito.nodeflow.library.language.*;
 import thito.nodeflow.library.ui.*;
 

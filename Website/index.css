@@ -1,0 +1,580 @@
+@font-face {
+    font-family: 'AXIS Extra';
+    src: url('AXIS-ExtraBold.woff2') format('woff2'),
+        url('AXIS-ExtraBold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+html {
+    scroll-behaviour: smooth;
+}
+
+.header {
+    background: transparent;
+    position: fixed;
+    width: 100%;
+    height: 50px;
+    z-index: 999;
+}
+
+.header-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 1;
+    z-index: 1;
+}
+
+#intro {
+    background-color: rgb(20, 20, 20);
+}
+
+.header-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+}
+
+.slider-container {
+    display: flex;
+}
+
+.circle {
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    height: 10px;
+    width: 10px;
+    margin: 6px;
+}
+
+.active-circle {
+    background-color: white;
+}
+
+.slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+}
+
+.headline-wrapper {
+    position: absolute;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding-left: 15%;
+}
+
+.headline {
+    color: white;
+    font-family: 'Anton';
+    font-kerning: auto;
+    line-height: 1.1;
+    padding: 10px;
+    max-width: 40%;
+    text-shadow: 0px 0px 20px rgb(20, 20, 20);
+}
+
+@media screen and (min-width: 1001px) {
+    .headline {
+        font-size: 8rem;
+    }
+    .content-header {
+        font-size: 3.5rem;
+    }
+    .feature-title {
+        font-size: 2.4rem;
+    }
+    .feature-desc {
+        font-size: 1.8rem;
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    .headline {
+        font-size: 6rem;
+    }
+    .content-header {
+        font-size: 3rem;
+    }
+    .feature-title {
+        font-size: 2rem;
+    }
+    .feature-desc {
+        font-size: 1.6rem;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    .headline {
+        font-size: 4rem;
+    }
+    .content-header {
+        font-size: 2.5rem;
+    }
+    .feature-title {
+        font-size: 1.6rem;
+    }
+    .feature-desc {
+        font-size: 1.4rem;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .headline {
+        font-size: 3rem;
+    }
+    .content-header {
+        font-size: 2rem;
+    }
+    .feature-title {
+        font-size: 1.2rem;
+    }
+    .feature-desc {
+        font-size: 1rem;
+    }
+}
+
+#intro {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.navigation {
+    flex-grow: 1;
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 30px;
+    height: 100%;
+}
+
+.navitem {
+    margin: 0px 20px;
+    bottom: 0;
+    top: 0;
+    color: rgb(255, 255, 255, 0.85);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 1em;
+}
+
+.navitembar {
+    background-color: white;
+    height: 1px;
+    width: 0px;
+    transition: width 0.2s ease-out;
+}
+
+.navitem:hover .navitembar {
+    width: 100%;
+}
+
+.navitem:hover {
+    text-decoration: none;
+    color: white;
+}
+
+.shady-header-bg {
+    -webkit-transition: opacity 0.4s ease;
+    transition: opacity 0.4s ease;
+    background: linear-gradient(to bottom, rgb(20, 20, 20), transparent);
+    background: -o-linear-gradient(to bottom, rgb(20, 20, 20), transparent);
+    background: -moz-linear-gradient(to bottom, rgb(20, 20, 20), transparent);
+    background: -webkit-linear-gradient(to bottom, rgb(20, 20, 20), transparent);
+}
+
+.full-header-bg {
+    background-color: rgb(30, 30, 30);
+}
+
+.logo {
+    font-family: 'AXIS Extra';
+    font-size: 25;
+    color: white;
+    margin: 10 40;
+    text-align: center;
+}
+
+.back-big-header {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+#header1 {
+    background-image: url('header3.png');
+}
+
+#header2 {
+    background-image: url('header.png');
+}
+
+#header3 {
+    background-image: url('header2.png');
+}
+
+body {
+    font-family: 'Roboto';
+    margin: 0;
+    background-color: rgb(20, 20, 20);
+    -moz-user-select: none;
+    -webkit-user-select: none; 
+    -ms-user-select:none; 
+    user-select:none;
+    -o-user-select:none;
+}
+
+.footer {
+    height: 100px;
+    background-color: rgb(30, 30, 30);
+    display: flex;
+    justify-content: center;
+}
+
+.copyright {
+    color: white;
+    margin-top: 20px;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.transparent-header {
+    opacity: 0;
+}
+
+.download-buttons {
+    display: flex;
+}
+
+.java-check {
+    color: black;
+    opacity: 0.6;
+}
+
+.java-check:hover {
+    color: black;
+}
+
+.content-page {
+    left: 0;
+    right: 0;
+    width: 70vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.content-header {
+    margin-top: 120px;
+    font-family: 'Anton';
+    text-align: center;
+}
+
+.feature {
+    display: flex;
+    margin-top: 2vw;
+    margin-bottom: 3vw;
+}
+
+.feature-content {
+    margin-left: 50px;
+}
+
+.feature-preview {
+    position: relative;
+    min-height: 20vw;
+    min-width: 30vw;
+    max-width: 30vw;
+    max-height: 20vw;
+    display: flex;
+    overflow: hidden;
+    background-color: rgb(50, 50, 50);
+    border-radius: 5px;
+}
+
+.feature-image {
+    position: absolute;
+    object-fit: cover;
+    object-position: 0px 50%;
+    /* top: -2.5vw; */
+    /* left: -2.5vw; */
+    width: 30vw;
+    height: 20vw;
+}
+
+.image-clipper {
+    position: absolute;
+    top: 50%;
+    left: 0%;
+    transform: translate(0%, -50%);
+    width: 0;
+    height: 20vw;
+    overflow: hidden;
+    transition: width 0.5s ease;
+    z-index: 10;
+}
+
+.feature-preview:hover .image-clipper {
+    width: 30vw;
+}
+
+
+.feature-title {
+    font-family: 'Anton';
+
+    line-height: 1;
+    margin-top: 20px;
+}
+
+.feature-desc {
+    font-family: 'Roboto';
+    margin-top: 20px;
+    padding-right: 40px;
+    padding-left: 0px;
+}
+
+.reversed-feature {
+    justify-content: flex-end;
+}
+
+.reversed-feature .feature-content {
+    text-align: right;
+    margin-right: 50px;
+    margin-left: 0px;
+}
+
+.reversed-feature .feature-desc {
+    padding-right: 0px;
+    padding-left: 40px;
+}
+
+.sysreq-item {
+    font-size: 1.2vw;
+}
+
+.sysreq-header {
+    font-size: 1.8vw;
+    margin-bottom: 10px;
+}
+
+.sysreq-confirmation {
+    margin-top: 4vw;
+    font-size: 0.8vw;
+}
+
+.support-button {
+    width: 12vw !important;
+}
+
+.support-container {
+    display: flex;
+    margin: 40px 0px 150px 0px;
+}
+
+.support-desc {
+    font-size: 1vw;
+    flex: 1;
+    margin-bottom: 20px;
+    text-align: justify;
+}
+
+.support-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 15vw;
+    margin: 0 40px;
+}
+
+.support-icon {
+    width: 8vw;
+}
+
+.support-title {
+    font-size: 1.7vw;
+    margin-top: 30px;
+}
+
+.guides-container {
+    display: flex;
+}
+
+.guides-content {
+    display: flex;
+    flex-direction: column;
+    max-width: 260px;
+    margin: 20 40;
+}
+
+.guides-instruction {
+    text-align: justify;
+    font-size: 0.9vw;
+    opacity: 0.8;
+}
+
+.inner-button {
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    text-overflow: clip;
+    overflow: clip;
+    white-space: nowrap;
+}
+
+.outer-button {
+    cursor: pointer;
+    display: flex;
+    border-style: solid;
+    border-width: 2;
+    border-color: rgb(60, 60, 60);
+    margin: 10px;
+    transition: border-width 0.1s;
+    min-width: 150px;
+    overflow: clip;
+}
+
+.outer-button > div {
+    flex: 1;
+    margin: 2px;
+    transition: margin 0.1s, background-position 0.3s ease;
+    background-size: 200% 100%;
+    background-image: linear-gradient(to right, rgb(60, 60, 60) 50%, rgb(88, 142, 243) 50%);
+}
+
+.outer-button:hover > div {
+    background-position: -100% 0;
+    margin: 0px;
+}
+
+.outer-button:hover {
+    border-width: 0px;
+}
+
+.outer-button {
+    width: 240px;
+    height: 50px;
+}
+
+.disabled-button > div {
+    background-image: none !important;
+    background-color: rgb(236, 79, 79);
+}
+
+.disabled-button {
+    border-color: rgb(236, 79, 79);
+}
+
+.sysreq-container {
+    flex: 1;
+}
+
+.download-content {
+    margin-top: 3vw;
+    display: flex;
+    justify-content: space-between;
+}
+
+.sysreq-content {
+    margin-bottom: 50px;
+}
+
+.changelog-container {
+    margin-left: 60px;
+    display: flex;
+    flex-direction: column;
+    max-width: 50%;
+    max-height: 30vw;
+}
+
+.changelog-header {
+    font-size: 1.8vw;
+}
+
+.changelog-content {
+    margin-top: 20px;
+    background-color: rgb(50, 50, 50);
+    flex: 1;
+    color: white;
+    padding: 20px 30px;
+    border-radius: 5px;
+    overflow-y: scroll;
+    font-size: 1vw;
+}
+
+.changelog-content h3 {
+    font-size: 1.3vw;
+}
+
+.changelog-content a {
+    color: white;
+}
+
+.changelog-content a:hover {
+    color: white;
+}
+
+#container {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    scroll-padding: 0;
+}
+/* Turn on custom 8px wide scrollbar */
+::-webkit-scrollbar {
+    width: 10px; /* 1px wider than Lion. */
+    /* This is more usable for users trying to click it. */
+    background-color: rgba(0,0,0,0);
+    -webkit-border-radius: 100px;
+  }
+  /* hover effect for both scrollbar area, and scrollbar 'thumb' */
+  ::-webkit-scrollbar:hover {
+    background-color: rgba(0, 0, 0, 0.09);
+  }
+   
+  /* The scrollbar 'thumb' ...that marque oval shape in a scrollbar */
+  ::-webkit-scrollbar-thumb:vertical {
+    /* This is the EXACT color of Mac OS scrollbars. 
+       Yes, I pulled out digital color meter */
+    background: rgba(0,0,0,0.5);
+    -webkit-border-radius: 100px;
+    background-clip: padding-box;
+    border: 2px solid rgba(0, 0, 0, 0);
+    min-height: 10px; /*Prevent it from getting too small */
+  }
+  ::-webkit-scrollbar-thumb:vertical:active {
+    background: rgba(0,0,0,0.61); /* Some darker color when you click it */
+    -webkit-border-radius: 100px;
+  }

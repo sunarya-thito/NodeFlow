@@ -2,7 +2,7 @@ package thito.nodeflow.internal.settings.parser;
 
 import thito.nodeflow.internal.settings.*;
 import thito.nodeflow.internal.settings.node.*;
-import thito.nodeflow.library.config.*;
+import thito.nodeflow.config.*;
 
 import java.util.*;
 

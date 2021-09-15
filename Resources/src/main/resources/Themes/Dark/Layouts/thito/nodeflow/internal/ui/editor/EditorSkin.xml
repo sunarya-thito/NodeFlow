@@ -24,7 +24,7 @@
                                     <Menu id="file-menu">
                                         <Text>${editor.file}</Text>
                                         <Items>
-                                            <Menu>
+                                            <Menu id="file-create">
                                                 <Text>${editor.menu-file.new}</Text>
                                             </Menu>
                                             <Item>

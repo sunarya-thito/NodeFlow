@@ -5,6 +5,7 @@ import thito.nodeflow.internal.project.module.*;
 import thito.nodeflow.library.language.*;
 import thito.nodeflow.library.resource.*;
 import thito.nodeflow.library.ui.*;
+import thito.nodeflow.library.ui.form.*;
 
 public class BlueprintModule implements FileModule {
     @Override
@@ -25,5 +26,15 @@ public class BlueprintModule implements FileModule {
     @Override
     public FileViewer createViewer(Project project, Resource resource) {
         return null;
+    }
+
+    @Override
+    public Validator<Resource> getFileValidator() {
+        return null;
+    }
+
+    @Override
+    public void createFile(Resource resource) {
+
     }
 }

@@ -1,8 +1,8 @@
 package thito.nodeflow.internal.project;
 
 import javafx.beans.property.*;
+import thito.nodeflow.config.*;
 import thito.nodeflow.internal.ui.editor.*;
-import thito.nodeflow.library.config.*;
 import thito.nodeflow.library.resource.*;
 
 import java.util.*;

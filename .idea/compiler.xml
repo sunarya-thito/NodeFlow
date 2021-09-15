@@ -16,6 +16,7 @@
         <module name="nodeflow-internal" />
         <module name="code-engine" />
         <module name="nodeflow-resources" />
+        <module name="config" />
         <module name="Bundler" />
       </profile>
     </annotationProcessing>

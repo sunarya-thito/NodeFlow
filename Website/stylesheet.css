@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'AXIS Extra';
+    src: url('AXIS-ExtraBold.woff2') format('woff2'),
+        url('AXIS-ExtraBold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+

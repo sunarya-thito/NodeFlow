@@ -52,6 +52,7 @@ public class ResourceManager {
     }
 
     public Resource getResource(File file) {
+        if (file == null) return null;
         synchronized (watchedResources) {
             Iterator<WeakReference<Resource>> resourceIterator = watchedResources.iterator();
             while (resourceIterator.hasNext()) {

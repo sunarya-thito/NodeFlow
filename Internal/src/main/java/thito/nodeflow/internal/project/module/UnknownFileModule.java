@@ -4,6 +4,7 @@ import thito.nodeflow.internal.project.*;
 import thito.nodeflow.library.language.*;
 import thito.nodeflow.library.resource.*;
 import thito.nodeflow.library.ui.*;
+import thito.nodeflow.library.ui.form.*;
 
 public class UnknownFileModule implements FileModule {
     @Override
@@ -24,5 +25,15 @@ public class UnknownFileModule implements FileModule {
     @Override
     public FileViewer createViewer(Project project, Resource resource) {
         return new UnknownFileViewer(this, project, resource);
+    }
+
+    @Override
+    public Validator<Resource> getFileValidator() {
+        return null;
+    }
+
+    @Override
+    public void createFile(Resource resource) {
+
     }
 }

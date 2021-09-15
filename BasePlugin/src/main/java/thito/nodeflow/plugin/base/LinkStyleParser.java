@@ -2,7 +2,7 @@ package thito.nodeflow.plugin.base;
 
 import thito.nodeflow.engine.node.*;
 import thito.nodeflow.internal.settings.*;
-import thito.nodeflow.library.config.*;
+import thito.nodeflow.config.*;
 
 import java.util.*;
 

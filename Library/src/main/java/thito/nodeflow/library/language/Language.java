@@ -3,7 +3,7 @@ package thito.nodeflow.library.language;
 import javafx.beans.*;
 import javafx.beans.property.*;
 import javafx.beans.value.*;
-import thito.nodeflow.library.config.*;
+import thito.nodeflow.config.*;
 
 import java.io.*;
 import java.util.*;

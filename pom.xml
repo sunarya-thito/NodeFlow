@@ -19,6 +19,7 @@
         <module>Setup</module>
         <module>Resources</module>
         <module>Bundler</module>
+        <module>Configuration</module>
     </modules>
 
     <properties>
@@ -30,7 +31,7 @@
         <repository>
             <id>github</id>
             <name>Github sunarya-thito Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/sunarya-thito/NodeFlowSoftware</url>
+            <url>https://maven.pkg.github.com/sunarya-thito/NodeFlow</url>
             <uniqueVersion>false</uniqueVersion>
         </repository>
     </distributionManagement>

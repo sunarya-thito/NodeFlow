@@ -18,7 +18,7 @@ public class Updater extends Stage {
 
     public static List<String> IGNORED_FILES = Arrays.asList(
 //            "NodeFlow.exe",
-            "NodeFlow-CLI.exe", "NodeFlow-CLI-Direct.exe", "NodeFlow-Direct.exe", "dump.tmp", ".gitignore", "NodeFlow-Beta.exe", "config.yml",
+            "NodeFlow-CLI.exe", "NodeFlow-CLI-Direct.exe", "NodeFlow-Direct.exe", "dump.tmp", ".gitignore", "NodeFlow-Beta.exe", "thito.nodeflow.config.yml",
             "NodeFlow", "user.yml"
     );
 

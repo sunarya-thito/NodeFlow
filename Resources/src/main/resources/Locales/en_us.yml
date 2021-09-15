@@ -36,6 +36,8 @@ open-file: Select File
 ok: Ok
 cancel: Cancel
 apply: Apply
+directory: Folder
+file-already-exist: File already exist
 file-size:
   B: "%sB"
   kB: "%skB"

@@ -1,11 +1,11 @@
 package thito.nodeflow.internal.plugin;
 
 import com.sun.javafx.css.*;
+import thito.nodeflow.config.*;
 import thito.nodeflow.internal.plugin.event.EventListener;
 import thito.nodeflow.internal.plugin.event.*;
 import thito.nodeflow.internal.project.*;
 import thito.nodeflow.internal.project.module.*;
-import thito.nodeflow.library.config.*;
 import thito.nodeflow.library.language.*;
 import thito.nodeflow.library.resource.*;
 

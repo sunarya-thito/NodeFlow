@@ -26,6 +26,9 @@ public class EditorSkin extends Skin {
     @Component("file-menu")
     Menu fileMenu;
 
+    @Component("file-create")
+    Menu fileCreateMenu;
+
     @Component("maximize-button")
     Button maximizeButton;
 
@@ -117,19 +120,16 @@ public class EditorSkin extends Skin {
         getScene().getWindow().heightProperty().addListener(obs -> updateSearchPopupPosition());
         updateSearchPopupPosition();
 
-        editorWindow.getEditor().getOpenedFiles().addListener(new ListChangeListener<FileTab>() {
-            @Override
-            public void onChanged(Change<? extends FileTab> change) {
-                while (change.next()) {
-                    if (change.wasRemoved()) {
-                        for (FileTab t : change.getRemoved()) {
-                            fileTabs.getTabs().remove(t.getTab());
-                        }
+        editorWindow.getEditor().getOpenedFiles().addListener((ListChangeListener<FileTab>) change -> {
+            while (change.next()) {
+                if (change.wasRemoved()) {
+                    for (FileTab t : change.getRemoved()) {
+                        fileTabs.getTabs().remove(t.getTab());
                     }
-                    if (change.wasAdded()) {
-                        for (FileTab t : change.getAddedSubList()) {
-                            fileTabs.getTabs().add(t.getTab());
-                        }
+                }
+                if (change.wasAdded()) {
+                    for (FileTab t : change.getAddedSubList()) {
+                        fileTabs.getTabs().add(t.getTab());
                     }
                 }
             }

@@ -3,14 +3,13 @@ package thito.nodeflow.internal.project;
 import javafx.beans.*;
 import javafx.beans.property.*;
 import javafx.collections.*;
+import thito.nodeflow.config.*;
 import thito.nodeflow.internal.*;
 import thito.nodeflow.internal.ui.editor.*;
-import thito.nodeflow.library.config.*;
 import thito.nodeflow.library.resource.*;
 import thito.nodeflow.library.task.*;
 
 import java.io.*;
-import java.util.*;
 import java.util.stream.*;
 
 public class ProjectProperties {

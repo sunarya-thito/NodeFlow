@@ -36,7 +36,7 @@ public class EditorFilePanelSkin extends Skin {
                 addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
                     if (event.getClickCount() == 2) {
                         Resource resource = getItem();
-                        if (resource != null) {
+                        if (resource != null && resource.getType() == ResourceType.FILE) {
                             editorSkin.getEditorWindow().getEditor().openFile(resource);
                         }
                     }

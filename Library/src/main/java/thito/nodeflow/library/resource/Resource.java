@@ -50,6 +50,10 @@ public class Resource {
         });
     }
 
+    public Resource getParent() {
+        return getResourceManager().getResource(toFile().getParentFile());
+    }
+
     protected void updateChildren() {
         String[] children = file.list();
         if (children != null) {

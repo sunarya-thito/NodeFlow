@@ -1,6 +1,4 @@
-import thito.nodeflow.library.config.*;
-
-import java.util.*;
+import thito.nodeflow.config.*;
 
 public class ConfigTest {
     public static void main(String[] args) {

@@ -1,6 +1,6 @@
 package thito.nodeflow.internal.plugin;
 
-import thito.nodeflow.library.config.*;
+import thito.nodeflow.config.*;
 
 import java.io.*;
 import java.net.*;

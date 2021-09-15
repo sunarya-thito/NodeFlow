@@ -2,7 +2,7 @@ package thito.nodeflow.internal.settings.parser;
 
 import javafx.scene.paint.*;
 import thito.nodeflow.internal.settings.*;
-import thito.nodeflow.library.config.*;
+import thito.nodeflow.config.*;
 
 import java.util.*;
 

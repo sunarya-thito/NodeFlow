@@ -4,7 +4,7 @@ import thito.nodeflow.engine.node.*;
 import thito.nodeflow.internal.*;
 import thito.nodeflow.internal.plugin.*;
 import thito.nodeflow.internal.settings.*;
-import thito.nodeflow.library.config.*;
+import thito.nodeflow.config.*;
 import thito.nodeflow.plugin.base.module.*;
 
 import java.io.*;
