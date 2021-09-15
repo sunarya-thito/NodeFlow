@@ -35,7 +35,7 @@ jobs:
       - name: Create Executable
         run: mvn package -pl CodeEngine
       - name: Generate Docs
-        run: java -cp CodeEngine/target/code-engine.jar thito.nodeflow.javadoc.exporter.JD16Exporter "-DjavaDocsUrl=${{ env.JAVADOCS_URL }}" "-DoutputDirectory=Generated Docs/${{ env.OUTPUT_DIRECTORY }}"
+        run: java "-DjavaDocsUrl=${{ env.JAVADOCS_URL }}" "-DoutputDirectory=Generated Docs/${{ env.OUTPUT_DIRECTORY }}" -cp CodeEngine/target/code-engine.jar thito.nodeflow.javadoc.exporter.JD16Exporter
       - name: Publish Docs
         uses: cpina/github-action-push-to-another-repository@v1.3
         env:
