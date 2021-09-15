@@ -2,12 +2,44 @@ package thito.nodeflow.javadoc;
 
 public class JavaClass extends JavaMember {
 
+    private String packageName;
+    private String simpleName;
     private String moduleName;
     private ClassType type;
-    private String superClass;
-    private String[] interfaces;
+    private TypeReference superClass;
+    private TypeReference[] interfaces;
     private JavaMember[] members; // does not includes inner classes!
     private String[] innerClasses;
+    private TypeReference[] genericParameters;
+
+    {
+        memberType = "JavaClass";
+    }
+
+    public void setGenericParameters(TypeReference[] genericParameters) {
+        this.genericParameters = genericParameters;
+    }
+
+    public TypeReference[] getGenericParameters() {
+        return genericParameters;
+    }
+
+    public void setSimpleName(String simpleName) {
+        this.simpleName = simpleName;
+    }
+
+    public String getSimpleName() {
+        return simpleName;
+    }
+
+    public String getPackageName() {
+        return packageName;
+    }
+
+
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
+    }
 
     public String getModuleName() {
         return moduleName;
@@ -33,19 +65,19 @@ public class JavaClass extends JavaMember {
         this.type = type;
     }
 
-    public String getSuperClass() {
+    public TypeReference getSuperClass() {
         return superClass;
     }
 
-    public void setSuperClass(String superClass) {
+    public void setSuperClass(TypeReference superClass) {
         this.superClass = superClass;
     }
 
-    public String[] getInterfaces() {
+    public TypeReference[] getInterfaces() {
         return interfaces;
     }
 
-    public void setInterfaces(String[] interfaces) {
+    public void setInterfaces(TypeReference[] interfaces) {
         this.interfaces = interfaces;
     }
 

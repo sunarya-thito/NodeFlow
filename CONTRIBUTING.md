@@ -14,7 +14,7 @@ All java classes should follow the standard java naming convention.
 For better readability, all resource files must use camel case typing, but this one does not 
 apply to locale files since they are code specific file name.
 ## Code Structure
-There are 4 sub-modules inside this repository.
+There are 12 sub-modules inside this repository.
 ### BasePlugin
 BasePlugin is the bundled plugin that included in the first launch/install of the software.
 ### BuildHelper

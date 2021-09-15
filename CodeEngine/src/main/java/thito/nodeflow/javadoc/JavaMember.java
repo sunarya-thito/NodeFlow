@@ -3,11 +3,21 @@ package thito.nodeflow.javadoc;
 import java.util.*;
 
 public class JavaMember {
+    protected String memberType;
     private int modifiers;
     private String name;
 
     private String comment;
-    private Map<String, String> tagMap = new HashMap<>();
+    private JavaAnnotation[] annotations;
+    private Map<String, List<String>> tagMap = new HashMap<>();
+
+    public JavaAnnotation[] getAnnotations() {
+        return annotations;
+    }
+
+    public void setAnnotations(JavaAnnotation[] annotations) {
+        this.annotations = annotations;
+    }
 
     public int getModifiers() {
         return modifiers;
@@ -33,7 +43,7 @@ public class JavaMember {
         return comment;
     }
 
-    public Map<String, String> getTagMap() {
+    public Map<String, List<String>> getTagMap() {
         return tagMap;
     }
 }
