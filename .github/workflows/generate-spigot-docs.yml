@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: Generate JDK 16 Docs
+name: Generate Spigot Latest Docs
 
 # Controls when the workflow will run
 on:
@@ -11,12 +11,12 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  generate-jdk16-docs:
+  generate-spigot-latest-docs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     env:
       JAVADOCS_URL: https://hub.spigotmc.org/javadocs/bukkit/
-      OUTPUT_DIRECTORY: spigot-1.17.1
+      OUTPUT_DIRECTORY: spigot-latest
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
