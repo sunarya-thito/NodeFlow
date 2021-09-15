@@ -1,0 +1,48 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Generate JDK 16 Docs
+
+# Controls when the workflow will run
+on:
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  generate-jdk16-docs:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    env:
+      JAVADOCS_URL: https://hub.spigotmc.org/javadocs/bukkit/
+      OUTPUT_DIRECTORY: spigot-1.17.1
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      - name: Set up JDK 16
+        uses: actions/setup-java@v2
+        with:
+          java-version: '16'
+          distribution: 'adopt'
+      - name: Cache Maven packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+      - name: Create Executable
+        run: mvn package -pl CodeEngine
+      - name: Generate Docs
+        run: java "-DjavaDocsUrl=${{ env.JAVADOCS_URL }}" "-DoutputDirectory=Generated Docs/${{ env.OUTPUT_DIRECTORY }}" -cp CodeEngine/target/code-engine.jar thito.nodeflow.javadoc.exporter.JD16Exporter
+      - name: Publish Docs
+        uses: cpina/github-action-push-to-another-repository@v1.3
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
+        with:
+          source-directory: Generated Docs/${{ env.OUTPUT_DIRECTORY }}
+          destination-github-username: sunarya-thito
+          destination-repository-name: GeneralizedJavaDocs
+          target-branch: ${{ env.OUTPUT_DIRECTORY }}
+          user-email: septogeddon@gmail.com
