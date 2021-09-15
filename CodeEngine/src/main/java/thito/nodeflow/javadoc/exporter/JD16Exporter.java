@@ -33,11 +33,7 @@ public class JD16Exporter {
             throw new RuntimeException("Failed to export", e);
         }
     }
-//    private String local = "jdk-16.0.2_doc-all/docs/api/";
-    private String local = "spigot-api-jd/";
     private Gson gson = new GsonBuilder().setPrettyPrinting().create();
-//    private String baseURL = "https://docs.oracle.com/en/java/javase/16/docs/api/";
-//    private String baseURL = "https://hub.spigotmc.org/javadocs/bukkit/";
     private Map<String, String> noteMapping = new HashMap<>();
     private Map<String, JavaClass> map = new HashMap<>();
     private Map<String, String> urlMap = new HashMap<>();
