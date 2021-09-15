@@ -12,12 +12,16 @@ import java.io.*;
 import java.lang.reflect.*;
 import java.nio.file.*;
 import java.util.*;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.*;
 import java.util.function.*;
 
 public class JD16Exporter {
     public static void main(String[] args) {
         String outDir = System.getProperty("outputDirectory");
         String javaDocsUrl = System.getProperty("javaDocsUrl");
+        if (outDir == null) outDir = "testdocs";
+        if (javaDocsUrl == null) javaDocsUrl = "https://hub.spigotmc.org/javadocs/bukkit/";
         System.out.println("Output Directory: "+outDir);
         System.out.println("Java Docs URL: "+javaDocsUrl);
         if (outDir == null || javaDocsUrl == null) return;
@@ -31,7 +35,7 @@ public class JD16Exporter {
         });
         try {
             exporter.export(outputDirectory);
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new RuntimeException("Failed to export", e);
         }
     }
@@ -42,6 +46,8 @@ public class JD16Exporter {
     private File outputDirectory;
     private String baseURL;
     private Function<String, String> htmlSupplier;
+    private ExecutorService pool = Executors.newFixedThreadPool(20);
+    private Map<String, CompletableFuture<String>> downloaded = new HashMap<>();
 
     public JD16Exporter(String baseURL, Function<String, String> htmlSupplier) {
         if (!baseURL.endsWith("/")) {
@@ -59,25 +65,51 @@ public class JD16Exporter {
         noteMapping.put("Returns:", "return");
     }
 
-    public void export(File outputDirectory) throws IOException {
+    private CompletableFuture<String> download(String url) {
+        CompletableFuture<String> future = downloaded.get(url);
+        if (future == null) {
+            downloaded.put(url, future = new CompletableFuture<>());
+            CompletableFuture<String> finalFuture = future;
+            pool.submit(() -> {
+                finalFuture.complete(htmlSupplier.apply(url));
+            });
+        }
+        return future;
+    }
+
+    public void export(File outputDirectory) throws Exception {
         this.outputDirectory = outputDirectory;
         listAllClasses();
         File target = new File(outputDirectory, "class-list.json");
         Files.writeString(target.toPath(), gson.toJson(map.keySet()));
     }
 
-    private void listAllClasses() throws IOException {
+    private void listAllClasses() throws Exception {
         String url = baseURL + "allclasses-index.html";
         Document doc = Jsoup.parse(htmlSupplier.apply(url), baseURL);
         for (Element e : doc.select(".col-first.all-classes-table a")) {
             String href = e.attr("abs:href");
             if (href != null && href.startsWith(baseURL)) {
-                readClass(href);
+                download(href);
             }
         }
+        int size = downloaded.size();
+        for (CompletableFuture<?> f : downloaded.values()) {
+            f.thenAccept(result -> {
+                int progress = downloadProgress.incrementAndGet();
+                System.out.println("DOWNLOADING [" + progress + "/" + size + "]");
+            });
+        }
+        for (CompletableFuture<?> f : downloaded.values()) {
+            f.get();
+        }
+        for (String u : downloaded.keySet()) readClass(u);
+        pool.shutdown();
     }
 
-    private String readClassName(String url) throws IOException {
+    private AtomicInteger downloadProgress = new AtomicInteger();
+
+    private String readClassName(String url) throws Exception {
         String name = urlMap.get(url);
         if (name == null) {
             name = readClass(url).getName();
@@ -86,8 +118,8 @@ public class JD16Exporter {
         return name;
     }
 
-    private JavaClass readClass(String url) throws IOException {
-        Document doc = Jsoup.parse(htmlSupplier.apply(url), url);
+    private JavaClass readClass(String url) throws Exception {
+        Document doc = Jsoup.parse(download(url).get(), url);
         JavaClass javaClass = new JavaClass();
         Elements subTitle = doc.select(".header .sub-title");
         for (Element e : subTitle) {
@@ -314,7 +346,7 @@ public class JD16Exporter {
         return params;
     }
 
-    private StringBuilder extractData(Element elements) throws IOException {
+    private StringBuilder extractData(Element elements) throws Exception {
         StringBuilder signature = new StringBuilder();
         for (Node node : elements.childNodes()) {
             if (node instanceof TextNode) {

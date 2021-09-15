@@ -29,7 +29,7 @@ public class GenerateDocs extends AbstractMojo {
         });
         try {
             exporter.export(outputDirectory);
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new MojoExecutionException("Failed to export", e);
         }
     }
