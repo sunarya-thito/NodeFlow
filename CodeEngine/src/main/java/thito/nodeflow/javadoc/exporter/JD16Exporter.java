@@ -100,6 +100,9 @@ public class JD16Exporter {
                 }
             }
         }
+        if (javaClass.getModuleName() == null) {
+            javaClass.setModuleName("ALL-UNNAMED");
+        }
         Element title = doc.selectFirst(".header > h1");
         Objects.requireNonNull(title);
         String s = title.ownText();
@@ -261,7 +264,7 @@ public class JD16Exporter {
         }
         javaClass.setMembers(members.toArray(new JavaMember[0]));
         String moduleName = javaClass.getModuleName();
-        File target = new File(outputDirectory, (moduleName == null || moduleName.isEmpty() ? "UNNAMED" : moduleName) + "/" + javaClass.getName().replace('.', '/') + ".json");
+        File target = new File(outputDirectory, (moduleName == null || moduleName.isEmpty() ? "ALL-UNNAMED" : moduleName) + "/" + javaClass.getName().replace('.', '/') + ".json");
         target.getParentFile().mkdirs();
         System.out.println("WRITING "+javaClass.getName());
         Files.writeString(target.toPath(), gson.toJson(javaClass));
@@ -320,7 +323,9 @@ public class JD16Exporter {
                 String title = node.attr("title");
                 if (title.startsWith("enum class in ") ||
                 title.startsWith("class in ") ||
-                title.startsWith("interface in ")) {
+                title.startsWith("interface in ") ||
+                title.startsWith("class or interface in ") ||
+                title.startsWith("enum in ")) {
                     String[] split = title.split(" in ");
                     String pkg = split[1];
                     String simpleName = ((Element) node).text().replace('.', '$');
@@ -329,7 +334,7 @@ public class JD16Exporter {
                     } else {
                         signature.append(pkg).append(".").append(simpleName);
                     }
-                } else if (title.startsWith("type property in ")) {
+                } else if (title.startsWith("type property in ") || title.startsWith("type parameter in ")) {
                     String[] split = title.split(" in ");
                     String pkg = split[1];
                     String simpleName = ((Element) node).text();
