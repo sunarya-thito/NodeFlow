@@ -329,6 +329,10 @@ public class JD16Exporter {
                     String[] split = title.split(" in ");
                     String pkg = split[1];
                     String simpleName = ((Element) node).text().replace('.', '$');
+                    if (simpleName.startsWith("@")) {
+                        signature.append("@");
+                        simpleName = simpleName.substring(1);
+                    }
                     if (pkg.equalsIgnoreCase("<unnamed>")) {
                         signature.append(simpleName);
                     } else {
