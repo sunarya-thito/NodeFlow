@@ -16,10 +16,12 @@ import java.util.function.*;
 
 public class JD16Exporter {
     public static void main(String[] args) {
-        File outputDirectory = new File(System.getProperty("outputDirectory"));
+        String outDir = System.getProperty("outputDirectory");
         String javaDocsUrl = System.getProperty("javaDocsUrl");
-        System.out.println("Output Directory: "+outputDirectory);
+        System.out.println("Output Directory: "+outDir);
         System.out.println("Java Docs URL: "+javaDocsUrl);
+        if (outDir == null || javaDocsUrl == null) return;
+        File outputDirectory = new File(outDir);
         JD16Exporter exporter = new JD16Exporter(javaDocsUrl, url -> {
             try {
                 return Jsoup.connect(url).execute().body();
