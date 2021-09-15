@@ -41,7 +41,7 @@ the software need to make it run.
 Resources module contains all media/locales/graphics/fonts the software needed to display its UI.
 ### Setup
 Setup a.k.a Updater is a standalone app that update the software files without downloading the entire software files.
-### Website
+### docs
 The nodeflow website
 ## Resources Guidelines
 Resources such as Images, Icons, Fonts, etc, must follow these rules:
