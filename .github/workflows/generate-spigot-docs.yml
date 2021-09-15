@@ -15,8 +15,8 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     env:
-      JAVADOCS_URL: https://docs.oracle.com/en/java/javase/16/docs/api/
-      OUTPUT_DIRECTORY: jdk-16
+      JAVADOCS_URL: https://hub.spigotmc.org/javadocs/bukkit/
+      OUTPUT_DIRECTORY: spigot-1.17.1
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
