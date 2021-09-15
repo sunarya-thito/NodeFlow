@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.concurrent.atomic.*;
 import java.util.stream.*;
 
-@Mojo(name = "extract-style", defaultPhase = LifecyclePhase.PACKAGE)
+@Mojo(name = "extract-style")
 public class ExtractStyleMojo extends AbstractMojo {
 
     @Parameter(defaultValue = "${project}", required = true, readonly = true)
