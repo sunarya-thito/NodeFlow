@@ -2,7 +2,6 @@ package thito.nodeflow.javadoc.exporter;
 
 import com.google.gson.*;
 import org.jsoup.*;
-import org.jsoup.nodes.Node;
 import org.jsoup.nodes.*;
 import org.jsoup.select.*;
 import thito.nodeflow.javadoc.*;
@@ -336,14 +335,7 @@ public class JD16Exporter {
     }
 
     private List<JavaAnnotation> readAnnotations(TypeTokenizer typeTokenizer) {
-        List<JavaAnnotation> annotations = new ArrayList<>();
-        while (typeTokenizer.hasNext()) {
-            typeTokenizer.eatWhitespace();
-            JavaAnnotation annotation = typeTokenizer.eatAnnotation();
-            if (annotation == null) break;
-            annotations.add(annotation);
-        }
-        return annotations;
+        return typeTokenizer.eatAnnotations();
     }
 
     private List<JavaMethod.Parameter> readParameters(TypeTokenizer tokenizer) {

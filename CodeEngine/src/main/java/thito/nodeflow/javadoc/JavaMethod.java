@@ -1,7 +1,5 @@
 package thito.nodeflow.javadoc;
 
-import java.io.*;
-
 public class JavaMethod extends JavaMember {
 
     {
@@ -12,14 +10,14 @@ public class JavaMethod extends JavaMember {
     private TypeReference[] throwsClasses;
     private Parameter[] parameters;
     private TypeReference[] genericParameters;
-    private boolean isDefaultMethod;
+    private Boolean isDefaultMethod;
 
     public boolean isDefaultMethod() {
-        return isDefaultMethod;
+        return isDefaultMethod != null && isDefaultMethod;
     }
 
     public void setDefaultMethod(boolean defaultMethod) {
-        isDefaultMethod = defaultMethod;
+        isDefaultMethod = defaultMethod ? true : null;
     }
 
     public TypeReference[] getGenericParameters() {
@@ -61,35 +59,35 @@ public class JavaMethod extends JavaMember {
     public static class Parameter {
         private JavaAnnotation[] annotations;
         private TypeReference type;
-        private String name;
-        private boolean varargs;
+        private LocalFieldDeclaration name;
+        private Boolean varargs;
 
         public JavaAnnotation[] getAnnotations() {
             return annotations;
         }
 
         public void setAnnotations(JavaAnnotation[] annotations) {
-            this.annotations = annotations;
+            this.annotations = annotations != null && annotations.length == 0 ? null : annotations;
         }
 
         public boolean isVarargs() {
-            return varargs;
+            return varargs != null && varargs;
         }
 
         public void setVarargs(boolean varargs) {
-            this.varargs = varargs;
+            this.varargs = varargs ? true : null;
         }
 
-        public String getName() {
-            return name;
+        public void setName(LocalFieldDeclaration name) {
+            this.name = name;
         }
 
         public TypeReference getType() {
             return type;
         }
 
-        public void setName(String name) {
-            this.name = name;
+        public LocalFieldDeclaration getName() {
+            return name;
         }
 
         public void setType(TypeReference type) {

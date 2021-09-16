@@ -4,10 +4,10 @@ import java.util.*;
 import java.util.stream.*;
 
 public class JavaAnnotation {
-    private TypeReference type;
+    private String type;
     private Value[] values;
 
-    public void setType(TypeReference type) {
+    public void setType(String type) {
         this.type = type;
     }
 
@@ -15,7 +15,7 @@ public class JavaAnnotation {
         this.values = values;
     }
 
-    public TypeReference getType() {
+    public String getType() {
         return type;
     }
 

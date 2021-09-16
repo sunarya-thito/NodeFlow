@@ -16,7 +16,7 @@ public class JavaMember {
     }
 
     public void setAnnotations(JavaAnnotation[] annotations) {
-        this.annotations = annotations;
+        this.annotations = annotations != null && annotations.length == 0 ? null : annotations;
     }
 
     public int getModifiers() {

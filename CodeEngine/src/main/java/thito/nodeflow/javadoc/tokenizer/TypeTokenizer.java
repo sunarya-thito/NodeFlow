@@ -3,7 +3,6 @@ package thito.nodeflow.javadoc.tokenizer;
 import org.apache.commons.text.*;
 import thito.nodeflow.javadoc.*;
 
-import java.io.*;
 import java.lang.reflect.*;
 import java.util.*;
 
@@ -238,25 +237,31 @@ public class TypeTokenizer {
         return builder.isEmpty() ? null : builder.toString();
     }
 
-    public int eatArray() {
-        int total = 0;
-        while (index < array.length) {
-            int mark = index;
+    public ArrayDimensionDeclaration eatArray() {
+        int mark = index;
+        JavaAnnotation[] annotations = eatAnnotations().toArray(new JavaAnnotation[0]);
+        eatWhitespace();
+        if (eat('[')) {
             eatWhitespace();
-            if (eat('[')) {
-                eatWhitespace();
-                if (eat(']')) {
-                    total++;
-                } else {
-                    index = mark;
-                    break;
-                }
-            } else {
-                index = mark;
-                break;
+            if (eat(']')) {
+                ArrayDimensionDeclaration declaration = new ArrayDimensionDeclaration();
+                declaration.setAnnotations(annotations);
+                return declaration;
             }
         }
-        return total;
+        index = mark;
+        return null;
+    }
+
+    public ArrayDimensionDeclaration[] eatArrays() {
+        List<ArrayDimensionDeclaration> dimensions = new ArrayList<>();
+        while (index < array.length) {
+            eatWhitespace();
+            ArrayDimensionDeclaration declaration = eatArray();
+            if (declaration == null) break;
+            dimensions.add(declaration);
+        }
+        return dimensions.toArray(new ArrayDimensionDeclaration[0]);
     }
 
     public boolean eatVarArgs() {
@@ -343,29 +348,48 @@ public class TypeTokenizer {
         return true;
     }
 
+    public List<JavaAnnotation> eatAnnotations() {
+        List<JavaAnnotation> annotations = new ArrayList<>();
+        while (hasNext()) {
+            eatWhitespace();
+            JavaAnnotation annotation = eatAnnotation();
+            if (annotation == null) break;
+            annotations.add(annotation);
+        }
+        return annotations;
+    }
+
+    public LocalFieldDeclaration eatLocalField() {
+        int mark = index;
+        JavaAnnotation[] annotations = eatAnnotations().toArray(new JavaAnnotation[0]);
+        if (annotations.length <= 0 || eatWhitespace() > 0) {
+            eatWhitespace();
+            String name = eatName();
+            if (name != null) {
+                LocalFieldDeclaration declaration = new LocalFieldDeclaration();
+                declaration.setAnnotations(annotations);
+                declaration.setName(name);
+                return declaration;
+            }
+        }
+        index = mark;
+        return null;
+    }
+
     public JavaMethod.Parameter eatParameter() {
         int mark = index;
         eatWhitespace();
         TypeReference type = eatType();
+        eatWhitespace();
         boolean varArgs = eatVarArgs();
-        if (eatWhitespace() > 0) {
-            if (!varArgs) {
-                varArgs = eatVarArgs();
-                if (varArgs) {
-                    if (eatWhitespace() <= 0) {
-                        index = mark;
-                        return null;
-                    }
-                }
-            }
-            String name = eatName();
-            if (name != null) {
-                JavaMethod.Parameter parameter = new JavaMethod.Parameter();
-                parameter.setVarargs(varArgs);
-                parameter.setName(name);
-                parameter.setType(type);
-                return parameter;
-            }
+        eatWhitespace();
+        LocalFieldDeclaration name = eatLocalField();
+        if (name != null) {
+            JavaMethod.Parameter parameter = new JavaMethod.Parameter();
+            parameter.setVarargs(varArgs);
+            parameter.setName(name);
+            parameter.setType(type);
+            return parameter;
         }
         index = mark;
         return null;
@@ -379,7 +403,9 @@ public class TypeTokenizer {
     // B[]
     // B<C>[]
     // B#C
-    public <T> TypeReference eatType() {
+    public TypeReference eatType() {
+        JavaAnnotation[] annotations = eatAnnotations().toArray(new JavaAnnotation[0]);
+        eatWhitespace();
         if (eat('?')) {
             WildcardTypeReference typeReference = new WildcardTypeReference();
             int mark = index;
@@ -404,6 +430,7 @@ public class TypeTokenizer {
                     } else index = mark;
                 }
             }
+            typeReference.setAnnotations(annotations);
             return typeReference;
         } else {
             String typeName = eatTypeName();
@@ -426,11 +453,13 @@ public class TypeTokenizer {
                         VariableTypeReference reference = new VariableTypeReference();
                         reference.setOwner(typeName);
                         reference.setName(name);
-                        reference.setArrayDimensions(eatArray());
+                        reference.setArrayDimensions(eatArrays());
+                        reference.setAnnotations(annotations);
                         return reference;
                     }
                 } else index = mark;
-                typeReference.setArrayDimensions(eatArray());
+                typeReference.setAnnotations(annotations);
+                typeReference.setArrayDimensions(eatArrays());
                 return typeReference;
             }
         }
@@ -474,7 +503,7 @@ public class TypeTokenizer {
 
     public JavaAnnotation eatAnnotation() {
         if (eat('@')) {
-            TypeReference type = eatType();
+            String type = eatTypeName();
             if (type != null) {
                 JavaAnnotation javaAnnotation = new JavaAnnotation();
                 javaAnnotation.setType(type);
