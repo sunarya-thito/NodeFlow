@@ -11,6 +11,7 @@ import thito.nodeflow.javadoc.tokenizer.*;
 
 import java.io.*;
 import java.lang.reflect.*;
+import java.net.*;
 import java.nio.file.*;
 import java.util.*;
 import java.util.concurrent.*;
@@ -21,13 +22,21 @@ public class JD16Exporter {
     public static void main(String[] args) {
         String outDir = System.getProperty("outputDirectory");
         String javaDocsUrl = System.getProperty("javaDocsUrl");
+//        if (outDir == null) outDir = "Generated Docs";
+//        if (javaDocsUrl == null) javaDocsUrl = "https://docs.oracle.com/en/java/javase/16/docs/api/";
         System.out.println("Output Directory: "+outDir);
         System.out.println("Java Docs URL: "+javaDocsUrl);
         if (outDir == null || javaDocsUrl == null) return;
         File outputDirectory = new File(outDir);
         JD16Exporter exporter = new JD16Exporter(javaDocsUrl, url -> {
-            try {
-                return Jsoup.connect(url).execute().body();
+            try (InputStreamReader reader = new InputStreamReader(new URL(url).openStream())) {
+                char[] buffer = new char[1024 * 8];
+                int len;
+                StringBuilder builder = new StringBuilder();
+                while ((len = reader.read(buffer, 0, buffer.length)) != -1) {
+                    builder.append(buffer, 0, len);
+                }
+                return builder.toString();
             } catch (Throwable t) {
                 throw new RuntimeException(t);
             }
@@ -89,9 +98,12 @@ public class JD16Exporter {
     private void listAllClasses() throws Exception {
         String url = baseURL + "allclasses-index.html";
         Document doc = Jsoup.parse(htmlSupplier.apply(url), baseURL);
+        int count = 0;
         for (Element e : doc.select(".col-first.all-classes-table a")) {
             String href = e.attr("abs:href");
             if (href != null && href.startsWith(baseURL)) {
+                count++;
+                System.out.println("START DOWNLOADING ("+count+") "+e.text()+" (" + href+ ")");
                 download(href);
             }
         }
