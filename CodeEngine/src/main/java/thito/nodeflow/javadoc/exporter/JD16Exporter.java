@@ -19,8 +19,6 @@ import java.util.function.*;
 
 public class JD16Exporter {
     public static void main(String[] args) {
-        System.setProperty("outputDirectory", "GenDocs");
-        System.setProperty("javaDocsUrl", "https://papermc.io/javadocs/paper/1.17/");
         String outDir = System.getProperty("outputDirectory");
         String javaDocsUrl = System.getProperty("javaDocsUrl");
         System.out.println("Output Directory: "+outDir);
