@@ -21,7 +21,7 @@ public class JavaDocParser {
         return handler.getAllClassPaths();
     }
 
-    public JavaClass getDocumentation(String className) {
-        return handler.requestClass(className);
+    public JavaClass getDocumentation(String moduleName, String className) {
+        return handler.requestClass(moduleName, className);
     }
 }

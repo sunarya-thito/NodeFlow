@@ -217,6 +217,10 @@ public class JD16Exporter {
                 subCl.add(readClass(href).getName());
             }
         }
+        Element classNotes = doc.selectFirst(".description .block");
+        if (classNotes != null) {
+            javaClass.setComment(classNotes.html());
+        }
         if (!subCl.isEmpty()) javaClass.setInnerClasses(subCl.toArray(new String[0]));
         Elements allFields = doc.select(".field-details .member-list .detail");
         List<JavaMember> members = new ArrayList<>();
