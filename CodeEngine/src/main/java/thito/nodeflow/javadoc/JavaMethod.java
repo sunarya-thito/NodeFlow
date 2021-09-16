@@ -1,5 +1,7 @@
 package thito.nodeflow.javadoc;
 
+import java.io.*;
+
 public class JavaMethod extends JavaMember {
 
     {

@@ -157,12 +157,15 @@ public class JD16Exporter {
         declaration.eatWhitespace(); // optional
 
         // CLASS ANNOTATION
-        JavaAnnotation[] annotations = readAnnotations(declaration);
-        javaClass.setAnnotations(annotations);
+        List<JavaAnnotation> annotations = readAnnotations(declaration);
 
-        declaration.eatWhitespace(); // optional
+        declaration.eatWhitespace(); // optional or crucial?
         // CLASS MODIFIERS
         javaClass.setModifiers(declaration.eatModifiers());
+
+        declaration.eatWhitespace(); // optional
+        // ANNOTATION ALSO GOES AFTER MODIFIER LIKE WTF
+        annotations.addAll(readAnnotations(declaration));
 
         declaration.eatWhitespace(); // optional
         // CLASS DECLARATION
@@ -184,6 +187,7 @@ public class JD16Exporter {
         declaration.eatWhitespace();
         if (declaration.eat("extends")) {
             declaration.eatWhitespace();
+            // interface A extends B, C
             TypeReference[] references = declaration.eatSplit(',');
             if (references.length == 1) {
                 javaClass.setSuperClass(references[0]);
@@ -221,9 +225,13 @@ public class JD16Exporter {
             String memberSignature = extractData(e.selectFirst(".member-signature")).toString();
             TypeTokenizer memberDeclaration = new TypeTokenizer(0, memberSignature.toCharArray());
             memberDeclaration.eatWhitespace();
-            field.setAnnotations(readAnnotations(memberDeclaration));
+            List<JavaAnnotation> annotationList = readAnnotations(memberDeclaration);
             memberDeclaration.eatWhitespace();
             field.setModifiers(memberDeclaration.eatModifiers());
+            memberDeclaration.eatWhitespace();
+            // second annotation
+            annotationList.addAll(readAnnotations(memberDeclaration));
+            field.setAnnotations(annotationList.toArray(new JavaAnnotation[0]));
             memberDeclaration.eatWhitespace();
             field.setType(memberDeclaration.eatType());
             memberDeclaration.eatWhitespace();
@@ -241,7 +249,7 @@ public class JD16Exporter {
             String memberSignature = extractData(e.selectFirst(".member-signature")).toString();
             TypeTokenizer memberDeclaration = new TypeTokenizer(0, memberSignature.toCharArray());
             memberDeclaration.eatWhitespace();
-            method.setAnnotations(readAnnotations(memberDeclaration));
+            List<JavaAnnotation> annotationList = readAnnotations(memberDeclaration);
             memberDeclaration.eatWhitespace();
             if (memberDeclaration.eat("default")) {
                 method.setDefaultMethod(true);
@@ -249,13 +257,16 @@ public class JD16Exporter {
             memberDeclaration.eatWhitespace();
             method.setModifiers(memberDeclaration.eatModifiers());
             memberDeclaration.eatWhitespace();
+            // second annotation
+            annotationList.addAll(readAnnotations(memberDeclaration));
+            method.setAnnotations(annotationList.toArray(new JavaAnnotation[0]));
+            memberDeclaration.eatWhitespace();
             method.setGenericParameters(readGenericParameters(memberDeclaration));
             memberDeclaration.eatWhitespace();
             method.setReturnType(memberDeclaration.eatType());
             memberDeclaration.eatWhitespace();
             method.setName(memberDeclaration.eatName());
             memberDeclaration.eatWhitespace();
-            method.setParameters(readParameters(memberDeclaration).toArray(new JavaMethod.Parameter[0]));
             memberDeclaration.eatWhitespace();
             if (memberDeclaration.eat("throws")) {
                 memberDeclaration.eatWhitespace();
@@ -274,9 +285,13 @@ public class JD16Exporter {
             String memberSignature = extractData(e.selectFirst(".member-signature")).toString();
             TypeTokenizer memberDeclaration = new TypeTokenizer(0, memberSignature.toCharArray());
             memberDeclaration.eatWhitespace();
-            method.setAnnotations(readAnnotations(memberDeclaration));
+            List<JavaAnnotation> annotationList = readAnnotations(memberDeclaration);
             memberDeclaration.eatWhitespace();
             method.setModifiers(memberDeclaration.eatModifiers());
+            memberDeclaration.eatWhitespace();
+            // second annotation place
+            annotationList.addAll(readAnnotations(memberDeclaration));
+            method.setAnnotations(annotationList.toArray(new JavaAnnotation[0]));
             memberDeclaration.eatWhitespace();
             method.setGenericParameters(readGenericParameters(memberDeclaration));
             memberDeclaration.eatWhitespace();
@@ -315,7 +330,7 @@ public class JD16Exporter {
         return null;
     }
 
-    private JavaAnnotation[] readAnnotations(TypeTokenizer typeTokenizer) {
+    private List<JavaAnnotation> readAnnotations(TypeTokenizer typeTokenizer) {
         List<JavaAnnotation> annotations = new ArrayList<>();
         while (typeTokenizer.hasNext()) {
             typeTokenizer.eatWhitespace();
@@ -323,7 +338,7 @@ public class JD16Exporter {
             if (annotation == null) break;
             annotations.add(annotation);
         }
-        return annotations.toArray(new JavaAnnotation[0]);
+        return annotations;
     }
 
     private List<JavaMethod.Parameter> readParameters(TypeTokenizer tokenizer) {
@@ -332,7 +347,7 @@ public class JD16Exporter {
         tokenizer.eat('(');
         while (tokenizer.hasNext()) {
             tokenizer.eatWhitespace();
-            JavaAnnotation[] annotations = readAnnotations(tokenizer);
+            JavaAnnotation[] annotations = readAnnotations(tokenizer).toArray(new JavaAnnotation[0]);
             tokenizer.eatWhitespace();
             JavaMethod.Parameter parameter = tokenizer.eatParameter();
             if (parameter == null) break;
