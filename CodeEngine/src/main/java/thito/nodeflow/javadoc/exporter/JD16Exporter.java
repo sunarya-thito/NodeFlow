@@ -271,6 +271,7 @@ public class JD16Exporter {
             memberDeclaration.eatWhitespace();
             method.setName(memberDeclaration.eatName());
             memberDeclaration.eatWhitespace();
+            method.setParameters(readParameters(memberDeclaration).toArray(new JavaMethod.Parameter[0]));
             memberDeclaration.eatWhitespace();
             if (memberDeclaration.eat("throws")) {
                 memberDeclaration.eatWhitespace();
