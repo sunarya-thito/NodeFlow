@@ -186,6 +186,9 @@ public class JD16Exporter {
         declaration.eatWhitespace();
         javaClass.setGenericParameters(readGenericParameters(declaration));
         declaration.eatWhitespace();
+        // TO ELIMINATE RECORD TYPE
+        readParameters(declaration);
+        declaration.eatWhitespace();
         if (declaration.eat("extends")) {
             declaration.eatWhitespace();
             // interface A extends B, C
