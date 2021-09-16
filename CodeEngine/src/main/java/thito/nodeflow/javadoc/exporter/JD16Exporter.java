@@ -344,24 +344,29 @@ public class JD16Exporter {
     }
 
     private List<JavaMethod.Parameter> readParameters(TypeTokenizer tokenizer) {
-        List<JavaMethod.Parameter> params = new ArrayList<>();
-        tokenizer.eatWhitespace();
-        tokenizer.eat('(');
-        while (tokenizer.hasNext()) {
+        int mark = tokenizer.getIndex();
+        if (tokenizer.eat('(')) {
+            List<JavaMethod.Parameter> params = new ArrayList<>();
+            while (tokenizer.hasNext()) {
+                tokenizer.eatWhitespace();
+                JavaAnnotation[] annotations = readAnnotations(tokenizer).toArray(new JavaAnnotation[0]);
+                tokenizer.eatWhitespace();
+                JavaMethod.Parameter parameter = tokenizer.eatParameter();
+                if (parameter == null) break;
+                parameter.setAnnotations(annotations);
+                params.add(parameter);
+                if (parameter.getVarArgs() != null) break;
+                tokenizer.eatWhitespace();
+                if (!tokenizer.eat(',')) break;
+            }
             tokenizer.eatWhitespace();
-            JavaAnnotation[] annotations = readAnnotations(tokenizer).toArray(new JavaAnnotation[0]);
-            tokenizer.eatWhitespace();
-            JavaMethod.Parameter parameter = tokenizer.eatParameter();
-            if (parameter == null) break;
-            parameter.setAnnotations(annotations);
-            params.add(parameter);
-            if (parameter.getVarArgs() != null) break;
-            tokenizer.eatWhitespace();
-            if (!tokenizer.eat(',')) break;
+            if (!tokenizer.eat(')')) {
+                tokenizer.setIndex(mark);
+                return null;
+            }
+            return params;
         }
-        tokenizer.eatWhitespace();
-        if (!tokenizer.eat(')')) throw new IllegalArgumentException("invalid param: "+tokenizer);
-        return params;
+        return null;
     }
 
     private StringBuilder extractData(Element elements) throws Exception {
