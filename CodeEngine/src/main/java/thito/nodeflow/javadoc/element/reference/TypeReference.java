@@ -1,17 +1,18 @@
-package thito.nodeflow.javadoc;
+package thito.nodeflow.javadoc.element.reference;
 
-import java.io.*;
-import java.lang.annotation.*;
+import thito.nodeflow.javadoc.element.*;
+import thito.nodeflow.javadoc.element.declaration.*;
+
 import java.util.*;
 import java.util.stream.*;
 
 public abstract class TypeReference {
     private JavaAnnotation[] annotations;
     protected String type;
-    protected TypeUseDeclaration[] arrayDimensions;
+    protected ArrayDimensionDeclaration[] arrayDimensions;
 
-    public void setArrayDimensions(TypeUseDeclaration[] arrayDimensions) {
-        this.arrayDimensions = arrayDimensions != null && annotations.length == 0 ? null : arrayDimensions;
+    public void setArrayDimensions(ArrayDimensionDeclaration[] arrayDimensions) {
+        this.arrayDimensions = arrayDimensions != null && arrayDimensions.length == 0 ? null : arrayDimensions;
     }
 
     public void setAnnotations(JavaAnnotation[] annotations) {
@@ -22,7 +23,7 @@ public abstract class TypeReference {
         return annotations;
     }
 
-    public TypeUseDeclaration[] getArrayDimensions() {
+    public ArrayDimensionDeclaration[] getArrayDimensions() {
         return arrayDimensions;
     }
 

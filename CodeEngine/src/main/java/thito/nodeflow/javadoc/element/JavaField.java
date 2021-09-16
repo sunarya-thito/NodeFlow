@@ -1,4 +1,6 @@
-package thito.nodeflow.javadoc;
+package thito.nodeflow.javadoc.element;
+
+import thito.nodeflow.javadoc.element.reference.*;
 
 public class JavaField extends JavaMember {
 

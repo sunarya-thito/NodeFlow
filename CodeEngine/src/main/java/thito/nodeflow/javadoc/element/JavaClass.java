@@ -1,4 +1,7 @@
-package thito.nodeflow.javadoc;
+package thito.nodeflow.javadoc.element;
+
+import thito.nodeflow.javadoc.*;
+import thito.nodeflow.javadoc.element.reference.*;
 
 public class JavaClass extends JavaMember {
 

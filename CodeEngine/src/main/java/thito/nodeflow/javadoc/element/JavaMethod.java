@@ -1,4 +1,7 @@
-package thito.nodeflow.javadoc;
+package thito.nodeflow.javadoc.element;
+
+import thito.nodeflow.javadoc.element.declaration.*;
+import thito.nodeflow.javadoc.element.reference.*;
 
 public class JavaMethod extends JavaMember {
 
@@ -59,8 +62,8 @@ public class JavaMethod extends JavaMember {
     public static class Parameter {
         private JavaAnnotation[] annotations;
         private TypeReference type;
-        private LocalFieldDeclaration name;
-        private Boolean varargs;
+        private LocalFieldDeclaration field;
+        private ArrayDimensionDeclaration varArgs;
 
         public JavaAnnotation[] getAnnotations() {
             return annotations;
@@ -70,24 +73,24 @@ public class JavaMethod extends JavaMember {
             this.annotations = annotations != null && annotations.length == 0 ? null : annotations;
         }
 
-        public boolean isVarargs() {
-            return varargs != null && varargs;
+        public ArrayDimensionDeclaration getVarArgs() {
+            return varArgs;
         }
 
-        public void setVarargs(boolean varargs) {
-            this.varargs = varargs ? true : null;
+        public void setVarArgs(ArrayDimensionDeclaration varArgs) {
+            this.varArgs = varArgs;
         }
 
-        public void setName(LocalFieldDeclaration name) {
-            this.name = name;
+        public void setField(LocalFieldDeclaration field) {
+            this.field = field;
         }
 
         public TypeReference getType() {
             return type;
         }
 
-        public LocalFieldDeclaration getName() {
-            return name;
+        public LocalFieldDeclaration getField() {
+            return field;
         }
 
         public void setType(TypeReference type) {
@@ -95,7 +98,7 @@ public class JavaMethod extends JavaMember {
         }
 
         public String toString() {
-            return type + " " + name;
+            return type + " " + field;
         }
     }
 }

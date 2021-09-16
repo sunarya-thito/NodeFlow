@@ -1,6 +1,6 @@
-package thito.nodeflow.javadoc;
+package thito.nodeflow.javadoc.element.declaration;
 
-public class LocalFieldDeclaration extends TypeUseDeclaration {
+public class LocalFieldDeclaration extends TypeDeclaration {
     private String name;
 
     public String getName() {

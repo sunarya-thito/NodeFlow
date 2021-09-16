@@ -5,6 +5,8 @@ import org.jsoup.*;
 import org.jsoup.nodes.*;
 import org.jsoup.select.*;
 import thito.nodeflow.javadoc.*;
+import thito.nodeflow.javadoc.element.*;
+import thito.nodeflow.javadoc.element.reference.*;
 import thito.nodeflow.javadoc.tokenizer.*;
 
 import java.io.*;
@@ -17,6 +19,8 @@ import java.util.function.*;
 
 public class JD16Exporter {
     public static void main(String[] args) {
+        System.setProperty("outputDirectory", "GenDocs");
+        System.setProperty("javaDocsUrl", "https://papermc.io/javadocs/paper/1.17/");
         String outDir = System.getProperty("outputDirectory");
         String javaDocsUrl = System.getProperty("javaDocsUrl");
         System.out.println("Output Directory: "+outDir);
@@ -350,7 +354,7 @@ public class JD16Exporter {
             if (parameter == null) break;
             parameter.setAnnotations(annotations);
             params.add(parameter);
-            if (parameter.isVarargs()) break;
+            if (parameter.getVarArgs() != null) break;
             tokenizer.eatWhitespace();
             if (!tokenizer.eat(',')) break;
         }

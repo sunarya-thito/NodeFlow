@@ -2,6 +2,9 @@ package thito.nodeflow.javadoc.tokenizer;
 
 import org.apache.commons.text.*;
 import thito.nodeflow.javadoc.*;
+import thito.nodeflow.javadoc.element.*;
+import thito.nodeflow.javadoc.element.declaration.*;
+import thito.nodeflow.javadoc.element.reference.*;
 
 import java.lang.reflect.*;
 import java.util.*;
@@ -264,8 +267,15 @@ public class TypeTokenizer {
         return dimensions.toArray(new ArrayDimensionDeclaration[0]);
     }
 
-    public boolean eatVarArgs() {
-        return eat("...");
+    public ArrayDimensionDeclaration eatVarArgs() {
+        JavaAnnotation[] annotations = eatAnnotations().toArray(new JavaAnnotation[0]);
+        eatWhitespace();
+        if (eat("...")) {
+            ArrayDimensionDeclaration declaration = new ArrayDimensionDeclaration();
+            declaration.setAnnotations(annotations);
+            return declaration;
+        }
+        return null;
     }
 
     public int eatWhitespace() {
@@ -381,13 +391,13 @@ public class TypeTokenizer {
         eatWhitespace();
         TypeReference type = eatType();
         eatWhitespace();
-        boolean varArgs = eatVarArgs();
+        ArrayDimensionDeclaration varArgs = eatVarArgs();
         eatWhitespace();
         LocalFieldDeclaration name = eatLocalField();
         if (name != null) {
             JavaMethod.Parameter parameter = new JavaMethod.Parameter();
-            parameter.setVarargs(varArgs);
-            parameter.setName(name);
+            parameter.setVarArgs(varArgs);
+            parameter.setField(name);
             parameter.setType(type);
             return parameter;
         }
@@ -470,6 +480,7 @@ public class TypeTokenizer {
     // A extends B
     // A super B & C
     public VariableTypeReference eatGenericVariable() {
+        JavaAnnotation[] annotations = eatAnnotations().toArray(new JavaAnnotation[0]);
         String name = eatName();
         if (name != null && !name.isEmpty()) {
             VariableTypeReference typeReference = new VariableTypeReference();
@@ -496,6 +507,7 @@ public class TypeTokenizer {
                     } else index = mark;
                 }
             }
+            typeReference.setAnnotations(annotations);
             return typeReference;
         }
         return null;

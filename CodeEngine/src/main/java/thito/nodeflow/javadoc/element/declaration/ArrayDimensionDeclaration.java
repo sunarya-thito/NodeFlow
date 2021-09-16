@@ -1,6 +1,6 @@
-package thito.nodeflow.javadoc;
+package thito.nodeflow.javadoc.element.declaration;
 
-public class ArrayDimensionDeclaration extends TypeUseDeclaration {
+public class ArrayDimensionDeclaration extends TypeDeclaration {
     @Override
     public String toString() {
         String s = super.toString();

@@ -1,5 +1,7 @@
 package thito.nodeflow.javadoc;
 
+import thito.nodeflow.javadoc.element.*;
+
 public interface ParserEngine {
 
     Handler createHandler(JavaDocSource source);

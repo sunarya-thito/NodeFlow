@@ -1,6 +1,5 @@
-package thito.nodeflow.javadoc;
+package thito.nodeflow.javadoc.element.reference;
 
-import java.lang.reflect.*;
 import java.util.*;
 import java.util.stream.*;
 

@@ -1,4 +1,4 @@
-package thito.nodeflow.javadoc;
+package thito.nodeflow.javadoc.element;
 
 import java.util.*;
 

@@ -1,9 +1,11 @@
-package thito.nodeflow.javadoc;
+package thito.nodeflow.javadoc.element.declaration;
+
+import thito.nodeflow.javadoc.element.*;
 
 import java.util.*;
 import java.util.stream.*;
 
-public class TypeUseDeclaration {
+public abstract class TypeDeclaration {
     private JavaAnnotation[] annotations;
 
     public void setAnnotations(JavaAnnotation[] annotations) {

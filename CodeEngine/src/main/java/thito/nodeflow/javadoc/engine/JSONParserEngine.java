@@ -2,6 +2,8 @@ package thito.nodeflow.javadoc.engine;
 
 import com.google.gson.*;
 import thito.nodeflow.javadoc.*;
+import thito.nodeflow.javadoc.element.*;
+import thito.nodeflow.javadoc.element.reference.*;
 
 import java.lang.reflect.*;
 
