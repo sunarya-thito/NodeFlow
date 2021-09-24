@@ -12,3 +12,5 @@
 /BasePlugin/target/
 /BuildHelper/target/
 /Configuration/target/
+/JVMDebugger/target/
+/WebsitePlugin/target/
