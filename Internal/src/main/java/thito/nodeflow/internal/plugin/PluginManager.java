@@ -6,11 +6,12 @@ import thito.nodeflow.internal.plugin.event.EventListener;
 import thito.nodeflow.internal.plugin.event.*;
 import thito.nodeflow.internal.project.*;
 import thito.nodeflow.internal.project.module.*;
-import thito.nodeflow.library.language.*;
-import thito.nodeflow.library.resource.*;
+import thito.nodeflow.internal.language.*;
+import thito.nodeflow.internal.resource.*;
 
 import java.io.*;
 import java.lang.reflect.*;
+import java.net.*;
 import java.util.*;
 import java.util.logging.*;
 
@@ -21,6 +22,7 @@ public class PluginManager {
         return pluginManager;
     }
 
+    private List<Plugin> pluginList = new ArrayList<>();
     private List<ProjectExport> exporter = new ArrayList<>();
     private List<FileModule> moduleList = new ArrayList<>();
     private Map<Plugin, List<String>> styleSheetMap = new HashMap<>();
@@ -29,6 +31,19 @@ public class PluginManager {
 
     public List<FileModule> getModuleList() {
         return Collections.unmodifiableList(moduleList);
+    }
+
+    public Plugin loadPlugin(File file) throws MalformedURLException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        PluginClassLoader pluginClassLoader = new PluginClassLoader(file, getClass().getClassLoader());
+        pluginClassLoader.load();
+        Plugin plugin = pluginClassLoader.getPlugin();
+        plugin.initialize();
+        pluginList.add(plugin);
+        return plugin;
+    }
+
+    public Collection<Plugin> getPlugins() {
+        return Collections.unmodifiableList(pluginList);
     }
 
     public void loadPluginLocale(Language target, Plugin plugin, InputStream inputStream) throws IOException {

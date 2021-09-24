@@ -1,5 +1,6 @@
 package thito.nodeflow.java.util;
 
+import org.jetbrains.annotations.*;
 import org.objectweb.asm.*;
 import org.objectweb.asm.tree.*;
 import thito.nodeflow.java.*;
@@ -106,12 +107,49 @@ public class Conversion {
         registerTransformation(new ClassPair(Java.Class(byte.class), Java.Class(Byte.class)), new BoxingByte());
         registerTransformation(new ClassPair(Java.Class(boolean.class), Java.Class(Boolean.class)), new BoxingBoolean());
 
+        registerTransformation(new ClassPair(Java.Class(String.class), Java.Class(boolean.class)), new StringToBoolean());
+        registerTransformation(new ClassPair(Java.Class(String.class), Java.Class(byte.class)), new StringToByte());
+        registerTransformation(new ClassPair(Java.Class(String.class), Java.Class(char.class)), new StringToChar());
+        registerTransformation(new ClassPair(Java.Class(String.class), Java.Class(double.class)), new StringToDouble());
+        registerTransformation(new ClassPair(Java.Class(String.class), Java.Class(float.class)), new StringToFloat());
+        registerTransformation(new ClassPair(Java.Class(String.class), Java.Class(int.class)), new StringToInt());
+        registerTransformation(new ClassPair(Java.Class(String.class), Java.Class(long.class)), new StringToLong());
+        registerTransformation(new ClassPair(Java.Class(String.class), Java.Class(short.class)), new StringToShort());
+
+        // for less boxing invocation
+        // it will box, but not in the exported product
+        registerTransformation(new ClassPair(Java.Class(String.class), Java.Class(Boolean.class)), new StringToBooleanWrapper());
+        registerTransformation(new ClassPair(Java.Class(String.class), Java.Class(Byte.class)), new StringToByteWrapper());
+        registerTransformation(new ClassPair(Java.Class(String.class), Java.Class(Double.class)), new StringToDoubleWrapper());
+        registerTransformation(new ClassPair(Java.Class(String.class), Java.Class(Float.class)), new StringToFloatWrapper());
+        registerTransformation(new ClassPair(Java.Class(String.class), Java.Class(Integer.class)), new StringToIntegerWrapper());
+        registerTransformation(new ClassPair(Java.Class(String.class), Java.Class(Long.class)), new StringToLongWrapper());
+        registerTransformation(new ClassPair(Java.Class(String.class), Java.Class(Short.class)), new StringToShortWrapper());
+
+        registerTransformation(new ClassPair(Java.Class(Number.class), Java.Class(boolean.class)), new NumberToBoolean());
+
+        registerTransformation(new ClassPair(Java.Class(Number.class), Java.Class(byte.class)), new NumberToByte());
+        registerTransformation(new ClassPair(Java.Class(Number.class), Java.Class(short.class)), new NumberToShort());
+        registerTransformation(new ClassPair(Java.Class(Number.class), Java.Class(int.class)), new NumberToInt());
+        registerTransformation(new ClassPair(Java.Class(Number.class), Java.Class(long.class)), new NumberToLong());
+        registerTransformation(new ClassPair(Java.Class(Number.class), Java.Class(double.class)), new NumberToDouble());
+        registerTransformation(new ClassPair(Java.Class(Number.class), Java.Class(float.class)), new NumberToFloat());
+
+        registerTransformation(new ClassPair(Java.Class(int.class), Java.Class(boolean.class)), new NumberToBoolean());
+        registerTransformation(new ClassPair(Java.Class(short.class), Java.Class(boolean.class)), new NumberToBoolean());
+        registerTransformation(new ClassPair(Java.Class(long.class), Java.Class(boolean.class)), new NumberToBoolean());
+        registerTransformation(new ClassPair(Java.Class(double.class), Java.Class(boolean.class)), new NumberToBoolean());
+        registerTransformation(new ClassPair(Java.Class(byte.class), Java.Class(boolean.class)), new NumberToBoolean());
+        registerTransformation(new ClassPair(Java.Class(float.class), Java.Class(boolean.class)), new NumberToBoolean());
+
+        registerTransformation(new ClassPair(Java.Class(Object.class), Java.Class(boolean.class)), new ObjectToBoolean());
         registerTransformation(new ClassPair(Java.Class(Object.class), Java.Class(String.class)), new ObjectToString());
     }
 
     public static ObjectTransformation getTransformation(IClass source, IClass target) {
         for (Map.Entry<ClassPair, ObjectTransformation> entry : transformationMap.entrySet()) {
-            if (entry.getKey().getSource().isAssignableFrom(source) && target.isAssignableFrom(entry.getKey().getTarget())) {
+            if (BCHelper.isAssignableFrom(entry.getKey().getSource(), source, new HashSet<>()) &&
+                BCHelper.isAssignableFrom(target, entry.getKey().getTarget(), new HashSet<>())) {
                 return entry.getValue();
             }
         }
@@ -122,22 +160,109 @@ public class Conversion {
         transformationMap.put(pair, objectTransformation);
     }
 
+    @Contract(pure = true)
     public static Reference followWidestConversion(Reference target, Reference compare) {
         IClass higher = BCHelper.getPrioritized(target.getType(), compare.getType());
         return cast(target, higher);
     }
 
+    public static boolean isTransformationPossible(IClass source, IClass target) {
+        ObjectTransformation objectTransformation = getTransformation(source, target);
+        if (objectTransformation != null) {
+            return true;
+        }
+        if (BCHelper.isWrapper(source)) {
+            ObjectTransformation primitiveSourceTransformation = getTransformation(BCHelper.wrapperToPrimitive(source), target);
+            return primitiveSourceTransformation != null && isTransformationPossible(source, BCHelper.wrapperToPrimitive(source));
+        }
+        if (BCHelper.isWrapper(target)) {
+            ObjectTransformation primitiveTargetTransformation = getTransformation(source, BCHelper.wrapperToPrimitive(target));
+            return primitiveTargetTransformation != null && isTransformationPossible(BCHelper.wrapperToPrimitive(source), target);
+        }
+        if (BCHelper.isWrapper(source) && BCHelper.isWrapper(target)) {
+            return isTransformationPossible(source, BCHelper.wrapperToPrimitive(source)) &&
+                    isTransformationPossible(BCHelper.wrapperToPrimitive(source), BCHelper.wrapperToPrimitive(target)) &&
+                    isTransformationPossible(BCHelper.wrapperToPrimitive(target), target);
+        }
+        if (BCHelper.isPrimitive(source)) {
+            ObjectTransformation wrapperSourceTransformation = getTransformation(BCHelper.primitiveToWrapper(source), target);
+            return wrapperSourceTransformation != null && isTransformationPossible(BCHelper.primitiveToWrapper(source), source);
+        }
+        if (BCHelper.isPrimitive(target)) {
+            ObjectTransformation wrapperTargetTransformation = getTransformation(source, BCHelper.primitiveToWrapper(target));
+            return wrapperTargetTransformation != null && isTransformationPossible(BCHelper.primitiveToWrapper(target), target);
+        }
+        return false;
+    }
+
+    @Contract(pure = true)
     public static Reference cast(Reference target, IClass type) {
-        if (type.isAssignableFrom(target.getType()) || type.getName().equals("void")) {
+        if (BCHelper.isAssignableFrom(type, target.getType(), new HashSet<>()) ||
+                type.getName().equals("void")) {
             return target;
         }
+
+        if (Java.Class(Enum.class).isAssignableFrom(type)) {
+            IClass targetType;
+            if (BCHelper.isPrimitive(target.getType())) {
+                targetType = BCHelper.primitiveToWrapper(target.getType());
+            } else {
+                targetType = target.getType();
+            }
+            if (Java.Class(String.class).isAssignableFrom(targetType)) {
+                StringToEnum stringToEnum = new StringToEnum(type);
+                return stringToEnum.transform(target);
+            }
+            if (Java.Class(Number.class).isAssignableFrom(targetType)) {
+                NumberToEnum numberToEnum = new NumberToEnum(type);
+                return numberToEnum.transform(target);
+            }
+        }
+
         ObjectTransformation objectTransformation = getTransformation(target.getType(), type);
         if (objectTransformation != null) {
             return objectTransformation.transform(target);
         }
-        if (BCHelper.isPrimitive(target.getType()) && BCHelper.isWrapper(type)) {
-            return cast(cast(target, BCHelper.wrapperToPrimitive(type)), type);
+
+        // Wrapper A to Primitive A > Primitive A to B
+        if (BCHelper.isWrapper(target.getType())) {
+            ObjectTransformation primitiveSourceTransformation = getTransformation(BCHelper.wrapperToPrimitive(target.getType()), type);
+            if (primitiveSourceTransformation != null) {
+                return primitiveSourceTransformation.transform(cast(target, BCHelper.wrapperToPrimitive(target.getType())));
+            }
         }
+
+        // A to Primitive B > Primitive B to Wrapper B
+        if (BCHelper.isWrapper(type)) {
+            ObjectTransformation primitiveTargetTransformation = getTransformation(target.getType(), BCHelper.wrapperToPrimitive(type));
+            if (primitiveTargetTransformation != null) {
+                return cast(primitiveTargetTransformation.transform(target), type);
+            }
+        }
+
+        if (BCHelper.isPrimitive(target.getType())) {
+            ObjectTransformation wrapperSourceTransformation = getTransformation(BCHelper.primitiveToWrapper(target.getType()), type);
+            if (wrapperSourceTransformation != null) {
+                return wrapperSourceTransformation.transform(cast(target, BCHelper.primitiveToWrapper(target.getType())));
+            }
+        }
+
+        if (BCHelper.isPrimitive(type)) {
+            ObjectTransformation wrapperTargetTransformation = getTransformation(target.getType(), BCHelper.primitiveToWrapper(type));
+            if (wrapperTargetTransformation != null) {
+                return cast(wrapperTargetTransformation.transform(target), type);
+            }
+        }
+
+        // Wrapper to Wrapper conversion
+        // Wrapper A to Primitive A > Primitive A to Primitive B > Primitive B to Wrapper B
+        // Example case: Double to Integer
+        // Double > double > int > Integer
+        if (BCHelper.isWrapper(target.getType()) && BCHelper.isWrapper(type)) {
+            return cast(cast(cast(target, BCHelper.wrapperToPrimitive(target.getType())), BCHelper.wrapperToPrimitive(type)), type);
+        }
+
+        if (BCHelper.isPrimitive(target.getType()) || BCHelper.isPrimitive(type)) throw new ClassCastException("cannot cast "+target.getType().getName()+" to "+type.getName());
         return new Reference(type) {
             @Override
             public void writeByteCode() {
@@ -158,19 +283,4 @@ public class Conversion {
         };
     }
 
-    public static Reference unbox(Reference target) {
-        if (BCHelper.isWrapper(target.getType())) {
-            IClass primitive = BCHelper.wrapperToPrimitive(target.getType());
-            return target.method(primitive.getName()+"Value").invoke();
-        }
-        return target;
-    }
-
-    public static Reference box(Reference target) {
-        IClass wrapper = BCHelper.primitiveToWrapper(target.getType());
-        if (wrapper != null) {
-            return wrapper.method("valueOf", target.getType()).invoke(target);
-        }
-        return target;
-    }
 }

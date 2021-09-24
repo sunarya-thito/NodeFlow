@@ -3,7 +3,7 @@ package thito.nodeflow.internal.ui.dashboard.pages;
 import javafx.scene.control.*;
 import thito.nodeflow.internal.*;
 import thito.nodeflow.internal.ui.dashboard.*;
-import thito.nodeflow.library.ui.*;
+import thito.nodeflow.internal.ui.*;
 
 public class AboutPage extends DashboardPage {
 

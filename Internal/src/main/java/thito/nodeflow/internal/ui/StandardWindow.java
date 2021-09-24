@@ -5,7 +5,6 @@ import javafx.geometry.*;
 import javafx.scene.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
-import thito.nodeflow.library.ui.*;
 
 public class StandardWindow extends Window implements WindowHitTest {
     private BorderPane content;

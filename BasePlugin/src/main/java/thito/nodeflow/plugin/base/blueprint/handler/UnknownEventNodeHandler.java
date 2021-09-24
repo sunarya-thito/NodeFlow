@@ -6,7 +6,7 @@ import thito.nodeflow.engine.node.*;
 import thito.nodeflow.engine.node.handler.*;
 import thito.nodeflow.engine.node.skin.*;
 import thito.nodeflow.engine.node.state.*;
-import thito.nodeflow.library.language.*;
+import thito.nodeflow.internal.language.*;
 import thito.nodeflow.plugin.base.blueprint.handler.parameter.*;
 
 public class UnknownEventNodeHandler implements EventNodeHandler {
@@ -26,7 +26,7 @@ public class UnknownEventNodeHandler implements EventNodeHandler {
 
     @Override
     public StringProperty displayNameProperty() {
-        return I18n.$("baseplugin.blueprint.unknown-node");
+        return I18n.$("plugin.blueprint.unknown-node");
     }
 
     @Override

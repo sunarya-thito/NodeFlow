@@ -13,13 +13,14 @@
         <module>BuildHelper</module>
         <module>Engine</module>
         <module>CodeEngine</module>
-        <module>Library</module>
         <module>Internal</module>
         <module>Launcher</module>
         <module>Setup</module>
         <module>Resources</module>
         <module>Bundler</module>
         <module>Configuration</module>
+        <module>JVMDebugger</module>
+        <module>WebsitePlugin</module>
     </modules>
 
     <properties>

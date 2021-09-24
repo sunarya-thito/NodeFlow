@@ -47,7 +47,7 @@
     -fx-orientation: HORIZONTAL;
     -fx-background-color: transparent;
     -fx-padding: 0;
-    -fx-skin: "thito.nodeflow.library.ui.SplitPaneSkin";
+    -fx-skin: "thito.nodeflow.internal.ui.SplitPaneSkin";
 }
 
 .settings-panel .split-pane-divider {

@@ -1,6 +1,6 @@
 <NodeFlow>
     <Components>
-        <ImagePane>thito.nodeflow.library.ui.ImagePane</ImagePane>
+        <ImagePane>thito.nodeflow.internal.ui.ImagePane</ImagePane>
     </Components>
     <Layout>
         <HBox class="search-result-item">

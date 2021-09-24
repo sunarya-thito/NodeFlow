@@ -12,7 +12,13 @@
             <groupId>thito.nodeflow</groupId>
             <artifactId>nodeflow-internal</artifactId>
             <version>2.0</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>thito.nodeflow</groupId>
+            <artifactId>code-engine</artifactId>
+            <version>2.0</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>thito.nodeflow</groupId>
@@ -20,16 +26,25 @@
             <version>2.0</version>
             <scope>compile</scope>
         </dependency>
-        <dependency>
-            <groupId>thito.nodeflow</groupId>
-            <artifactId>code-engine</artifactId>
-            <version>2.0</version>
-        </dependency>
     </dependencies>
 
     <properties>
         <maven.compiler.source>16</maven.compiler.source>
         <maven.compiler.target>16</maven.compiler.target>
     </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <finalName>BasePlugin</finalName>
+                    <outputDirectory>../target/Plugins</outputDirectory>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

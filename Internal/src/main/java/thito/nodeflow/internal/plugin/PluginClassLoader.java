@@ -1,6 +1,8 @@
 package thito.nodeflow.internal.plugin;
 
 import thito.nodeflow.config.*;
+import thito.nodeflow.internal.*;
+import thito.nodeflow.internal.resource.*;
 
 import java.io.*;
 import java.net.*;
@@ -9,8 +11,14 @@ import java.util.stream.*;
 
 public class PluginClassLoader extends URLClassLoader {
     private Plugin plugin;
-    public PluginClassLoader(URL[] urls, ClassLoader parent) {
-        super(urls, parent);
+    private File file;
+    public PluginClassLoader(File file, ClassLoader parent) throws MalformedURLException {
+        super(new URL[] { file.toURI().toURL() }, parent);
+        this.file = file;
+    }
+
+    public File getFile() {
+        return file;
     }
 
     public Plugin getPlugin() {
@@ -32,8 +40,10 @@ public class PluginClassLoader extends URLClassLoader {
             List<String> authors = pluginProperties.getList("authors").orElse(new ListSection())
                     .stream().map(String::valueOf).collect(Collectors.toList());
             Class<?> mainClass = Class.forName(main, true, this);
-            if (PluginInstance.class.isAssignableFrom(mainClass)) throw new ClassNotFoundException("main class does not extend "+PluginInstance.class.getName());
-            plugin = new Plugin(id, name, version, mainClass, authors, this);
+            if (!PluginInstance.class.isAssignableFrom(mainClass)) throw new ClassNotFoundException("main class "+mainClass.getName()+" does not implement "+PluginInstance.class.getName());
+            File dataFolder = new File(file.getParentFile(), id);
+            dataFolder.mkdirs();
+            plugin = new Plugin(id, name, version, mainClass, authors, this, dataFolder);
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }

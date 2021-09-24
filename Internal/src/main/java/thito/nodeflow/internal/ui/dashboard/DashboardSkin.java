@@ -1,15 +1,13 @@
 package thito.nodeflow.internal.ui.dashboard;
 
-import javafx.animation.*;
 import javafx.event.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
-import javafx.util.*;
 import thito.nodeflow.internal.*;
 import thito.nodeflow.internal.ui.dashboard.pages.*;
-import thito.nodeflow.library.ui.*;
-import thito.nodeflow.library.ui.Skin;
+import thito.nodeflow.internal.ui.*;
+import thito.nodeflow.internal.ui.Skin;
 
 public class DashboardSkin extends Skin {
 

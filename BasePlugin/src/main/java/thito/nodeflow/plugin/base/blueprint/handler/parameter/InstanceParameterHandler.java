@@ -3,7 +3,7 @@ package thito.nodeflow.plugin.base.blueprint.handler.parameter;
 import javafx.beans.property.*;
 import javafx.scene.paint.*;
 import thito.nodeflow.engine.node.*;
-import thito.nodeflow.library.language.*;
+import thito.nodeflow.internal.language.*;
 import thito.nodeflow.plugin.base.blueprint.*;
 import thito.nodeflow.plugin.base.blueprint.state.parameter.*;
 
@@ -39,7 +39,7 @@ public class InstanceParameterHandler extends ConstantHolderParameterHandler {
 
     @Override
     public StringProperty displayNameProperty() {
-        return I18n.$("baseplugin.blueprint.instance-param");
+        return I18n.$("plugin.blueprint.instance-param");
     }
 
     @Override

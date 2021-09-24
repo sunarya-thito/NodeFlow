@@ -6,7 +6,7 @@ import thito.nodeflow.engine.node.*;
 import thito.nodeflow.engine.node.handler.*;
 import thito.nodeflow.engine.node.skin.*;
 import thito.nodeflow.engine.node.state.*;
-import thito.nodeflow.library.language.*;
+import thito.nodeflow.internal.language.*;
 import thito.nodeflow.plugin.base.blueprint.*;
 import thito.nodeflow.plugin.base.blueprint.handler.parameter.*;
 import thito.nodeflow.plugin.base.blueprint.state.*;
@@ -34,7 +34,7 @@ public class SetFieldNodeHandler extends JavaNodeHandler {
 
     @Override
     public StringProperty displayNameProperty() {
-        return I18n.$("baseplugin.blueprint.set-field-node");
+        return I18n.$("plugin.blueprint.set-field-node");
     }
 
     @Override

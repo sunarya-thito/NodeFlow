@@ -3,11 +3,10 @@ package thito.nodeflow.internal.ui.editor;
 import javafx.event.*;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
-import thito.nodeflow.library.ui.*;
-import thito.nodeflow.library.ui.Skin;
+import thito.nodeflow.internal.ui.*;
+import thito.nodeflow.internal.ui.Skin;
 
 import java.io.*;
-import java.util.*;
 
 public class ErrorTabSkin extends Skin {
 

@@ -2,8 +2,7 @@ package thito.nodeflow.plugin.base.blueprint;
 
 import thito.nodeflow.engine.node.*;
 import thito.nodeflow.engine.node.handler.*;
-import thito.nodeflow.engine.node.state.*;
-import thito.nodeflow.library.language.*;
+import thito.nodeflow.internal.language.*;
 import thito.nodeflow.plugin.base.blueprint.state.*;
 
 public interface NodeProvider {

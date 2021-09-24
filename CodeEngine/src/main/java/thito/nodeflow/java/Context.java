@@ -150,26 +150,12 @@ public class Context implements AutoCloseable {
                         int length = Array.getLength(val);
                         for (int index = 0; index < length; index++) {
                             Object element = Array.get(val, index);
-                            if (element instanceof Enum) {
-                                code.getLine().append(code.simplifyType(Java.Class(((Enum<?>) element).getDeclaringClass())))
-                                        .append('.')
-                                        .append(((Enum<?>) element).name());
-                            } else if (element instanceof EnumType.Value) {
-                                code.getLine().append(code.simplifyType(((EnumType.Value) element).getType()))
-                                        .append('.')
-                                        .append(((EnumType.Value) element).name());
-                            } else {
-                                code.getLine().append(element);
-                            }
+                            code.getLine().append(element);
                         }
                     } else if (val instanceof Enum) {
                         code.getLine().append(code.simplifyType(Java.Class(((Enum<?>) val).getDeclaringClass())))
                                 .append('.')
                                 .append(((Enum<?>) val).name());
-                    } else if (val instanceof EnumType.Value) {
-                        code.getLine().append(code.simplifyType(((EnumType.Value) val).getType()))
-                                .append('.')
-                                .append(((EnumType.Value) val).name());
                     } else {
                         code.getLine().append(val);
                     }
@@ -323,16 +309,12 @@ public class Context implements AutoCloseable {
                         Object element = Array.get(val, i);
                         if (element instanceof Enum) {
                             arrayVisitor.visitEnum(null, Type.getDescriptor(val.getClass().getComponentType()), ((Enum<?>) element).name());
-                        } else if (element instanceof EnumType.Value) {
-                            arrayVisitor.visitEnum(null, BCHelper.getDescriptor(((EnumType.Value) element).getType()), ((EnumType.Value) element).name());
                         } else {
                             arrayVisitor.visit(null, element);
                         }
                     }
                 } else if (val instanceof Enum) {
                     annotationVisitor.visitEnum(value.getName(), Type.getDescriptor(val.getClass().getComponentType()), ((Enum<?>) val).name());
-                } else if (val instanceof EnumType.Value) {
-                    annotationVisitor.visitEnum(value.getName(), BCHelper.getDescriptor(((EnumType.Value) val).getType()), ((EnumType.Value) val).name());
                 } else {
                     annotationVisitor.visit(value.getName(), val);
                 }

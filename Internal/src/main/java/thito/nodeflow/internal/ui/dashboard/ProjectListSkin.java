@@ -2,8 +2,8 @@ package thito.nodeflow.internal.ui.dashboard;
 
 import javafx.scene.layout.*;
 import thito.nodeflow.internal.ui.dashboard.pages.*;
-import thito.nodeflow.library.binding.*;
-import thito.nodeflow.library.ui.*;
+import thito.nodeflow.internal.binding.*;
+import thito.nodeflow.internal.ui.*;
 
 public class ProjectListSkin extends Skin {
     @Component("content-list")

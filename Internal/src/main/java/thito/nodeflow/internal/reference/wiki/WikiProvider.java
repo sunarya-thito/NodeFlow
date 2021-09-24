@@ -1,7 +1,7 @@
 package thito.nodeflow.internal.reference.wiki;
 
 import thito.nodeflow.internal.reference.*;
-import thito.nodeflow.library.language.*;
+import thito.nodeflow.internal.language.*;
 
 import java.util.*;
 

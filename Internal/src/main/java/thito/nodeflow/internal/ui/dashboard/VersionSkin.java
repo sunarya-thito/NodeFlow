@@ -3,8 +3,8 @@ package thito.nodeflow.internal.ui.dashboard;
 import javafx.scene.control.*;
 import javafx.scene.text.*;
 import thito.nodeflow.internal.*;
-import thito.nodeflow.library.ui.*;
-import thito.nodeflow.library.ui.Skin;
+import thito.nodeflow.internal.ui.*;
+import thito.nodeflow.internal.ui.Skin;
 
 public class VersionSkin extends Skin {
     @Component("version")

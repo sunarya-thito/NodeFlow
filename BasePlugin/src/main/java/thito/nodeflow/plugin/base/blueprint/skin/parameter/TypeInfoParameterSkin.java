@@ -4,7 +4,7 @@ import javafx.scene.control.*;
 import org.apache.commons.lang3.reflect.*;
 import thito.nodeflow.engine.node.*;
 import thito.nodeflow.engine.node.skin.*;
-import thito.nodeflow.library.binding.*;
+import thito.nodeflow.internal.binding.*;
 import thito.nodeflow.plugin.base.blueprint.*;
 
 public class TypeInfoParameterSkin extends NodeParameterSkin {

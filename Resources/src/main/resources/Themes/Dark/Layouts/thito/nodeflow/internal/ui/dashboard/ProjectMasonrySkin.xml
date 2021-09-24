@@ -1,6 +1,6 @@
 <NodeFlow>
     <Components>
-        <MasonryPane>thito.nodeflow.library.ui.MasonryPane</MasonryPane>
+        <MasonryPane>thito.nodeflow.internal.ui.MasonryPane</MasonryPane>
     </Components>
     <Layout>
         <ScrollPane id="scroller">

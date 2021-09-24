@@ -2,7 +2,7 @@ package thito.nodeflow.plugin.base.blueprint.provider;
 
 import thito.nodeflow.engine.node.*;
 import thito.nodeflow.engine.node.handler.*;
-import thito.nodeflow.library.language.*;
+import thito.nodeflow.internal.language.*;
 import thito.nodeflow.plugin.base.blueprint.*;
 import thito.nodeflow.plugin.base.blueprint.handler.*;
 import thito.nodeflow.plugin.base.blueprint.handler.parameter.*;
@@ -31,7 +31,7 @@ public class GetFieldNodeProvider implements NodeProvider {
 
     @Override
     public I18n displayNameProperty() {
-        return I18n.$("baseplugin.blueprint.get-field-node").format(field.getName());
+        return I18n.$("plugin.blueprint.get-field-node").format(field.getName());
     }
 
     @Override

@@ -9,10 +9,9 @@
     <groovy codeStyle="LEGACY" />
   </component>
   <component name="EasyI18nSettings">
-    <option name="filePattern" value=".*.yml" />
+    <option name="filePattern" value=".yml" />
     <option name="localesPath" value="C:\Users\Thito\IdeaProjects\NodeFlow Software\Resources\src\main\resources\Locales" />
-    <option name="prefix" value="" />
-    <option name="previewLocale" value="en_us" />
+    <option name="pathPrefix" value="" />
   </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="JavadocGenerationManager">
@@ -26,6 +25,11 @@
         <option value="$PROJECT_DIR$/NodeFlowBuildHelper/pom.xml" />
         <option value="$PROJECT_DIR$/BuildHelper/pom.xml" />
       </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/Library/pom.xml" />
+      </set>
     </option>
   </component>
   <component name="ProjectResources">

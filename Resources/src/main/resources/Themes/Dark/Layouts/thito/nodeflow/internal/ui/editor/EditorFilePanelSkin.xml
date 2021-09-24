@@ -1,6 +1,6 @@
 <NodeFlow>
     <Components>
-        <ResourceExplorerView>thito.nodeflow.library.ui.resource.ResourceExplorerView</ResourceExplorerView>
+        <ResourceExplorerView>thito.nodeflow.internal.ui.resource.ResourceExplorerView</ResourceExplorerView>
     </Components>
     <Layout>
         <VBox class="file-explorer-root">

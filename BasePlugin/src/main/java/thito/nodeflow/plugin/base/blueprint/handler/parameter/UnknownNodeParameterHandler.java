@@ -6,7 +6,7 @@ import thito.nodeflow.engine.node.*;
 import thito.nodeflow.engine.node.handler.*;
 import thito.nodeflow.engine.node.skin.*;
 import thito.nodeflow.engine.node.state.*;
-import thito.nodeflow.library.language.*;
+import thito.nodeflow.internal.language.*;
 
 public class UnknownNodeParameterHandler implements NodeParameterHandler {
 
@@ -23,7 +23,7 @@ public class UnknownNodeParameterHandler implements NodeParameterHandler {
 
     @Override
     public StringProperty displayNameProperty() {
-        return I18n.$("baseplugin.blueprint.unknown-param");
+        return I18n.$("plugin.blueprint.unknown-param");
     }
 
     @Override

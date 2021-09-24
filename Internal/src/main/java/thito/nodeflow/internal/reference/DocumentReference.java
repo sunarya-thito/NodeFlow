@@ -1,6 +1,6 @@
 package thito.nodeflow.internal.reference;
 
-import thito.nodeflow.library.util.*;
+import thito.nodeflow.internal.util.*;
 
 public interface DocumentReference {
     default int calculateSearchScore(String search) {

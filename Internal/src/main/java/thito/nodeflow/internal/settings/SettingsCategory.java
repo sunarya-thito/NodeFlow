@@ -1,42 +1,39 @@
 package thito.nodeflow.internal.settings;
 
 import javafx.collections.*;
+import thito.nodeflow.internal.language.*;
+import thito.nodeflow.internal.settings.canvas.*;
 
 public class SettingsCategory {
-    private SettingsDescription description;
-    private Class<? extends Settings> type;
-    private Settings settings;
-    SettingsCategory parent;
-    ObservableList<SettingsProperty<?>> settingsPropertyList = FXCollections.observableArrayList();
-    ObservableList<SettingsCategory> subCategory = FXCollections.observableArrayList();
+    private String key;
+    private I18n displayName;
+    private SettingsContext context;
+    private ObservableList<SettingsItem<?>> items = FXCollections.observableArrayList();
+    private ObservableList<SettingsCategory> subCategories = FXCollections.observableArrayList();
 
-    public SettingsCategory(Class<? extends Settings> type, Settings settings) {
-        this.type = type;
-        this.settings = settings;
-        this.description = settings.description();
+    public SettingsCategory(String key, I18n displayName, SettingsContext context) {
+        this.key = key;
+        this.displayName = displayName;
+        this.context = context;
     }
 
-    public Settings getSettings() {
-        return settings;
+    public SettingsContext getContext() {
+        return context;
     }
 
-    public Class<? extends Settings> getType() {
-        return type;
+    public String getKey() {
+        return key;
     }
 
-    public SettingsCategory getParent() {
-        return parent;
+    public I18n getDisplayName() {
+        return displayName;
     }
 
-    public SettingsDescription getDescription() {
-        return description;
+    public ObservableList<SettingsCategory> getSubCategories() {
+        return subCategories;
     }
 
-    public ObservableList<SettingsCategory> getSubCategory() {
-        return subCategory;
-    }
-
-    public ObservableList<SettingsProperty<?>> getSettingsPropertyList() {
-        return settingsPropertyList;
+    public ObservableList<SettingsItem<?>> getItems() {
+        return items;
     }
 }

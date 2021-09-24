@@ -2,8 +2,9 @@ package thito.nodeflow.internal.project;
 
 import javafx.beans.property.*;
 import thito.nodeflow.config.*;
+import thito.nodeflow.internal.settings.*;
 import thito.nodeflow.internal.ui.editor.*;
-import thito.nodeflow.library.resource.*;
+import thito.nodeflow.internal.resource.*;
 
 import java.util.*;
 
@@ -21,8 +22,17 @@ public class Project {
         this.workspace = workspace;
         this.properties = properties;
         this.directory = properties.getDirectory();
-        configuration = properties.getConfig().getMap("configuration").orElse(new MapSection());
+        configuration = properties.getConfiguration().getMap("configuration").orElse(new MapSection());
         sourceFolder = properties.getDirectory().getChild("src");
+        Settings.loadProjectSettings(properties);
+    }
+
+    public Section getConfiguration() {
+        return configuration;
+    }
+
+    public Resource getDirectory() {
+        return directory;
     }
 
     public Workspace getWorkspace() {

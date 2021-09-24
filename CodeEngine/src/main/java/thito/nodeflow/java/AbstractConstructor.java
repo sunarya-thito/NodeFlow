@@ -51,7 +51,6 @@ public abstract class AbstractConstructor extends AbstractMember implements ICon
                     BCHelper.writeToSourceCode(parameterTypes[i], args[i]);
                 }
                 line.append(')');
-                code.endLine();
             }
         };
     }

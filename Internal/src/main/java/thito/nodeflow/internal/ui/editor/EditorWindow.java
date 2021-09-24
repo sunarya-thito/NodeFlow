@@ -5,10 +5,11 @@ import javafx.geometry.*;
 import javafx.scene.*;
 import javafx.scene.input.*;
 import thito.nodeflow.internal.*;
+import thito.nodeflow.internal.project.*;
 import thito.nodeflow.internal.ui.dashboard.*;
-import thito.nodeflow.library.binding.*;
-import thito.nodeflow.library.language.*;
-import thito.nodeflow.library.ui.*;
+import thito.nodeflow.internal.binding.*;
+import thito.nodeflow.internal.language.*;
+import thito.nodeflow.internal.ui.*;
 
 public class EditorWindow extends Window implements WindowHitTest {
     private Editor editor;

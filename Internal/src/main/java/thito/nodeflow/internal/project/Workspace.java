@@ -3,8 +3,8 @@ package thito.nodeflow.internal.project;
 import javafx.collections.*;
 import thito.nodeflow.config.*;
 import thito.nodeflow.internal.*;
-import thito.nodeflow.library.resource.*;
-import thito.nodeflow.library.task.*;
+import thito.nodeflow.internal.resource.*;
+import thito.nodeflow.internal.task.*;
 
 import java.io.*;
 import java.util.*;

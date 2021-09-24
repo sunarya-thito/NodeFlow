@@ -1,7 +1,7 @@
 import javafx.beans.binding.*;
 import javafx.beans.property.*;
-import thito.nodeflow.library.language.*;
-import thito.nodeflow.library.util.*;
+import thito.nodeflow.internal.language.*;
+import thito.nodeflow.internal.util.*;
 
 import java.io.*;
 import java.util.*;

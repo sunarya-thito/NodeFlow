@@ -7,17 +7,19 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="nodeflow-jvm-debugger" />
         <module name="nodeflow-build-helper" />
-        <module name="nodeflow-launcher" />
         <module name="BasePlugin" />
-        <module name="nodeflow-library" />
-        <module name="nodeflow-setup" />
         <module name="nodeflow-engine" />
-        <module name="nodeflow-internal" />
+        <module name="website-plugin" />
         <module name="code-engine" />
+        <module name="WebsitePlugin" />
+        <module name="Bundler" />
+        <module name="nodeflow-launcher" />
+        <module name="nodeflow-setup" />
+        <module name="nodeflow-internal" />
         <module name="nodeflow-resources" />
         <module name="config" />
-        <module name="Bundler" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -30,6 +32,7 @@
       <module name="Legacy Internal" target="8" />
       <module name="Library" target="16" />
       <module name="NodeFlow Software" target="16" />
+      <module name="nodeflow-library" target="16" />
       <module name="NodeFlowLauncher" target="14" />
       <module name="Resources" target="16" />
       <module name="Setup" target="16" />

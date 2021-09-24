@@ -19,7 +19,7 @@ public abstract class PluginObserver implements WeakListener {
     @Override
     public boolean wasGarbageCollected() {
         Plugin plugin = getPlugin();
-        return plugin == null || !plugin.getPluginSettings().getEnabled().get();
+        return plugin == null || !plugin.getPluginSettings().getEnable().getValue();
     }
 
     public Plugin getPlugin() {

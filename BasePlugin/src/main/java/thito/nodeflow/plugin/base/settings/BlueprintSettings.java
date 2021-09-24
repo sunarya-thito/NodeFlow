@@ -1,15 +1,13 @@
 package thito.nodeflow.plugin.base.settings;
 
+import javafx.beans.property.*;
 import thito.nodeflow.engine.node.*;
 import thito.nodeflow.internal.settings.*;
-import thito.nodeflow.library.language.*;
+import thito.nodeflow.internal.settings.canvas.*;
 
-public class BlueprintSettings implements Settings {
+@Category(value = "${plugin.blueprint.settings.name}", context = SettingsContext.ALL)
+public class BlueprintSettings extends SettingsCanvas {
 
-    public final SettingsProperty<LinkStyle> linkStyle = new SettingsProperty<>(I18n.$("baseplugin.blueprint.settings.link-style"), LinkStyle.CABLE);
-
-    @Override
-    public SettingsDescription description() {
-        return new SettingsDescription(I18n.$("baseplugin.blueprint.settings.name"));
-    }
+    @Item("${plugin.blueprint.settings.link-style}")
+    public final ObjectProperty<LinkStyle> linkStyle = new SimpleObjectProperty<>(LinkStyle.CABLE);
 }

@@ -1,5 +1,7 @@
 package thito.nodeflow.java;
 
+import thito.nodeflow.java.generated.body.*;
+
 import java.util.*;
 
 public class SourceCode implements AutoCloseable {
@@ -26,9 +28,14 @@ public class SourceCode implements AutoCloseable {
 
     private static final String indention = "    ";
     private Set<Integer> variables = new HashSet<>();
+    private int exceptionVariableCounter;
     private List<StringBuilder> lines = new ArrayList<>();
     private StringBuilder line;
     private int tabIndent;
+
+    public int requestExceptionIndex() {
+        return exceptionVariableCounter++;
+    }
 
     public Map<String, IClass> getImportMap() {
         return importMap;
@@ -60,7 +67,6 @@ public class SourceCode implements AutoCloseable {
 
     public String simplifyType(IClass type) {
         if (type.getName().equals("void")) return "void";
-        if (BCHelper.isPrimitive(type)) return type.getName();
         IClass other = importMap.get(type.getSimpleName());
         if (other != null) {
             if (type.getName().equals(other.getName())) return type.getSimpleName();

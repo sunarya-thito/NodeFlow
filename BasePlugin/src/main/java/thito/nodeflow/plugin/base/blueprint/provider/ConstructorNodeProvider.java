@@ -2,7 +2,7 @@ package thito.nodeflow.plugin.base.blueprint.provider;
 
 import thito.nodeflow.engine.node.Node;
 import thito.nodeflow.engine.node.handler.*;
-import thito.nodeflow.library.language.*;
+import thito.nodeflow.internal.language.*;
 import thito.nodeflow.plugin.base.blueprint.handler.*;
 import thito.nodeflow.plugin.base.blueprint.state.*;
 
@@ -18,7 +18,7 @@ public class ConstructorNodeProvider extends AbstractMethodCallProvider {
 
     @Override
     public String getId() {
-        return "baseplugin.constructorNodeProvider." +
+        return "blueprint.constructorNodeProvider." +
                 getExecutable().getDeclaringClass().getName() +
                 "(" +
                 Arrays.stream(getExecutable().getParameterTypes()).map(Class::getName).collect(Collectors.joining(",")) +
@@ -28,7 +28,7 @@ public class ConstructorNodeProvider extends AbstractMethodCallProvider {
     @Override
     public I18n displayNameProperty() {
         Executable exec = getExecutable();
-        return I18n.$("baseplugin.blueprint.constructor-node").format(
+        return I18n.$("plugin.blueprint.constructor-node").format(
                 exec.getDeclaringClass().getSimpleName(),
                 exec.getDeclaringClass().getName(),
                 exec.getDeclaringClass().getCanonicalName()

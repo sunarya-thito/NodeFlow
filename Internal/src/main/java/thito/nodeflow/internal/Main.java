@@ -1,19 +1,18 @@
 package thito.nodeflow.internal;
 
-import com.sun.javafx.css.*;
 import javafx.application.*;
 import javafx.beans.binding.*;
 import javafx.beans.property.*;
 import javafx.stage.*;
+import thito.nodeflow.internal.binding.*;
 import thito.nodeflow.internal.protocol.*;
+import thito.nodeflow.internal.resource.*;
 import thito.nodeflow.internal.settings.*;
-import thito.nodeflow.internal.settings.general.*;
+import thito.nodeflow.internal.settings.application.*;
+import thito.nodeflow.internal.task.*;
 import thito.nodeflow.internal.ui.*;
 import thito.nodeflow.internal.ui.dashboard.*;
 import thito.nodeflow.internal.ui.editor.*;
-import thito.nodeflow.library.resource.*;
-import thito.nodeflow.library.task.*;
-import thito.nodeflow.library.ui.*;
 
 import java.io.*;
 import java.net.*;
@@ -26,6 +25,7 @@ public class Main extends Application {
     }
     @Override
     public void start(Stage stage) throws Exception {
+        Thread.currentThread().setName("UI");
         Thread.setDefaultUncaughtExceptionHandler(new CrashExceptionHandler());
         System.setProperty("prism.lcdtext", "false");
         System.setProperty("sun.java3d.opengl", "true");
@@ -69,25 +69,24 @@ public class Main extends Application {
         StringProperty status = new SimpleStringProperty();
         DoubleProperty totalProgress = new SimpleDoubleProperty();
 
-        splashScreen.progressProperty().bind(totalProgress);
-        splashScreen.statusProperty().bind(status);
+        ThreadBinding.bind(splashScreen.statusProperty(), status, TaskThread.UI());
+        ThreadBinding.bind(splashScreen.progressProperty(), totalProgress, TaskThread.UI());
 
         TaskThread.IO().schedule(() -> {
             ThemeManager.init();
-            nodeFlow.getSettingsManager().addCategories(General.class);
 
             ResourceWatcher.getResourceWatcher().open();
 
+            SettingsManager settingsManager = SettingsManager.getSettingsManager();
+
+            settingsManager.registerCanvas(General.class);
+            settingsManager.registerCanvas(Appearance.class);
+
             nodeFlow.submitProgressedTask((progress, stat) -> {
                 stat.set("Loading settings configuration");
-                File target = new File(NodeFlow.ROOT, "nodeflow.yml");
-                if (target.exists()) {
-                    try (FileReader reader = new FileReader(target)) {
-                        nodeFlow.getSettingsManager().load(reader);
-                    } catch (Exception e) {
-                        logger.log(Level.SEVERE, "Failed to load nodeflow.yml", e);
-                    }
-                }
+                progress.set(0);
+                Settings.getSettings().load();
+                progress.set(1);
             });
 
             runLoaderTask(nodeFlow.progressedTasks, 0, status, totalProgress, () -> {
@@ -98,7 +97,7 @@ public class Main extends Application {
                     EditorWindow editorWindow = new Editor().getEditorWindow();
                     editorWindow.show();
 
-                    if (Settings.get(General.Appearance.class).getShowDashboardAtStart().get()) {
+                    if (Settings.getSettings().getCategory(Appearance.class).showDashboardAtStart.get()) {
                         dashboardWindow.show();
                     }
 
@@ -110,7 +109,7 @@ public class Main extends Application {
 
     private static void runLoaderTask(Queue<ProgressedTask> taskList, int progressDone, StringProperty status, DoubleProperty totalProgress, Runnable onDone) {
         ProgressedTask finalTask = taskList.poll();
-        if (finalTask != null) {
+        if (finalTask == null) {
             onDone.run();
             return;
         }

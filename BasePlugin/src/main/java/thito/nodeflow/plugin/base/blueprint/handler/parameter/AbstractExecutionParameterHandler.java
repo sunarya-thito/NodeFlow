@@ -4,7 +4,7 @@ import javafx.beans.property.*;
 import thito.nodeflow.engine.node.*;
 import thito.nodeflow.engine.node.handler.*;
 import thito.nodeflow.engine.node.skin.*;
-import thito.nodeflow.library.language.*;
+import thito.nodeflow.internal.language.*;
 
 public abstract class AbstractExecutionParameterHandler implements NodeParameterHandler {
 
@@ -16,7 +16,7 @@ public abstract class AbstractExecutionParameterHandler implements NodeParameter
 
     @Override
     public StringProperty displayNameProperty() {
-        return I18n.$("baseplugin.blueprint.execution-param");
+        return I18n.$("plugin.blueprint.execution-param");
     }
 
     @Override

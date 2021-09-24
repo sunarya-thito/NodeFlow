@@ -1,6 +1,6 @@
 package thito.nodeflow.internal.project;
 
-import thito.nodeflow.library.language.*;
+import thito.nodeflow.internal.language.*;
 
 public interface ProjectExport {
     I18n getDisplayName();

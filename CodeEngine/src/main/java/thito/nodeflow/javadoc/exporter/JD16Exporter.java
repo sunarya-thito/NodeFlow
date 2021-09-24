@@ -166,7 +166,7 @@ public class JD16Exporter {
         String simpleName = s.split("<")[0].replace('.', '$'); // also handles the $ for inner classes
         urlMap.put(url, javaClass.getPackageName() != null ? javaClass.getPackageName() + "." + simpleName : simpleName);
         String signatureData = extractData(doc.selectFirst(".type-signature")).toString();
-        TypeTokenizer declaration = new TypeTokenizer(0, signatureData.toCharArray());
+        JavaTokenizer declaration = new JavaTokenizer(0, signatureData.toCharArray());
         declaration.eatWhitespace(); // optional
 
         // CLASS ANNOTATION
@@ -243,7 +243,7 @@ public class JD16Exporter {
         for (Element e : allFields) {
             JavaField field = new JavaField();
             String memberSignature = extractData(e.selectFirst(".member-signature")).toString();
-            TypeTokenizer memberDeclaration = new TypeTokenizer(0, memberSignature.toCharArray());
+            JavaTokenizer memberDeclaration = new JavaTokenizer(0, memberSignature.toCharArray());
             memberDeclaration.eatWhitespace();
             List<JavaAnnotation> annotationList = readAnnotations(memberDeclaration);
             memberDeclaration.eatWhitespace();
@@ -267,7 +267,7 @@ public class JD16Exporter {
         for (Element e : allMethods) {
             JavaMethod method = new JavaMethod();
             String memberSignature = extractData(e.selectFirst(".member-signature")).toString();
-            TypeTokenizer memberDeclaration = new TypeTokenizer(0, memberSignature.toCharArray());
+            JavaTokenizer memberDeclaration = new JavaTokenizer(0, memberSignature.toCharArray());
             memberDeclaration.eatWhitespace();
             List<JavaAnnotation> annotationList = readAnnotations(memberDeclaration);
             memberDeclaration.eatWhitespace();
@@ -304,7 +304,7 @@ public class JD16Exporter {
         for (Element e : allConstructors) {
             JavaMethod method = new JavaMethod();
             String memberSignature = extractData(e.selectFirst(".member-signature")).toString();
-            TypeTokenizer memberDeclaration = new TypeTokenizer(0, memberSignature.toCharArray());
+            JavaTokenizer memberDeclaration = new JavaTokenizer(0, memberSignature.toCharArray());
             memberDeclaration.eatWhitespace();
             List<JavaAnnotation> annotationList = readAnnotations(memberDeclaration);
             memberDeclaration.eatWhitespace();
@@ -340,7 +340,7 @@ public class JD16Exporter {
         return javaClass;
     }
 
-    private TypeReference[] readGenericParameters(TypeTokenizer tokenizer) {
+    private TypeReference[] readGenericParameters(JavaTokenizer tokenizer) {
         if (tokenizer.eat('<')) {
             TypeReference[] references = tokenizer.eatGenericSplit(',');
             tokenizer.eatWhitespace();
@@ -351,11 +351,11 @@ public class JD16Exporter {
         return null;
     }
 
-    private List<JavaAnnotation> readAnnotations(TypeTokenizer typeTokenizer) {
-        return typeTokenizer.eatAnnotations();
+    private List<JavaAnnotation> readAnnotations(JavaTokenizer javaTokenizer) {
+        return javaTokenizer.eatAnnotations();
     }
 
-    private List<JavaMethod.Parameter> readParameters(TypeTokenizer tokenizer) {
+    private List<JavaMethod.Parameter> readParameters(JavaTokenizer tokenizer) {
         int mark = tokenizer.getIndex();
         if (tokenizer.eat('(')) {
             List<JavaMethod.Parameter> params = new ArrayList<>();

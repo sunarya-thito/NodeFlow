@@ -1,7 +1,7 @@
 package thito.nodeflow.internal.search;
 
 import javafx.beans.property.*;
-import thito.nodeflow.library.language.*;
+import thito.nodeflow.internal.language.*;
 
 public interface SearchResult {
     SearchableContent getContent();

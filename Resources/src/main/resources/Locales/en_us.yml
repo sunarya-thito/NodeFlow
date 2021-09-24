@@ -30,6 +30,7 @@ dashboard:
     folder-name: Folder Name
     validate-already-exist: Project with that folder name is already exist
 search: Search
+search-source: From %s
 browse: Browse
 open-directory: Select Directory
 open-file: Select File
@@ -57,24 +58,20 @@ settings:
   title: Settings
   plugins:
     enable: Enable
+  app-settings:
+    name: App Settings
   general:
     name: General
     items:
       action-buffer: Action buffer
       max-opened-tabs: Max Opened Tabs
       workspace-directory: Workspace Directory
-    sub:
-      appearance:
-        name: Appearance
-        sub:
-          color-scheme:
-            name: Color Scheme
-            items:
-              palette: Palette
-        items:
-          theme: Theme
-          language: Language
-          show-dashboard-at-start: Show Dashboard at Start
+  appearance:
+    name: Appearance
+    items:
+      theme: Theme
+      language: Language
+      show-dashboard-at-start: Show Dashboard at Start
 editor:
   title: NodeFlow - %s
   title-no-project: NodeFlow

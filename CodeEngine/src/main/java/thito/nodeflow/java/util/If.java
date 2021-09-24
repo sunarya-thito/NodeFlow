@@ -1,5 +1,6 @@
 package thito.nodeflow.java.util;
 
+import org.jetbrains.annotations.*;
 import org.objectweb.asm.*;
 import org.objectweb.asm.tree.*;
 import thito.nodeflow.java.*;
@@ -13,15 +14,21 @@ public class If {
         this.code = code;
     }
 
+    @Contract(pure = true)
     public static If IsTrue(Object state) {
         return new If(state, Opcodes.IFNE);
     }
+
+    @Contract(pure = true)
     public static If IsFalse(Object state) {
         return new If(state, Opcodes.IFEQ);
     }
+
+    @Contract(pure = true)
     public Then Then(Runnable run) {
         return new Then(run);
     }
+
     public class Then {
         private Runnable runnable;
 

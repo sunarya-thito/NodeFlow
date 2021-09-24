@@ -4,7 +4,7 @@ import javafx.collections.*;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import thito.nodeflow.internal.project.*;
-import thito.nodeflow.library.resource.*;
+import thito.nodeflow.internal.resource.*;
 
 public interface FileViewer {
     Project getProject();

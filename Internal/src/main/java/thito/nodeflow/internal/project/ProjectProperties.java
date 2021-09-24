@@ -5,9 +5,10 @@ import javafx.beans.property.*;
 import javafx.collections.*;
 import thito.nodeflow.config.*;
 import thito.nodeflow.internal.*;
+import thito.nodeflow.internal.settings.*;
 import thito.nodeflow.internal.ui.editor.*;
-import thito.nodeflow.library.resource.*;
-import thito.nodeflow.library.task.*;
+import thito.nodeflow.internal.resource.*;
+import thito.nodeflow.internal.task.*;
 
 import java.io.*;
 import java.util.stream.*;
@@ -77,6 +78,30 @@ public class ProjectProperties {
         return project;
     }
 
+    public void closeProject() {
+        Project project = loadedProject.get();
+        if (project != null) {
+            ObservableList<Editor> activeEditors = NodeFlow.getInstance().getActiveEditors();
+            for (Editor editor : activeEditors) {
+                if (editor.projectProperty().get() == project) {
+                    if (activeEditors.size() == 1) {
+                        TaskThread.UI().schedule(() -> {
+                            editor.projectProperty().set(null);
+                        });
+                    } else {
+                        TaskThread.UI().schedule(() -> {
+                            editor.getEditorWindow().close();
+                        });
+                    }
+                    break;
+                }
+            }
+            setLastModified(System.currentTimeMillis()); // triggers to save
+            Settings.unloadProjectSettings(this);
+        }
+        loadedProject.set(null);
+    }
+
     public ObjectProperty<Project> loadedProjectProperty() {
         return loadedProject;
     }
@@ -101,7 +126,7 @@ public class ProjectProperties {
         return directory;
     }
 
-    public Section getConfig() {
+    public Section getConfiguration() {
         return config;
     }
 
@@ -139,6 +164,7 @@ public class ProjectProperties {
         config.set("description", getDescription());
         config.set("last-modified", getLastModified());
         config.set("tags", getTags());
+        Settings.saveProjectSettings(this);
         TaskThread.IO().schedule(() -> {
             try (Writer writer = directory.getChild("project.yml").openWriter()) {
                 writer.write(Section.toString(config));

@@ -12,9 +12,7 @@ import javafx.scene.text.*;
 import javafx.stage.*;
 import javafx.util.*;
 import thito.nodeflow.internal.*;
-import thito.nodeflow.library.task.*;
-import thito.nodeflow.library.ui.Skin;
-import thito.nodeflow.library.ui.*;
+import thito.nodeflow.internal.task.*;
 
 public class SplashScreen {
     ImageView logo = new ImageView();

@@ -2,13 +2,8 @@ package thito.nodeflow.internal.ui.editor;
 
 import javafx.beans.property.*;
 import javafx.scene.layout.*;
-import thito.nodeflow.internal.project.*;
 import thito.nodeflow.internal.project.module.*;
-import thito.nodeflow.library.resource.*;
-import thito.nodeflow.library.task.*;
-import thito.nodeflow.library.ui.*;
-
-import java.io.*;
+import thito.nodeflow.internal.ui.*;
 
 public class TabSkin extends Skin {
 

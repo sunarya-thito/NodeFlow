@@ -4,12 +4,14 @@ import javafx.beans.property.*;
 import javafx.collections.*;
 import thito.nodeflow.internal.plugin.*;
 import thito.nodeflow.internal.project.*;
-import thito.nodeflow.library.resource.*;
-import thito.nodeflow.library.task.*;
+import thito.nodeflow.internal.resource.*;
+import thito.nodeflow.internal.search.*;
+import thito.nodeflow.internal.task.*;
 
 public class Editor {
+    private ObservableList<SearchableContentContext> searchableContentContexts = FXCollections.observableArrayList();
     private ObjectProperty<Project> project = new SimpleObjectProperty<>();
-    private ObservableList<FileTab> openedFiles = FXCollections.observableArrayList();
+    private ObservableList<EditorTab> openedFiles = FXCollections.observableArrayList();
     private EditorWindow editorWindow;
 
     public Editor() {
@@ -19,8 +21,9 @@ public class Editor {
                 if (old.editorProperty().get() == this) {
                     old.editorProperty().set(null);
                 }
+                old.getProperties().closeProject();
             }
-            openedFiles.clear();
+            openedFiles.removeIf(x -> x instanceof FileTab);
             if (val != null) {
                 // kinda wonder if this actually gonna happen
                 Editor oldEditor = val.editorProperty().get();
@@ -28,17 +31,25 @@ public class Editor {
                     oldEditor.projectProperty().set(null);
                 }
                 val.editorProperty().set(this);
-
             }
         });
+        for (SearchableContentProvider provider : SearchManager.getInstance().getProviderList()) {
+            searchableContentContexts.add(provider.createContext(this));
+        }
+    }
+
+    public ObservableList<SearchableContentContext> getSearchableContentContexts() {
+        return searchableContentContexts;
     }
 
     public FileTab openFile(Resource resource) {
         TaskThread.UI().checkThread();
-        for (FileTab tab : openedFiles) {
-            if (tab.getResource().equals(resource)) {
-                tab.getTab().getTabPane().getSelectionModel().select(tab.getTab());
-                return tab;
+        for (EditorTab x : openedFiles) {
+            if (x instanceof FileTab tab) {
+                if (tab.getResource().equals(resource)) {
+                    tab.getTab().getTabPane().getSelectionModel().select(tab.getTab());
+                    return tab;
+                }
             }
         }
         FileTab tab = new FileTab(this, project.get(), resource, PluginManager.getPluginManager().getModule(resource));
@@ -47,7 +58,7 @@ public class Editor {
         return tab;
     }
 
-    public ObservableList<FileTab> getOpenedFiles() {
+    public ObservableList<EditorTab> getOpenedTabs() {
         return openedFiles;
     }
 

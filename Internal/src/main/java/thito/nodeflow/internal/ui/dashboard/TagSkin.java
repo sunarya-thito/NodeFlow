@@ -1,14 +1,11 @@
 package thito.nodeflow.internal.ui.dashboard;
 
-import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.image.*;
-import javafx.scene.layout.*;
 import thito.nodeflow.internal.project.*;
-import thito.nodeflow.library.ui.*;
-import thito.nodeflow.library.ui.Component;
-import thito.nodeflow.library.ui.Skin;
-import thito.nodeflow.library.util.*;
+import thito.nodeflow.internal.ui.Component;
+import thito.nodeflow.internal.ui.Skin;
+import thito.nodeflow.internal.util.*;
 
 import java.awt.*;
 

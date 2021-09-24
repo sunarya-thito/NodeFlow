@@ -10,11 +10,11 @@ import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import thito.nodeflow.internal.*;
 import thito.nodeflow.internal.project.*;
-import thito.nodeflow.library.binding.*;
-import thito.nodeflow.library.task.*;
-import thito.nodeflow.library.ui.*;
-import thito.nodeflow.library.ui.Skin;
-import thito.nodeflow.library.util.*;
+import thito.nodeflow.internal.binding.*;
+import thito.nodeflow.internal.task.*;
+import thito.nodeflow.internal.ui.*;
+import thito.nodeflow.internal.ui.Skin;
+import thito.nodeflow.internal.util.*;
 
 import java.util.*;
 

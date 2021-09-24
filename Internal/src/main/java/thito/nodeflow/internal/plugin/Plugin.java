@@ -1,7 +1,10 @@
 package thito.nodeflow.internal.plugin;
 
+import thito.nodeflow.internal.language.*;
 import thito.nodeflow.internal.settings.*;
+import thito.nodeflow.internal.settings.canvas.*;
 
+import java.io.*;
 import java.lang.reflect.*;
 import java.util.*;
 import java.util.logging.*;
@@ -23,11 +26,12 @@ public class Plugin {
     private Class<?> mainClass;
     private List<String> authors;
     private PluginInstance instance;
-    private PluginSettings pluginSettings;
     private Logger logger;
+    private File dataFolder;
+    private PluginSettings pluginSettings;
     PluginClassLoader classLoader;
 
-    public Plugin(String id, String name, String version, Class<?> mainClass, List<String> authors, PluginClassLoader pluginClassLoader) {
+    public Plugin(String id, String name, String version, Class<?> mainClass, List<String> authors, PluginClassLoader pluginClassLoader, File dataFolder) {
         this.id = id;
         this.name = name;
         this.version = version;
@@ -35,10 +39,13 @@ public class Plugin {
         this.authors = authors;
         this.classLoader = pluginClassLoader;
         this.logger = Logger.getLogger(name);
+        this.dataFolder = dataFolder;
+        this.pluginSettings = new PluginSettings(id, I18n.direct(name), SettingsContext.GLOBAL);
+        Settings.getSettings().registerSettingsCategory(pluginSettings);
     }
 
-    public PluginSettings getPluginSettings() {
-        return pluginSettings;
+    public File getDataFolder() {
+        return dataFolder;
     }
 
     public Logger getLogger() {
@@ -62,6 +69,10 @@ public class Plugin {
         return instance;
     }
 
+    public PluginSettings getPluginSettings() {
+        return pluginSettings;
+    }
+
     public boolean isInitialized() {
         return instance != null;
     }
@@ -76,13 +87,15 @@ public class Plugin {
 
     protected void initialize() throws NoSuchMethodException, InvocationTargetException,
             InstantiationException, IllegalAccessException {
-        pluginSettings = new PluginSettings(this);
         instance = (PluginInstance) mainClass.getConstructor().newInstance();
         instance.onLoad();
-        if (pluginSettings.getEnabled().get()) {
+    }
+
+    public void launch() {
+        if (getPluginSettings().getEnable().getValue()) {
             instance.onEnable();
         }
-        pluginSettings.getEnabled().addListener((obs, old, val) -> {
+        pluginSettings.getEnable().valueProperty().addListener((obs, old, val) -> {
             if (val) {
                 instance.onEnable();
             } else {

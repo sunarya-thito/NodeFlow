@@ -5,7 +5,7 @@ import javafx.scene.paint.*;
 import thito.nodeflow.engine.node.*;
 import thito.nodeflow.engine.node.skin.*;
 import thito.nodeflow.engine.node.state.*;
-import thito.nodeflow.library.language.*;
+import thito.nodeflow.internal.language.*;
 import thito.nodeflow.plugin.base.blueprint.*;
 import thito.nodeflow.plugin.base.blueprint.state.parameter.*;
 
@@ -46,7 +46,7 @@ public class FieldValueParameterHandler extends JavaParameterHandler {
 
     @Override
     public StringProperty displayNameProperty() {
-        return I18n.$("baseplugin.blueprint.field-value-param");
+        return I18n.$("plugin.blueprint.field-value-param");
     }
 
     @Override

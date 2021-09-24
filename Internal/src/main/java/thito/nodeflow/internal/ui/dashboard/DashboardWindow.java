@@ -2,11 +2,10 @@ package thito.nodeflow.internal.ui.dashboard;
 
 import javafx.geometry.*;
 import javafx.scene.input.*;
-import javafx.scene.layout.*;
 import javafx.stage.*;
-import thito.nodeflow.library.language.*;
-import thito.nodeflow.library.ui.Window;
-import thito.nodeflow.library.ui.*;
+import thito.nodeflow.internal.language.*;
+import thito.nodeflow.internal.ui.Window;
+import thito.nodeflow.internal.ui.*;
 
 public class DashboardWindow extends Window implements WindowHitTest {
 

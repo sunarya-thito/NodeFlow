@@ -1,5 +1,6 @@
 package thito.nodeflow.java;
 
+import org.jetbrains.annotations.*;
 import thito.nodeflow.java.util.*;
 
 public abstract class Reference {
@@ -35,7 +36,7 @@ public abstract class Reference {
     }
 
     public void impl_write(IClass expectation) {
-        if (expectation.isAssignableFrom(getType())) {
+        if (expectation.getName().equals("void")) {
             writeByteCode();
         } else {
             Conversion.cast(this, expectation).writeByteCode();
@@ -43,7 +44,7 @@ public abstract class Reference {
     }
 
     public void impl_writeSourceCode(IClass expectation) {
-        if (expectation.isAssignableFrom(getType())) {
+        if (expectation.getName().equals("void")) {
             writeSourceCode();
         } else {
             Conversion.cast(this, expectation).writeSourceCode();
@@ -81,6 +82,7 @@ public abstract class Reference {
     }
 
     public interface MethodInvocation {
+        @Contract(pure = true)
         Reference invoke(Object...args);
         void invokeVoid(Object...args);
     }

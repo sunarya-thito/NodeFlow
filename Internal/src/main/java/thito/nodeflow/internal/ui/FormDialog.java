@@ -3,8 +3,8 @@ package thito.nodeflow.internal.ui;
 import javafx.beans.binding.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import thito.nodeflow.library.language.*;
-import thito.nodeflow.library.ui.form.*;
+import thito.nodeflow.internal.language.*;
+import thito.nodeflow.internal.ui.form.*;
 
 import java.util.function.*;
 

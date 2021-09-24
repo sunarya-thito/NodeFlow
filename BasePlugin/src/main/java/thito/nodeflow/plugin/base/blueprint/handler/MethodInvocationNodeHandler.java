@@ -3,7 +3,7 @@ package thito.nodeflow.plugin.base.blueprint.handler;
 import javafx.beans.property.*;
 import javafx.scene.image.*;
 import thito.nodeflow.engine.node.*;
-import thito.nodeflow.library.language.*;
+import thito.nodeflow.internal.language.*;
 import thito.nodeflow.plugin.base.blueprint.*;
 import thito.nodeflow.plugin.base.blueprint.state.*;
 
@@ -25,7 +25,7 @@ public class MethodInvocationNodeHandler extends AbstractMethodCallNodeHandler {
 
     @Override
     public StringProperty displayNameProperty() {
-        return I18n.$("baseplugin.blueprint.method-node").format(method.getName());
+        return I18n.$("plugin.blueprint.method-node").format(method.getName());
     }
 
     @Override

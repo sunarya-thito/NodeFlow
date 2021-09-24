@@ -5,7 +5,7 @@ import javafx.scene.paint.*;
 import thito.nodeflow.engine.node.*;
 import thito.nodeflow.engine.node.skin.*;
 import thito.nodeflow.engine.node.state.*;
-import thito.nodeflow.library.language.*;
+import thito.nodeflow.internal.language.*;
 import thito.nodeflow.plugin.base.blueprint.*;
 import thito.nodeflow.plugin.base.blueprint.state.parameter.*;
 
@@ -35,7 +35,7 @@ public class OutputParameterHandler extends JavaParameterHandler {
 
     @Override
     public StringProperty displayNameProperty() {
-        return I18n.$("baseplugin.blueprint.return-param");
+        return I18n.$("plugin.blueprint.return-param");
     }
 
     @Override

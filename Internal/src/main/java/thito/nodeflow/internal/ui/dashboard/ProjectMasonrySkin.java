@@ -1,8 +1,8 @@
 package thito.nodeflow.internal.ui.dashboard;
 
 import thito.nodeflow.internal.ui.dashboard.pages.*;
-import thito.nodeflow.library.binding.*;
-import thito.nodeflow.library.ui.*;
+import thito.nodeflow.internal.binding.*;
+import thito.nodeflow.internal.ui.*;
 
 public class ProjectMasonrySkin extends Skin {
     @Component("pane")

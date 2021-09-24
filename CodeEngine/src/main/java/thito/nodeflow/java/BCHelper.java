@@ -36,6 +36,7 @@ public class BCHelper {
         primitiveToWrapper.put(new KClass(short.class), new KClass(Short.class));
         primitiveToWrapper.put(new KClass(byte.class), new KClass(Byte.class));
         primitiveToWrapper.put(new KClass(boolean.class), new KClass(Boolean.class));
+        primitiveToWrapper.put(new KClass(void.class), new KClass(Void.class));
 
         primitiveToWrapper.forEach((primitive, wrapper) -> wrapperToPrimitive.put(wrapper, primitive));
     }
@@ -66,22 +67,22 @@ public class BCHelper {
         if (target == null) return false;
         if (source.getName().equals(target.getName())) return true;
         if (source.isArray()) {
-            if (Java.Class(Object.class).isAssignableFrom(target)) {
+            if (isAssignableFrom(Java.Class(Object.class), target, new HashSet<>())) {
                 return true;
             }
             if (target.isArray()) {
-                return source.getComponentType().isAssignableFrom(target.getComponentType());
+                return isAssignableFrom(source.getComponentType(), target.getComponentType(), new HashSet<>());
             }
             return false;
         }
         IClass superClass = target.getSuperClass();
-        if (superClass != null && scanned.add(superClass) && source.isAssignableFrom(superClass)) {
+        if (superClass != null && scanned.add(superClass) && isAssignableFrom(source, superClass, scanned)) {
             return true;
         }
         IClass[] interfaces = target.getInterfaces();
         if (interfaces != null) {
             for (IClass in : interfaces) {
-                if (scanned.add(in) && source.isAssignableFrom(in)) {
+                if (scanned.add(in) && isAssignableFrom(source, in, scanned)) {
                     return true;
                 }
             }
@@ -140,7 +141,7 @@ public class BCHelper {
             return "C";
         }
         if (type.equals(Java.Class(boolean.class))) {
-            return "B";
+            return "Z";
         }
         if (type.isArray()) return type.getName().replace('.', '/');
         return "L"+getClassPath(type)+";";

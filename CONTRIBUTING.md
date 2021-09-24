@@ -32,8 +32,6 @@ into JavaFX components. This sub-module used by Internal as dependencies.
 ### Internal
 This is the main sub-module that handles how the software works. It basically contains everything
 that makes the software runs.
-### Launcher
-Launcher module help the software to run by loading its dependencies and wrap them as an executable.
 ### Library
 This sub-module provides functional and useful utilities. This sub-module contains everything
 the software need to make it run.
@@ -41,6 +39,8 @@ the software need to make it run.
 Resources module contains all media/locales/graphics/fonts the software needed to display its UI.
 ### Setup
 Setup a.k.a Updater is a standalone app that update the software files without downloading the entire software files.
+### JVMDebugger
+A debugger tool for NodeFlow projects. Used to retrieve application status and activities from different process for user testing purposes.
 ### docs
 The nodeflow website
 ## Resources Guidelines

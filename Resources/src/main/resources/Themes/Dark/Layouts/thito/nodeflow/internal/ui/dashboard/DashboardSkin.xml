@@ -1,6 +1,6 @@
 <NodeFlow>
     <Components>
-        <PlainRadioButton>thito.nodeflow.library.ui.PlainRadioButton</PlainRadioButton>
+        <PlainRadioButton>thito.nodeflow.internal.ui.PlainRadioButton</PlainRadioButton>
     </Components>
     <Layout>
         <VBox id="dashboard-viewport" class="dashboard-root" disableOverflow="true">

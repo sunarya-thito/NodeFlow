@@ -1,8 +1,8 @@
 package thito.nodeflow.internal.ui.editor;
 
 import javafx.scene.layout.*;
-import thito.nodeflow.library.binding.*;
-import thito.nodeflow.library.ui.*;
+import thito.nodeflow.internal.binding.*;
+import thito.nodeflow.internal.ui.*;
 
 public class SearchPopupSkin extends Skin {
     @Component("content")

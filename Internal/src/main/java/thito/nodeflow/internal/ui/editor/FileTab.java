@@ -3,12 +3,12 @@ package thito.nodeflow.internal.ui.editor;
 import javafx.scene.control.*;
 import thito.nodeflow.internal.project.*;
 import thito.nodeflow.internal.project.module.*;
-import thito.nodeflow.library.resource.*;
-import thito.nodeflow.library.task.*;
+import thito.nodeflow.internal.resource.*;
+import thito.nodeflow.internal.task.*;
 
 import java.io.*;
 
-public class FileTab {
+public class FileTab extends EditorTab {
 
     private Project project;
     private Resource resource;
@@ -25,7 +25,7 @@ public class FileTab {
         tab = new Tab();
         tab.setOnCloseRequest(event -> {
             event.consume();
-            editor.getOpenedFiles().remove(this);
+            editor.getOpenedTabs().remove(this);
         });
         tab.getProperties().put(FileTab.class, this);
     }

@@ -1,5 +1,6 @@
 package thito.nodeflow.java.util;
 
+import org.jetbrains.annotations.*;
 import thito.nodeflow.java.*;
 
 public class EnumType {
@@ -18,40 +19,13 @@ public class EnumType {
         return enumType;
     }
 
-    public Value valueOf(String name) {
-        return new Value(name);
+    @Contract(pure = true)
+    public Reference valueOf(Object name) {
+        return enumType.method("valueOf", Java.Class(String.class)).invoke(name);
     }
 
+    @Contract(pure = true)
     public Reference values() {
         return enumType.method("values").invoke();
-    }
-
-    public class Value extends Reference {
-        private String name;
-        public Value(String name) {
-            super(getEnumType());
-            this.name = name;
-        }
-
-        public String name() {
-            return name;
-        }
-
-        public Reference ordinal() {
-            return method("ordinal").invoke();
-        }
-
-        @Override
-        public void writeByteCode() {
-            getType().field(name).writeByteCode();
-        }
-
-        @Override
-        public void writeSourceCode() {
-            SourceCode code = SourceCode.getContext();
-            code.getLine().append(code.simplifyType(getEnumType()))
-                    .append('.')
-                    .append(name);
-        }
     }
 }

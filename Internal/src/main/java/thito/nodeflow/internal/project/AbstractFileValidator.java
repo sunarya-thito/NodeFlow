@@ -1,8 +1,8 @@
 package thito.nodeflow.internal.project;
 
-import thito.nodeflow.library.language.*;
-import thito.nodeflow.library.resource.*;
-import thito.nodeflow.library.ui.form.*;
+import thito.nodeflow.internal.language.*;
+import thito.nodeflow.internal.resource.*;
+import thito.nodeflow.internal.ui.form.*;
 
 public class AbstractFileValidator implements Validator<Resource> {
     @Override

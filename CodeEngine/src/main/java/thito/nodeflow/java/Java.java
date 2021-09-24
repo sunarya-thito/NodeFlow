@@ -1,5 +1,6 @@
 package thito.nodeflow.java;
 
+import org.jetbrains.annotations.*;
 import org.objectweb.asm.*;
 import org.objectweb.asm.tree.*;
 import thito.nodeflow.java.generated.*;
@@ -9,6 +10,7 @@ import java.lang.reflect.*;
 import java.lang.reflect.Type;
 
 public class Java {
+    @Contract(pure = true)
     public static Reference Null() {
         return new Reference(Java.Class(Object.class)) {
             @Override
@@ -28,6 +30,7 @@ public class Java {
         return new ArrayClass(componentType, dimensions);
     }
 
+    @Contract(pure = true)
     public static Reference Type(IClass clazz) {
         return new Reference(Class.class) {
             @Override

@@ -1,10 +1,12 @@
 package thito.nodeflow.java.util;
 
+import org.jetbrains.annotations.*;
 import org.objectweb.asm.*;
 import org.objectweb.asm.tree.*;
 import thito.nodeflow.java.*;
 
 public class Array {
+    @Contract(pure = true)
     public static Reference get(Object array, Object index) {
         IClass finalComponent = BCHelper.getType(array).getComponentType();
         return new Reference(finalComponent) {
@@ -45,6 +47,7 @@ public class Array {
             sourceCode.endLine();
         } else throw new IllegalStateException("no context");
     }
+    @Contract(pure = true)
     public static Reference getLength(Object array) {
         return new Reference(int.class) {
             @Override
@@ -60,6 +63,7 @@ public class Array {
             }
         };
     }
+    @Contract(pure = true)
     public static Reference newInstance(IClass type, Object...dimensions) {
         if (dimensions.length == 1) {
             return new Reference(Java.ArrayClass(type, 1)) {

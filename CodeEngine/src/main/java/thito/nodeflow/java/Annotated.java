@@ -47,9 +47,7 @@ public class Annotated {
         Value value = get("value").orElse(null);
         if (value != null) {
             Object val = value.getValue();
-            if (val instanceof EnumType.Value) {
-                return ((EnumType.Value) val).name().equals("CLASS") || ((EnumType.Value) val).name().equals("RUNTIME");
-            } else if (val instanceof Enum) {
+            if (val instanceof Enum) {
                 return val == RetentionPolicy.RUNTIME || val == RetentionPolicy.CLASS;
             }
         }

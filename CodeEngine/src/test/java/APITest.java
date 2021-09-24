@@ -22,12 +22,30 @@ public class APITest {
                         local2.set(Long.valueOf(1294213414314321L));
                         local2.set(124);
                         LField local3 = body.createLocal(Java.Class(Integer.class));
+                        LField local4 = body.createLocal(Java.Class(Double.class));
+                        LField local5 = body.createLocal(Java.Class(Boolean.class));
+                        local5.set(10);
+                        local4.set(3419);
                         local3.set(124.421d);
                         local2.set(local3.get());
-                        While.Loop(loop -> {
-                            If.IsTrue(Condition.Is(local3.get()).LessThan(1000)).Then(() -> {
-                                loop.Break();
-                            }).End();
+                        local3.set(local4.get());
+                        local4.set(local3.get());
+                        Try.This(() -> {
+                            local4.set("test");
+                            local3.set("124e1");
+                        }).Catch(Java.Class(NumberFormatException.class), e -> {
+                            e.method("printStackTrace").invokeVoid();
+                        });
+                        local.set(true);
+                        local.set(Condition.Is(10).GreaterThanOrEqualTo(10));
+                        Try.This(() -> {
+                            While.Loop(loop -> {
+                                If.IsTrue(Condition.Is(local3.get()).LessThan(1000)).Then(() -> {
+                                    loop.Break();
+                                }).End();
+                            });
+                        }).Catch(Java.Class(NullPointerException.class), e -> {
+                            e.method("printStackTrace").invokeVoid();
                         });
                         If.IsTrue(false).Then(() -> {
                             local3.set(Math.add(10, Math.divide(Math.modulo(12, 1), 4231d)));
@@ -35,6 +53,8 @@ public class APITest {
                         If.IsFalse(false).Then(() -> {
                             Java.Class(System.class).field("out").method("println", Java.Class(Object.class)).invokeVoid(local.get());
                         }).Else(() -> {
+                            LField l = body.createLocal(Java.Class(Testificate.class));
+                            l.set(0);
                             Java.Class(System.class).field("out").method("println", Java.Class(Object.class)).invokeVoid(
                                     Array.get(EnumType.Enum(Java.Class(Testificate.class)).values(), 0)
                             );

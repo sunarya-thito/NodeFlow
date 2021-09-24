@@ -4,12 +4,10 @@ import javafx.scene.image.*;
 import javafx.scene.input.*;
 import thito.nodeflow.internal.plugin.*;
 import thito.nodeflow.internal.project.module.*;
-import thito.nodeflow.library.binding.*;
-import thito.nodeflow.library.resource.*;
-import thito.nodeflow.library.ui.*;
-import thito.nodeflow.library.ui.resource.*;
-
-import java.io.*;
+import thito.nodeflow.internal.binding.*;
+import thito.nodeflow.internal.resource.*;
+import thito.nodeflow.internal.ui.*;
+import thito.nodeflow.internal.ui.resource.*;
 
 public class EditorFilePanelSkin extends Skin {
 

@@ -8,7 +8,6 @@ public class Main {
 
     static ApplicationClassLoader applicationClassLoader;
     public static void main(String[] args) {
-        System.out.println(System.getProperty("illegal-access"));
         File currentDirectory = new File("").getAbsoluteFile();
         File[] bins = new File(currentDirectory, "Libraries").listFiles();
         if (bins == null) {

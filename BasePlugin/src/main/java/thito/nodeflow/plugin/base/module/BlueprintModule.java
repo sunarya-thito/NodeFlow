@@ -2,15 +2,15 @@ package thito.nodeflow.plugin.base.module;
 
 import thito.nodeflow.internal.project.*;
 import thito.nodeflow.internal.project.module.*;
-import thito.nodeflow.library.language.*;
-import thito.nodeflow.library.resource.*;
-import thito.nodeflow.library.ui.*;
-import thito.nodeflow.library.ui.form.*;
+import thito.nodeflow.internal.language.*;
+import thito.nodeflow.internal.resource.*;
+import thito.nodeflow.internal.ui.*;
+import thito.nodeflow.internal.ui.form.*;
 
 public class BlueprintModule implements FileModule {
     @Override
     public I18n getDisplayName() {
-        return I18n.$("baseplugin.blueprint.module-name");
+        return I18n.$("plugin.blueprint.module-name");
     }
 
     @Override

@@ -5,8 +5,8 @@ import javafx.scene.control.*;
 import javafx.scene.image.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.*;
-import thito.nodeflow.library.ui.*;
-import thito.nodeflow.library.ui.Skin;
+import thito.nodeflow.internal.ui.*;
+import thito.nodeflow.internal.ui.Skin;
 
 import java.util.*;
 

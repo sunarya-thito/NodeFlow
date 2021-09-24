@@ -4,11 +4,23 @@ import javafx.beans.*;
 import javafx.beans.property.*;
 import javafx.collections.*;
 import thito.nodeflow.internal.search.*;
-import thito.nodeflow.library.language.*;
+import thito.nodeflow.internal.language.*;
+import thito.nodeflow.internal.ui.editor.*;
 
 import java.util.regex.*;
 
 public abstract class TextContent implements SearchableContent {
+
+    private SearchableContentContext context;
+
+    public TextContent(SearchableContentContext context) {
+        this.context = context;
+    }
+
+    @Override
+    public SearchableContentContext getContext() {
+        return context;
+    }
 
     public abstract I18n getName();
     public abstract StringProperty contentProperty();
@@ -23,11 +35,15 @@ public abstract class TextContent implements SearchableContent {
     public class TextSearchSession implements SearchSession, InvalidationListener {
         private SearchQuery query;
         private ObservableList<SearchResult> results = FXCollections.observableArrayList();
-
         public TextSearchSession(SearchQuery query) {
             this.query = query;
             update();
             contentProperty().addListener(new WeakInvalidationListener(this));
+        }
+
+        @Override
+        public SearchableContent getContent() {
+            return TextContent.this;
         }
 
         private void update() {

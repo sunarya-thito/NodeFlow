@@ -5,9 +5,7 @@ import javafx.scene.*;
 import javafx.scene.control.*;
 import thito.nodeflow.internal.project.*;
 import thito.nodeflow.internal.ui.editor.*;
-import thito.nodeflow.library.resource.*;
-
-import java.nio.charset.*;
+import thito.nodeflow.internal.resource.*;
 
 public class UnknownFileViewer implements FileViewer {
     private Project project;

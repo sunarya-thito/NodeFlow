@@ -2,8 +2,6 @@ package thito.nodeflow.internal.ui;
 
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import thito.nodeflow.library.ui.*;
-import thito.nodeflow.library.ui.Skin;
 
 public class StandardWindowSkin extends Skin {
     @Component("caption")

@@ -1,64 +1,35 @@
 package thito.nodeflow.internal.settings;
 
 import javafx.beans.property.*;
-import javafx.beans.value.*;
-import thito.nodeflow.library.language.*;
-
-import java.lang.annotation.*;
-import java.util.*;
+import thito.nodeflow.config.*;
 
 public class SettingsProperty<T> extends SimpleObjectProperty<T> {
-    Class<T> type;
-    String fieldName;
-    Map<Class<? extends Annotation>, Annotation> annotationMap = new HashMap<>();
-    SettingsCategory category;
-    private T defaultValue;
-    private I18n name;
+    private SettingsItem<T> settingsItem;
 
-    public SettingsProperty(I18n name, T initialValue) {
+    public SettingsProperty(SettingsItem<T> settingsItem) {
+        this.settingsItem = settingsItem;
+    }
+
+    public SettingsProperty(T initialValue, SettingsItem<T> settingsItem) {
         super(initialValue);
-        this.name = name;
+        this.settingsItem = settingsItem;
     }
 
-    public SettingsProperty(Class<T> type, String fieldName, I18n displayName, T initialValue) {
-        super(initialValue);
-        this.defaultValue = initialValue;
-        this.type = type;
-        this.fieldName = fieldName;
-        this.name = displayName;
+    public SettingsItem<T> getSettingsItem() {
+        return settingsItem;
     }
 
-    public SettingsCategory getCategory() {
-        return category;
+    public void apply() {
+        settingsItem.setValue(get());
     }
 
-    public T getDefaultValue() {
-        return defaultValue;
+    public void load(Section section, String key) {
+        SettingsParser<T> parser = SettingsManager.getSettingsManager().getParser(settingsItem.getType());
+        set(parser.fromConfig(section, key).orElse(null));
     }
 
-    public <T extends Annotation> T getAnnotated(Class<T> annotated) {
-        return (T) annotationMap.get(annotated);
-    }
-
-    @Override
-    public String getName() {
-        return fieldName;
-    }
-
-    public I18n displayNameProperty() {
-        return name;
-    }
-
-    public Class<T> getType() {
-        return type;
-    }
-
-    public <K> K value() {
-        return (K) get();
-    }
-
-    public void addListenerAndFire(ChangeListener<? super T> listener) {
-        listener.changed(this, null, get());
-        addListener(listener);
+    public void save(Section section, String key) {
+        SettingsParser<T> parser = SettingsManager.getSettingsManager().getParser(settingsItem.getType());
+        parser.toConfig(section, key, get());
     }
 }

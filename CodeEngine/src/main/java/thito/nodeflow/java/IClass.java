@@ -1,5 +1,8 @@
 package thito.nodeflow.java;
 
+import org.jetbrains.annotations.*;
+import thito.nodeflow.java.util.*;
+
 import java.util.*;
 
 public interface IClass extends IMember {
@@ -25,11 +28,13 @@ public interface IClass extends IMember {
     IClass[] getClasses();
     IClass getClass(String name);
     default boolean isAssignableFrom(IClass type) {
-        return BCHelper.isAssignableFrom(this, type, new HashSet<>());
+        return BCHelper.isAssignableFrom(this, type, new HashSet<>()) || Conversion.isTransformationPossible(this, type);
     }
+
     boolean isArray();
     IClass getComponentType();
 
+    @Contract(pure = true)
     default Reference field(String name) {
         return getField(name).get(null);
     }
@@ -49,6 +54,7 @@ public interface IClass extends IMember {
     }
 
     interface StaticMethodInvocation {
+        @Contract(pure = true)
         Reference invoke(Object...args);
         void invokeVoid(Object...args);
     }

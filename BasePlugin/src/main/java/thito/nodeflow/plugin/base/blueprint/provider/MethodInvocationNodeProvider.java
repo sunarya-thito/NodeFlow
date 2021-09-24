@@ -2,7 +2,7 @@ package thito.nodeflow.plugin.base.blueprint.provider;
 
 import thito.nodeflow.engine.node.Node;
 import thito.nodeflow.engine.node.handler.*;
-import thito.nodeflow.library.language.*;
+import thito.nodeflow.internal.language.*;
 import thito.nodeflow.plugin.base.blueprint.handler.*;
 import thito.nodeflow.plugin.base.blueprint.state.*;
 
@@ -34,7 +34,7 @@ public class MethodInvocationNodeProvider extends AbstractMethodCallProvider {
 
     @Override
     public I18n displayNameProperty() {
-        return I18n.$("baseplugin.blueprint.method-node").format(getExecutable().getName());
+        return I18n.$("plugin.blueprint.method-node").format(getExecutable().getName());
     }
 
     @Override

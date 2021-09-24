@@ -3,14 +3,17 @@ package thito.nodeflow.internal;
 import javafx.beans.*;
 import javafx.beans.property.*;
 import javafx.collections.*;
+import thito.nodeflow.config.*;
+import thito.nodeflow.internal.plugin.*;
 import thito.nodeflow.internal.project.*;
 import thito.nodeflow.internal.settings.*;
+import thito.nodeflow.internal.settings.application.*;
 import thito.nodeflow.internal.ui.editor.*;
-import thito.nodeflow.library.application.*;
-import thito.nodeflow.library.language.*;
-import thito.nodeflow.library.resource.*;
-import thito.nodeflow.library.task.*;
-import thito.nodeflow.library.ui.*;
+import thito.nodeflow.internal.application.*;
+import thito.nodeflow.internal.language.*;
+import thito.nodeflow.internal.resource.*;
+import thito.nodeflow.internal.task.*;
+import thito.nodeflow.internal.ui.*;
 
 import java.io.*;
 import java.util.*;
@@ -45,8 +48,7 @@ public class NodeFlow extends ApplicationResources {
         return (NodeFlow) ApplicationResources.getInstance();
     }
 
-    private Language defaultLanguage = new Language("en_us");
-    private SettingsManager settingsManager = new SettingsManager();
+    private Language defaultLanguage;
     protected LinkedList<ProgressedTask> progressedTasks = new LinkedList<>();
     private ObjectProperty<Workspace> workspace = new SimpleObjectProperty<>();
     private ObservableMap<String, Tag> tagMap = FXCollections.observableHashMap();
@@ -60,7 +62,74 @@ public class NodeFlow extends ApplicationResources {
                 shutdown();
             }
         });
+        File pluginDirectory = new File(ROOT, "Plugins");
+        pluginDirectory.mkdirs();
+        File[] pluginFiles = pluginDirectory.listFiles();
+        if (pluginFiles != null) {
+            List<Plugin> initialized = new ArrayList<>();
+            for (int i = 0; i < pluginFiles.length; i++) {
+                File f = pluginFiles[i];
+                if (!f.getName().endsWith(".jar")) continue;
+                double progressValue = i / (double) pluginFiles.length;
+                submitProgressedTask((progress, status) -> {
+                    status.set("Loading plugin "+f.getName());
+                    try {
+                        Plugin plugin = PluginManager.getPluginManager().loadPlugin(f);
+                        getLogger().log(Level.INFO, "Loading "+plugin.getName()+" ("+f.getName()+")");
+                        initialized.add(plugin);
+                    } catch (Throwable t) {
+                        getLogger().log(Level.SEVERE, "Failed to load "+f.getName(), t);
+                    }
+                    progress.set(progressValue);
+                });
+            }
+            submitProgressedTask((progress, status) -> {
+                status.set("Launching plugins...");
+                progress.set(0);
+                for (int i = 0; i < initialized.size(); i++) {
+                    Plugin plugin = initialized.get(i);
+                    double pg = i / (double) initialized.size();
+                    submitProgressedTask((p2, s2) -> {
+                        s2.set("Initializing "+plugin.getName());
+                        getLogger().log(Level.INFO, "Initializing "+plugin.getName());
+                        try {
+                            plugin.launch();
+                        } catch (Throwable t) {
+                            getLogger().log(Level.SEVERE, "Failed to launch "+plugin.getName(), t);
+                        }
+                        p2.set(pg);
+                    });
+                }
+            });
+        }
         getAvailableLanguages();
+        workspace.addListener((obs, old, val) -> {
+            if (old != null) {
+                TaskThread.BACKGROUND().schedule(() -> {
+                    for (ProjectProperties properties : old.getProjectPropertiesList()) {
+                        properties.closeProject();
+                    }
+                });
+            }
+        });
+    }
+
+    public Section readFromConfiguration() {
+        File file = new File(ROOT, "config.yml");
+        if (!file.exists()) return new MapSection();
+        try (FileReader reader = new FileReader(file)) {
+            return Section.parseToMap(reader);
+        } catch (IOException t) {
+            throw new RuntimeException(t);
+        }
+    }
+
+    public void saveToConfiguration(Section section) {
+        try (FileWriter writer = new FileWriter(new File(ROOT, "config.yml"))) {
+            writer.write(Section.toString(section));
+        } catch (IOException t) {
+            throw new RuntimeException(t);
+        }
     }
 
     public Editor createNewEditor() {
@@ -92,10 +161,6 @@ public class NodeFlow extends ApplicationResources {
 
     public ObjectProperty<Workspace> workspaceProperty() {
         return workspace;
-    }
-
-    public SettingsManager getSettingsManager() {
-        return settingsManager;
     }
 
     public void submitProgressedTask(ProgressedTask task) {

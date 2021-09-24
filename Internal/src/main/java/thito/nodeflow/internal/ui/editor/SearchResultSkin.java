@@ -1,8 +1,10 @@
 package thito.nodeflow.internal.ui.editor;
 
 import javafx.scene.control.*;
-import thito.nodeflow.library.ui.Skin;
-import thito.nodeflow.library.ui.*;
+import javafx.scene.input.*;
+import thito.nodeflow.internal.search.*;
+import thito.nodeflow.internal.ui.Skin;
+import thito.nodeflow.internal.ui.*;
 
 public class SearchResultSkin extends Skin {
 
@@ -23,6 +25,10 @@ public class SearchResultSkin extends Skin {
 
     @Override
     protected void onLayoutLoaded() {
+        addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            SearchResult result = item.getSearchResult();
+            result.navigate();
+        });
         title.textProperty().bind(item.titleProperty());
         source.textProperty().bind(item.sourceProperty());
         icon.imageProperty().bind(item.iconProperty());

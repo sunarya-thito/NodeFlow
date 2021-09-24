@@ -2,7 +2,6 @@ package thito.nodeflow.internal.ui.editor;
 
 import javafx.application.*;
 import javafx.beans.*;
-import javafx.beans.binding.*;
 import javafx.collections.*;
 import javafx.event.*;
 import javafx.geometry.*;
@@ -10,14 +9,14 @@ import javafx.scene.control.*;
 import javafx.scene.image.*;
 import javafx.scene.layout.*;
 import thito.nodeflow.internal.project.*;
+import thito.nodeflow.internal.search.*;
 import thito.nodeflow.internal.ui.dashboard.*;
-import thito.nodeflow.internal.ui.settings.*;
-import thito.nodeflow.library.binding.*;
-import thito.nodeflow.library.language.*;
-import thito.nodeflow.library.task.*;
-import thito.nodeflow.library.ui.Skin;
-import thito.nodeflow.library.ui.*;
-import thito.nodeflow.library.ui.handler.*;
+import thito.nodeflow.internal.ui.handler.*;
+import thito.nodeflow.internal.binding.*;
+import thito.nodeflow.internal.language.*;
+import thito.nodeflow.internal.task.*;
+import thito.nodeflow.internal.ui.Skin;
+import thito.nodeflow.internal.ui.*;
 
 import java.util.*;
 
@@ -73,7 +72,8 @@ public class EditorSkin extends Skin {
     protected void initializeSkin() {
         super.initializeSkin();
         registerActionHandler("window.openSettings", ActionEvent.ACTION, event -> {
-            SettingsWindow.open();
+//            SettingsWindow.open();
+            // TODO open settings
         });
         registerActionHandler("window.openDashboard", ActionEvent.ACTION, event -> DashboardWindow.getWindow().show());
         registerActionHandler("editor.navigation.file", ActionEvent.ACTION, event -> {
@@ -120,15 +120,15 @@ public class EditorSkin extends Skin {
         getScene().getWindow().heightProperty().addListener(obs -> updateSearchPopupPosition());
         updateSearchPopupPosition();
 
-        editorWindow.getEditor().getOpenedFiles().addListener((ListChangeListener<FileTab>) change -> {
+        editorWindow.getEditor().getOpenedTabs().addListener((ListChangeListener<EditorTab>) change -> {
             while (change.next()) {
                 if (change.wasRemoved()) {
-                    for (FileTab t : change.getRemoved()) {
+                    for (EditorTab t : change.getRemoved()) {
                         fileTabs.getTabs().remove(t.getTab());
                     }
                 }
                 if (change.wasAdded()) {
-                    for (FileTab t : change.getAddedSubList()) {
+                    for (EditorTab t : change.getAddedSubList()) {
                         fileTabs.getTabs().add(t.getTab());
                     }
                 }
@@ -187,11 +187,24 @@ public class EditorSkin extends Skin {
     private void updateSearch(String string) {
         updateSearchPopupPosition();
         searchPopup.getSearchResultItems().clear();
-        for (int i = 0; i < 30; i++) {
-            SearchResultItem item = new SearchResultItem(I18n.direct("Title test"), I18n.direct("from NodeFlow wiki"));
-            item.iconProperty().set(new Image(new Random().nextBoolean() ? "rsrc:Themes/Dark/Icons/GlobeIcon.png" : "rsrc:Themes/Dark/Icons/FileIcon.png"));
-            searchPopup.getSearchResultItems().add(item);
-        }
+        Editor editor = editorWindow.getEditor();
+        SearchQuery query = new SearchQuery(string);
+        SearchThread.submit(() -> {
+            for (SearchableContentContext context : editor.getSearchableContentContexts()) {
+                for (SearchableContent content : context.getSearchableContentList()) {
+                    SearchSession searchSession = content.search(query);
+                    if (searchSession == null) continue;
+                    for (SearchResult result : searchSession.getResults()) {
+                        SearchResultItem item = new SearchResultItem(result.getTitle(), I18n.$("search-source").format(searchSession.getName()), result);
+                        String url = context.getProvider().getIconURL();
+                        if (url != null) item.iconProperty().set(new Image(url));
+                        TaskThread.UI().schedule(() -> {
+                            searchPopup.getSearchResultItems().add(item);
+                        });
+                    }
+                }
+            }
+        });
     }
 
     public int getMenuIndex() {
