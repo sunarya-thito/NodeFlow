@@ -3,6 +3,11 @@ package thito.nodeflow.plugin.base.blueprint.provider;
 import thito.nodeflow.engine.node.Node;
 import thito.nodeflow.engine.node.handler.*;
 import thito.nodeflow.internal.language.*;
+import thito.nodeflow.java.IMethod;
+import thito.nodeflow.java.known.KMethod;
+import thito.nodeflow.plugin.base.blueprint.BlueprintHandler;
+import thito.nodeflow.plugin.base.blueprint.compiler.CompilerContext;
+import thito.nodeflow.plugin.base.blueprint.compiler.NodeCompiler;
 import thito.nodeflow.plugin.base.blueprint.handler.*;
 import thito.nodeflow.plugin.base.blueprint.state.*;
 
@@ -33,12 +38,18 @@ public class MethodInvocationNodeProvider extends AbstractMethodCallProvider {
     }
 
     @Override
+    public void compile(CompilerContext context, NodeCompiler nodeCompiler) {
+        IMethod method = new KMethod(getExecutable());
+        Node node = nodeCompiler.getNode();
+    }
+
+    @Override
     public I18n displayNameProperty() {
         return I18n.$("plugin.blueprint.method-node").format(getExecutable().getName());
     }
 
     @Override
-    public NodeHandler createHandler(Node node, BlueprintNodeState handlerState) {
+    public NodeHandler createHandler(BlueprintHandler blueprintHandler, Node node, BlueprintNodeState handlerState) {
         return createHandler(node);
     }
 

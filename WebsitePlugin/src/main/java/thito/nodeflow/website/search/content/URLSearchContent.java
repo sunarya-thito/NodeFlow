@@ -4,6 +4,8 @@ import javafx.beans.property.*;
 import javafx.collections.*;
 import thito.nodeflow.internal.language.*;
 import thito.nodeflow.internal.search.*;
+import thito.nodeflow.internal.ui.editor.*;
+import thito.nodeflow.website.*;
 
 import java.net.*;
 
@@ -43,7 +45,7 @@ public class URLSearchContent implements SearchableContent {
         public URLSearchSession(URL url, SearchQuery query) {
             this.url = url;
             this.query = query;
-            this.name = I18n.direct("name");
+            this.name = I18n.$("plugin.internet");
             this.result = FXCollections.singletonObservableList(new URLSearchResult(url, this));
         }
 
@@ -104,6 +106,12 @@ public class URLSearchContent implements SearchableContent {
         @Override
         public void navigate() {
             // TODO open browser
+            Editor editor = searchSession.getContent().getContext().getEditor();
+            BrowserTab browserTab = new BrowserTab();
+            browserTab.getBrowserView().getCefBrowser().loadURL(url.toString());
+//            browserTab.getBrowser().navigation().loadUrl(url.toString());
+//            browserTab.getWebView().getEngine().load(url.toString());
+            editor.getOpenedTabs().add(browserTab);
         }
     }
 }

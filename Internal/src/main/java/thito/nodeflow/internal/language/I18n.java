@@ -13,14 +13,14 @@ public class I18n extends SimpleStringProperty {
 
     public static I18n $(String key) {
         if (key.startsWith("plugin.")) {
-            try {
-                Class<?> caller = Class.forName(Thread.currentThread().getStackTrace()[2].getClassName());
-                ClassLoader loader = caller.getClassLoader();
-                if (loader instanceof PluginClassLoader) {
-                    Plugin plugin = ((PluginClassLoader) loader).getPlugin();
+            String className = Thread.currentThread().getStackTrace()[2].getClassName();
+            for (Plugin plugin : PluginManager.getPluginManager().getPlugins()) {
+                try {
+                    Class.forName(className, false, plugin.getClassLoader());
                     key = plugin.getId() + key.substring(6);
+                    break;
+                } catch (Throwable ignored) {
                 }
-            } catch (ClassNotFoundException ignored) {
             }
         }
         return Language.getLanguage().getItem(key);

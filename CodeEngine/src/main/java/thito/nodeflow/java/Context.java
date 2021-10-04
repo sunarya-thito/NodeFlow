@@ -4,6 +4,7 @@ import org.objectweb.asm.*;
 import org.objectweb.asm.Type;
 import thito.nodeflow.java.generated.*;
 import thito.nodeflow.java.generated.body.*;
+import thito.nodeflow.java.transform.*;
 import thito.nodeflow.java.util.*;
 
 import java.lang.reflect.Array;
@@ -30,6 +31,7 @@ public class Context implements AutoCloseable {
         if (ctx != null) throw new IllegalStateException("already open");
         ctx = new Context();
         context.set(ctx);
+        ctx.initialize();
         return ctx;
     }
 
@@ -41,6 +43,121 @@ public class Context implements AutoCloseable {
 
     private Set<GClass> generatedClasses = new HashSet<>();
     protected Map<Class<?>, IClass> cachedClassMap = new ConcurrentHashMap<>();
+    private Map<Conversion.ClassPair, ObjectTransformation> transformationMap = new HashMap<>();
+    public Map<Conversion.ClassPair, ObjectTransformation> getTransformationMap() {
+        return transformationMap;
+    }
+
+    private void initialize() {
+        registerTransformation(new Conversion.ClassPair(Java.Class(byte.class), Java.Class(char.class)), new ByteToChar());
+        registerTransformation(new Conversion.ClassPair(Java.Class(byte.class), Java.Class(double.class)), new ByteToDouble());
+        registerTransformation(new Conversion.ClassPair(Java.Class(byte.class), Java.Class(float.class)), new ByteToFloat());
+        registerTransformation(new Conversion.ClassPair(Java.Class(byte.class), Java.Class(int.class)), new ByteToInt());
+        registerTransformation(new Conversion.ClassPair(Java.Class(byte.class), Java.Class(long.class)), new ByteToLong());
+        registerTransformation(new Conversion.ClassPair(Java.Class(byte.class), Java.Class(short.class)), new ByteToShort());
+
+        registerTransformation(new Conversion.ClassPair(Java.Class(char.class), Java.Class(byte.class)), new CharToByte());
+        registerTransformation(new Conversion.ClassPair(Java.Class(char.class), Java.Class(double.class)), new CharToDouble());
+        registerTransformation(new Conversion.ClassPair(Java.Class(char.class), Java.Class(float.class)), new CharToFloat());
+        registerTransformation(new Conversion.ClassPair(Java.Class(char.class), Java.Class(int.class)), new CharToInt());
+        registerTransformation(new Conversion.ClassPair(Java.Class(char.class), Java.Class(long.class)), new CharToLong());
+        registerTransformation(new Conversion.ClassPair(Java.Class(char.class), Java.Class(short.class)), new CharToShort());
+
+        registerTransformation(new Conversion.ClassPair(Java.Class(double.class), Java.Class(byte.class)), new DoubleToByte());
+        registerTransformation(new Conversion.ClassPair(Java.Class(double.class), Java.Class(char.class)), new DoubleToChar());
+        registerTransformation(new Conversion.ClassPair(Java.Class(double.class), Java.Class(float.class)), new DoubleToFloat());
+        registerTransformation(new Conversion.ClassPair(Java.Class(double.class), Java.Class(int.class)), new DoubleToInt());
+        registerTransformation(new Conversion.ClassPair(Java.Class(double.class), Java.Class(long.class)), new DoubleToLong());
+        registerTransformation(new Conversion.ClassPair(Java.Class(double.class), Java.Class(short.class)), new DoubleToShort());
+
+        registerTransformation(new Conversion.ClassPair(Java.Class(float.class), Java.Class(byte.class)), new FloatToByte());
+        registerTransformation(new Conversion.ClassPair(Java.Class(float.class), Java.Class(char.class)), new FloatToChar());
+        registerTransformation(new Conversion.ClassPair(Java.Class(float.class), Java.Class(double.class)), new FloatToDouble());
+        registerTransformation(new Conversion.ClassPair(Java.Class(float.class), Java.Class(int.class)), new FloatToInt());
+        registerTransformation(new Conversion.ClassPair(Java.Class(float.class), Java.Class(long.class)), new FloatToLong());
+        registerTransformation(new Conversion.ClassPair(Java.Class(float.class), Java.Class(short.class)), new FloatToShort());
+
+        registerTransformation(new Conversion.ClassPair(Java.Class(int.class), Java.Class(byte.class)), new IntToByte());
+        registerTransformation(new Conversion.ClassPair(Java.Class(int.class), Java.Class(char.class)), new IntToChar());
+        registerTransformation(new Conversion.ClassPair(Java.Class(int.class), Java.Class(double.class)), new IntToDouble());
+        registerTransformation(new Conversion.ClassPair(Java.Class(int.class), Java.Class(float.class)), new IntToFloat());
+        registerTransformation(new Conversion.ClassPair(Java.Class(int.class), Java.Class(long.class)), new IntToLong());
+        registerTransformation(new Conversion.ClassPair(Java.Class(int.class), Java.Class(short.class)), new IntToShort());
+
+        registerTransformation(new Conversion.ClassPair(Java.Class(short.class), Java.Class(byte.class)), new ShortToByte());
+        registerTransformation(new Conversion.ClassPair(Java.Class(short.class), Java.Class(char.class)), new ShortToChar());
+        registerTransformation(new Conversion.ClassPair(Java.Class(short.class), Java.Class(double.class)), new ShortToDouble());
+        registerTransformation(new Conversion.ClassPair(Java.Class(short.class), Java.Class(float.class)), new ShortToFloat());
+        registerTransformation(new Conversion.ClassPair(Java.Class(short.class), Java.Class(int.class)), new ShortToInt());
+        registerTransformation(new Conversion.ClassPair(Java.Class(short.class), Java.Class(long.class)), new ShortToLong());
+
+        registerTransformation(new Conversion.ClassPair(Java.Class(long.class), Java.Class(byte.class)), new LongToByte());
+        registerTransformation(new Conversion.ClassPair(Java.Class(long.class), Java.Class(char.class)), new LongToChar());
+        registerTransformation(new Conversion.ClassPair(Java.Class(long.class), Java.Class(double.class)), new LongToDouble());
+        registerTransformation(new Conversion.ClassPair(Java.Class(long.class), Java.Class(float.class)), new LongToFloat());
+        registerTransformation(new Conversion.ClassPair(Java.Class(long.class), Java.Class(int.class)), new LongToInt());
+        registerTransformation(new Conversion.ClassPair(Java.Class(long.class), Java.Class(short.class)), new LongToShort());
+
+        registerTransformation(new Conversion.ClassPair(Java.Class(Long.class), Java.Class(long.class)), new UnboxingLong());
+        registerTransformation(new Conversion.ClassPair(Java.Class(Double.class), Java.Class(double.class)), new UnboxingDouble());
+        registerTransformation(new Conversion.ClassPair(Java.Class(Integer.class), Java.Class(int.class)), new UnboxingInteger());
+        registerTransformation(new Conversion.ClassPair(Java.Class(Float.class), Java.Class(float.class)), new UnboxingFloat());
+        registerTransformation(new Conversion.ClassPair(Java.Class(Character.class), Java.Class(char.class)), new UnboxingCharacter());
+        registerTransformation(new Conversion.ClassPair(Java.Class(Short.class), Java.Class(short.class)), new UnboxingShort());
+        registerTransformation(new Conversion.ClassPair(Java.Class(Byte.class), Java.Class(byte.class)), new UnboxingByte());
+        registerTransformation(new Conversion.ClassPair(Java.Class(Boolean.class), Java.Class(boolean.class)), new UnboxingBoolean());
+
+        registerTransformation(new Conversion.ClassPair(Java.Class(long.class), Java.Class(Long.class)), new BoxingLong());
+        registerTransformation(new Conversion.ClassPair(Java.Class(double.class), Java.Class(Double.class)), new BoxingDouble());
+        registerTransformation(new Conversion.ClassPair(Java.Class(int.class), Java.Class(Integer.class)), new BoxingInt());
+        registerTransformation(new Conversion.ClassPair(Java.Class(float.class), Java.Class(Float.class)), new BoxingFloat());
+        registerTransformation(new Conversion.ClassPair(Java.Class(char.class), Java.Class(Character.class)), new BoxingChar());
+        registerTransformation(new Conversion.ClassPair(Java.Class(short.class), Java.Class(Short.class)), new BoxingShort());
+        registerTransformation(new Conversion.ClassPair(Java.Class(byte.class), Java.Class(Byte.class)), new BoxingByte());
+        registerTransformation(new Conversion.ClassPair(Java.Class(boolean.class), Java.Class(Boolean.class)), new BoxingBoolean());
+
+        registerTransformation(new Conversion.ClassPair(Java.Class(String.class), Java.Class(boolean.class)), new StringToBoolean());
+        registerTransformation(new Conversion.ClassPair(Java.Class(String.class), Java.Class(byte.class)), new StringToByte());
+        registerTransformation(new Conversion.ClassPair(Java.Class(String.class), Java.Class(char.class)), new StringToChar());
+        registerTransformation(new Conversion.ClassPair(Java.Class(String.class), Java.Class(double.class)), new StringToDouble());
+        registerTransformation(new Conversion.ClassPair(Java.Class(String.class), Java.Class(float.class)), new StringToFloat());
+        registerTransformation(new Conversion.ClassPair(Java.Class(String.class), Java.Class(int.class)), new StringToInt());
+        registerTransformation(new Conversion.ClassPair(Java.Class(String.class), Java.Class(long.class)), new StringToLong());
+        registerTransformation(new Conversion.ClassPair(Java.Class(String.class), Java.Class(short.class)), new StringToShort());
+
+        // for less boxing invocation
+        // it will box, but not in the exported product
+        registerTransformation(new Conversion.ClassPair(Java.Class(String.class), Java.Class(Boolean.class)), new StringToBooleanWrapper());
+        registerTransformation(new Conversion.ClassPair(Java.Class(String.class), Java.Class(Byte.class)), new StringToByteWrapper());
+        registerTransformation(new Conversion.ClassPair(Java.Class(String.class), Java.Class(Double.class)), new StringToDoubleWrapper());
+        registerTransformation(new Conversion.ClassPair(Java.Class(String.class), Java.Class(Float.class)), new StringToFloatWrapper());
+        registerTransformation(new Conversion.ClassPair(Java.Class(String.class), Java.Class(Integer.class)), new StringToIntegerWrapper());
+        registerTransformation(new Conversion.ClassPair(Java.Class(String.class), Java.Class(Long.class)), new StringToLongWrapper());
+        registerTransformation(new Conversion.ClassPair(Java.Class(String.class), Java.Class(Short.class)), new StringToShortWrapper());
+
+        registerTransformation(new Conversion.ClassPair(Java.Class(Number.class), Java.Class(boolean.class)), new NumberToBoolean());
+
+        registerTransformation(new Conversion.ClassPair(Java.Class(Number.class), Java.Class(byte.class)), new NumberToByte());
+        registerTransformation(new Conversion.ClassPair(Java.Class(Number.class), Java.Class(short.class)), new NumberToShort());
+        registerTransformation(new Conversion.ClassPair(Java.Class(Number.class), Java.Class(int.class)), new NumberToInt());
+        registerTransformation(new Conversion.ClassPair(Java.Class(Number.class), Java.Class(long.class)), new NumberToLong());
+        registerTransformation(new Conversion.ClassPair(Java.Class(Number.class), Java.Class(double.class)), new NumberToDouble());
+        registerTransformation(new Conversion.ClassPair(Java.Class(Number.class), Java.Class(float.class)), new NumberToFloat());
+
+        registerTransformation(new Conversion.ClassPair(Java.Class(int.class), Java.Class(boolean.class)), new NumberToBoolean());
+        registerTransformation(new Conversion.ClassPair(Java.Class(short.class), Java.Class(boolean.class)), new NumberToBoolean());
+        registerTransformation(new Conversion.ClassPair(Java.Class(long.class), Java.Class(boolean.class)), new NumberToBoolean());
+        registerTransformation(new Conversion.ClassPair(Java.Class(double.class), Java.Class(boolean.class)), new NumberToBoolean());
+        registerTransformation(new Conversion.ClassPair(Java.Class(byte.class), Java.Class(boolean.class)), new NumberToBoolean());
+        registerTransformation(new Conversion.ClassPair(Java.Class(float.class), Java.Class(boolean.class)), new NumberToBoolean());
+
+        registerTransformation(new Conversion.ClassPair(Java.Class(Object.class), Java.Class(boolean.class)), new ObjectToBoolean());
+        registerTransformation(new Conversion.ClassPair(Java.Class(Object.class), Java.Class(String.class)), new ObjectToString());
+    }
+
+    public void registerTransformation(Conversion.ClassPair pair, ObjectTransformation objectTransformation) {
+        transformationMap.put(pair, objectTransformation);
+    }
 
     public GClass declareClass(String pkg, String name, IClass declaringClass) {
         if (declaringClass != null && !isSamePackage(pkg, declaringClass.getPackageName())) throw new IllegalArgumentException("wrong package for declaring class "+pkg+" != "+declaringClass.getPackageName());

@@ -18,7 +18,7 @@ public class InputParameterHandler extends ConstantHolderParameterHandler {
         this.genericStorage = genericStorage;
         this.parameter = parameter;
         inputPort = new NodePort(false, Color.BLACK, PortShape.CIRCLE);
-        inputPort.colorProperty().bind(BlueprintManager.getBlueprintManager().getTypeColor(genericStorage, parameter.getParameterizedType()));
+        inputPort.colorProperty().bind(BlueprintRegistry.getTypeColor(genericStorage, parameter.getParameterizedType()));
     }
 
     @Override

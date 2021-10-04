@@ -4,6 +4,7 @@ import thito.nodeflow.engine.node.*;
 import thito.nodeflow.engine.node.handler.*;
 import thito.nodeflow.internal.language.*;
 import thito.nodeflow.plugin.base.blueprint.*;
+import thito.nodeflow.plugin.base.blueprint.handler.UnknownNodeHandler;
 import thito.nodeflow.plugin.base.blueprint.state.*;
 
 public class UnknownNodeProvider implements NodeProvider {
@@ -18,12 +19,14 @@ public class UnknownNodeProvider implements NodeProvider {
     }
 
     @Override
-    public NodeHandler createHandler(Node node, BlueprintNodeState handlerState) {
-        return null;
+    public NodeHandler createHandler(BlueprintHandler blueprintHandler, Node node, BlueprintNodeState handlerState) {
+        return new UnknownNodeHandler(node, handlerState);
     }
 
     @Override
-    public Node createNode() {
-        return null;
+    public Node createNode(BlueprintHandler blueprintHandler) {
+        Node node = new Node();
+        node.setHandler(createHandler(blueprintHandler, node, null));
+        return node;
     }
 }

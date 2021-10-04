@@ -19,7 +19,7 @@ public class InstanceParameterHandler extends ConstantHolderParameterHandler {
         this.instance = instance;
         this.genericStorage = genericStorage;
         this.inputPort = new NodePort(false, Color.BLACK, PortShape.CIRCLE);
-        this.inputPort.colorProperty().bind(BlueprintManager.getBlueprintManager().getTypeColor(genericStorage, instance));
+        this.inputPort.colorProperty().bind(BlueprintRegistry.getTypeColor(genericStorage, instance));
     }
 
     @Override

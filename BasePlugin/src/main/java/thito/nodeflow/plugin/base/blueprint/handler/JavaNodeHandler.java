@@ -6,7 +6,7 @@ import thito.nodeflow.engine.node.state.*;
 import thito.nodeflow.plugin.base.blueprint.*;
 import thito.nodeflow.plugin.base.blueprint.state.*;
 
-public abstract class JavaNodeHandler implements NodeHandler {
+public abstract class JavaNodeHandler implements BlueprintNodeHandler {
     private Node node;
     private NodeProvider provider;
     private GenericStorage genericStorage = new GenericStorage();

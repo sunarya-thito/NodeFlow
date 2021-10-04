@@ -149,6 +149,11 @@ public class BCHelper {
     public static Reference toReference(Object object, IClass expectation) {
         if (object == null) return Java.Null();
         if (object instanceof Reference) return (Reference) object;
+        if (object.getClass().isArray()) {
+            Object[] elements = new Object[java.lang.reflect.Array.getLength(object)];
+            for (int i = 0; i < elements.length; i++) elements[i] = java.lang.reflect.Array.get(object, i);
+            return Array.newArray(Java.Class(object.getClass().getComponentType()), elements);
+        }
         if (object instanceof Enum) {
             return EnumType.Enum(Java.Class(object.getClass())).valueOf(((Enum<?>) object).name());
         }

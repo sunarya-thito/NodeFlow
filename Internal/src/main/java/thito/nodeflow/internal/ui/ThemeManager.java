@@ -1,6 +1,7 @@
 package thito.nodeflow.internal.ui;
 
 import javafx.beans.property.*;
+import thito.nodeflow.internal.task.*;
 
 import java.io.*;
 import java.net.*;
@@ -26,7 +27,9 @@ public class ThemeManager {
 
     public ThemeManager() {
         theme.addListener((obs, old, val) -> {
-            updateTheme(val);
+            TaskThread.UI().schedule(() -> {
+                updateTheme(val);
+            });
         });
     }
 

@@ -26,8 +26,18 @@ public abstract class AbstractMethodCallProvider implements NodeProvider {
 
     protected abstract AbstractMethodCallNodeHandler createHandler(Node node);
 
+    public static int countVarArgs(Node node) {
+        int count = 0;
+        for (NodeParameter parameter : node.getParameters()) {
+            if (parameter.getHandler() instanceof VarArgsParameterHandler) {
+                count++;
+            }
+        }
+        return count;
+    }
+
     @Override
-    public Node createNode() {
+    public Node createNode(BlueprintHandler blueprintHandler) {
         Node node = new Node();
         AbstractMethodCallNodeHandler handler = createHandler(node);
         node.setHandler(handler);
@@ -70,6 +80,10 @@ public abstract class AbstractMethodCallProvider implements NodeProvider {
                 NodeParameter returnValue = new NodeParameter();
                 returnValue.setHandler(new OutputParameterHandler(handler.getGenericStorage(), ((Method) executable).getGenericReturnType(), returnValue));
                 node.getParameters().add(returnValue);
+            } else if (executable instanceof Constructor) {
+                NodeParameter newInstance = new NodeParameter();
+                newInstance.setHandler(new OutputParameterHandler(handler.getGenericStorage(), executable.getDeclaringClass(), newInstance));
+                node.getParameters().add(newInstance);
             }
         }
         return node;

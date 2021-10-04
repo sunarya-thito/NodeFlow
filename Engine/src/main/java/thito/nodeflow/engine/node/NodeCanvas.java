@@ -1,14 +1,20 @@
 package thito.nodeflow.engine.node;
 
 import javafx.beans.property.*;
-import javafx.beans.value.*;
-import javafx.collections.*;
-import thito.nodeflow.engine.node.handler.*;
-import thito.nodeflow.engine.node.skin.*;
-import thito.nodeflow.engine.node.state.*;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
+import thito.nodeflow.engine.node.handler.NodeCanvasHandler;
+import thito.nodeflow.engine.node.skin.NodeCanvasSkin;
+import thito.nodeflow.engine.node.state.NodeCanvasState;
 
-import java.util.*;
-import java.util.stream.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class NodeCanvas {
     private final DoubleProperty offsetX = new SimpleDoubleProperty();
@@ -22,7 +28,6 @@ public class NodeCanvas {
     private final NodeCanvasHandler handler;
     private final NodeCanvasSkin skin;
 
-    private final ObjectProperty<EventNode> eventNode = new SimpleObjectProperty<>();
     private final ObjectProperty<LinkStyle> linkStyle = new SimpleObjectProperty<>(LinkStyle.CABLE);
     private final BooleanProperty snapToGrid = new SimpleBooleanProperty();
 
@@ -30,7 +35,6 @@ public class NodeCanvas {
         this.handler = handler;
         skin = handler.createCanvasSkin(this);
 
-        eventNode.addListener(new EventNodeChangeListener());
         nodeList.addListener(new NodeCanvasNodeListListener());
         nodeLinkedList.addListener(new NodeCanvasNodeLinkedListListener());
         groupList.addListener(new NodeCanvasNodeGroupListListener());
@@ -104,18 +108,6 @@ public class NodeCanvas {
         return null;
     }
 
-    public ObjectProperty<EventNode> eventNodeProperty() {
-        return eventNode;
-    }
-
-    public EventNode getEventNode() {
-        return eventNode.get();
-    }
-
-    public void setEventNode(EventNode node) {
-        eventNode.set(node);
-    }
-
     public ObjectProperty<LinkStyle> linkStyleProperty() {
         return linkStyle;
     }
@@ -147,9 +139,6 @@ public class NodeCanvas {
         offsetX.set(state.offsetX);
         offsetY.set(state.offsetY);
         scale.set(state.scale);
-        if (state.eventNodeState != null) {
-            setEventNode(new EventNode(this, state.eventNodeState));
-        }
         state.nodeStateList.forEach(nodeState -> {
             nodeList.add(new Node(this, nodeState));
         });
@@ -169,27 +158,10 @@ public class NodeCanvas {
         state.offsetX = offsetX.get();
         state.offsetY = offsetY.get();
         state.scale = scale.get();
-        EventNode eventNode = getEventNode();
-        if (eventNode != null) {
-            state.eventNodeState = eventNode.saveState();
-        }
         nodeList.stream().map(Node::saveState).forEach(state.nodeStateList::add);
         nodeLinkedList.stream().map(NodeLinked::saveState).forEach(state.nodeLinkedStateList::add);
         groupList.stream().map(NodeGroup::saveState).forEach(state.groupStateList::add);
         return state;
-    }
-
-    public class EventNodeChangeListener implements ChangeListener<EventNode> {
-        @Override
-        public void changed(ObservableValue<? extends EventNode> observable, EventNode oldValue, EventNode newValue) {
-            if (oldValue != null) {
-                skin.onNodeRemoved(oldValue);
-            }
-            if (newValue != null) {
-                newValue.initialize(NodeCanvas.this);
-                skin.onNodeAdded(newValue);
-            }
-        }
     }
 
     public class NodeCanvasNodeListListener implements ListChangeListener<Node> {

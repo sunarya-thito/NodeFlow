@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>thito.nodeflow.plugin</groupId>
-    <artifactId>BasePlugin</artifactId>
+    <artifactId>base-plugin</artifactId>
     <version>1.0-SNAPSHOT</version>
     <dependencies>
         <dependency>

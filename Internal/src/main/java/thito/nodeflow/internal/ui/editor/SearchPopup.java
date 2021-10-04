@@ -1,5 +1,6 @@
 package thito.nodeflow.internal.ui.editor;
 
+import javafx.beans.binding.*;
 import javafx.collections.*;
 import javafx.stage.*;
 
@@ -9,6 +10,7 @@ public class SearchPopup extends Popup {
 
     public SearchPopup() {
         skin = new SearchPopupSkin(this);
+        skin.visibleProperty().bind(Bindings.isNotEmpty(searchResultItems));
         getContent().add(skin);
     }
 

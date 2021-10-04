@@ -1,19 +1,27 @@
 package thito.nodeflow.engine.node.skin;
 
 import javafx.beans.Observable;
-import javafx.beans.property.*;
-import javafx.beans.value.*;
-import javafx.collections.*;
-import javafx.css.*;
-import javafx.geometry.*;
-import javafx.scene.image.*;
-import javafx.scene.input.*;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
+import javafx.css.CssMetaData;
+import javafx.css.SimpleStyleableObjectProperty;
+import javafx.css.StyleConverter;
+import javafx.css.StyleableObjectProperty;
+import javafx.geometry.BoundingBox;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.paint.*;
-import javafx.scene.shape.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import thito.nodeflow.engine.node.*;
 
-import java.util.*;
+import java.util.Collection;
 
 public class NodeCanvasSkin extends Skin {
 
@@ -181,23 +189,6 @@ public class NodeCanvasSkin extends Skin {
 
     public void stopLinkingDrag(double sceneX, double sceneY, boolean proceed) {
         if (proceed) {
-            EventNode eventNode = getCanvas().getEventNode();
-            if (eventNode != null) {
-                for (NodeParameter parameter : eventNode.getParameters()) {
-                    NodeParameterSkin skin = parameter.getSkin();
-                    if (skin.contains(skin.sceneToLocal(sceneX, sceneY))) {
-                        for (NodeLinking linking : linkingList) {
-                            if (linking.getSource() != null) {
-                                getCanvas().connect(linking.getSource(), parameter, false);
-                            } else {
-                                getCanvas().connect(parameter, linking.getTarget(), false);
-                            }
-                        }
-                        linkingList.clear();
-                        return;
-                    }
-                }
-            }
             for (Node node : getCanvas().getNodeList()) {
                 for (NodeParameter parameter : node.getParameters()) {
                     NodeParameterSkin skin = parameter.getSkin();
@@ -249,20 +240,10 @@ public class NodeCanvasSkin extends Skin {
 
     public void onNodeAdded(Node node) {
         nodeLayer.getChildren().add(node.getSkin());
-        if (node instanceof EventNode) {
-            node.xProperty().set(0);
-            node.yProperty().set(0);
-            EventNodeSkin skin = ((EventNode) node).getSkin();
-            skin.prefHeightProperty().bind(heightProperty());
-        }
     }
 
     public void onNodeRemoved(Node node) {
         nodeLayer.getChildren().remove(node.getSkin());
-        if (node instanceof EventNode) {
-            EventNodeSkin skin = ((EventNode) node).getSkin();
-            skin.prefHeightProperty().unbind();
-        }
     }
 
     public void onGroupAdded(NodeGroup group) {

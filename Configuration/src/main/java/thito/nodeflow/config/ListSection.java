@@ -224,4 +224,19 @@ public class ListSection extends ArrayList<Object> implements Section {
             return list;
         });
     }
+
+    public ListSection getOrCreateList(int index) {
+        ListSection listSection = getList(index).orElse(null);
+        if (listSection == null) {
+            set(index, listSection = new ListSection());
+        }
+        return listSection;
+    }
+    public MapSection getOrCreateMap(int index) {
+        MapSection mapSection = getMap(index).orElse(null);
+        if (mapSection == null) {
+            set(index, mapSection = new MapSection());
+        }
+        return mapSection;
+    }
 }

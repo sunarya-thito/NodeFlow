@@ -35,10 +35,16 @@ public class GetFieldNodeProvider implements NodeProvider {
     }
 
     @Override
-    public Node createNode() {
+    public Node createNode(BlueprintHandler blueprintHandler) {
         Node node = new Node();
         GetFieldNodeHandler handler = new GetFieldNodeHandler(node, this, field);
         node.setHandler(handler);
+        {
+            // exec param
+            NodeParameter exec = new NodeParameter();
+            exec.setHandler(new ExecutionParameterHandler(exec));
+            node.getParameters().add(exec);
+        }
         {
             // instance param
             if (!Modifier.isStatic(field.getModifiers())) {
@@ -50,14 +56,14 @@ public class GetFieldNodeProvider implements NodeProvider {
         {
             // result param
             NodeParameter result = new NodeParameter();
-            result.setHandler(new OutputParameterHandler(handler.getGenericStorage(), getField().getGenericType(), result));
+            result.setHandler(new FieldValueParameterHandler(handler.getGenericStorage(), getField(), result));
             node.getParameters().add(result);
         }
         return node;
     }
 
     @Override
-    public NodeHandler createHandler(Node node, BlueprintNodeState handlerState) {
+    public NodeHandler createHandler(BlueprintHandler blueprintHandler, Node node, BlueprintNodeState handlerState) {
         return new GetFieldNodeHandler(node, this, getField());
     }
 }

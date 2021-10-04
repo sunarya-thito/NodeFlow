@@ -212,4 +212,18 @@ public interface Section {
             return list;
         });
     }
+    default ListSection getOrCreateList(String path) {
+        ListSection listSection = getList(path).orElse(null);
+        if (listSection == null) {
+            set(path, listSection = new ListSection());
+        }
+        return listSection;
+    }
+    default MapSection getOrCreateMap(String path) {
+        MapSection mapSection = getMap(path).orElse(null);
+        if (mapSection == null) {
+            set(path, mapSection = new MapSection());
+        }
+        return mapSection;
+    }
 }

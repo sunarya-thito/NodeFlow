@@ -1,7 +1,14 @@
 package thito.nodeflow.internal.project;
 
 import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import thito.nodeflow.config.*;
+import thito.nodeflow.internal.plugin.PluginManager;
+import thito.nodeflow.internal.plugin.ProjectHandler;
+import thito.nodeflow.internal.plugin.ProjectHandlerRegistry;
+import thito.nodeflow.internal.project.module.FileModule;
 import thito.nodeflow.internal.settings.*;
 import thito.nodeflow.internal.ui.editor.*;
 import thito.nodeflow.internal.resource.*;
@@ -16,6 +23,7 @@ public class Project {
     private Section configuration;
     private ObjectProperty<Editor> editor = new SimpleObjectProperty<>();
 
+    private List<ProjectHandler> projectHandlers = new ArrayList<>();
     private List<ProjectExport.Handler> exportHandlerList = new ArrayList<>();
 
     public Project(Workspace workspace, ProjectProperties properties) {
@@ -24,7 +32,16 @@ public class Project {
         this.directory = properties.getDirectory();
         configuration = properties.getConfiguration().getMap("configuration").orElse(new MapSection());
         sourceFolder = properties.getDirectory().getChild("src");
+
         Settings.loadProjectSettings(properties);
+    }
+
+    public <T extends ProjectHandler> T getProjectHandler(ProjectHandlerRegistry registry) {
+        return (T) projectHandlers.stream().filter(x -> x.getRegistry() == registry).findAny().orElse(null);
+    }
+
+    public List<ProjectHandler> getProjectHandlers() {
+        return projectHandlers;
     }
 
     public Section getConfiguration() {

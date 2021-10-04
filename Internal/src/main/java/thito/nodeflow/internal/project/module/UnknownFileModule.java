@@ -34,6 +34,5 @@ public class UnknownFileModule implements FileModule {
 
     @Override
     public void createFile(Resource resource) {
-
     }
 }

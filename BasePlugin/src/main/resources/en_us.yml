@@ -7,6 +7,7 @@ blueprint:
   constructor-node: Create %s
   unknown-node: Unknown
   unknown-param: Unknown Param
+  event-start-node: Event Start
   field-value-param: Value
   get-field-node: Get %s
   set-field-node: Set %s

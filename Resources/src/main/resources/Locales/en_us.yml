@@ -1,120 +1,118 @@
-name: English (US)
-# You can change this to your name for your own file
-credit: English Locale by Thito Yalasatria Sunarya
-#
-loading: Loading
-forms:
-  validate-not-empty: Field must not be empty
-color-chooser:
-  hue: "Hue:"
-  saturation: "Saturation:"
-  brightness: "Brightness:"
-  opacity: "Opacity:"
-  red: "Red:"
-  green: "Green:"
-  blue: "Blue:"
-  web-color: "HEX Color:"
-  hsb: HSB
-  rgb: RGB
-  web: Web
-dashboard:
-  title: Dashboard
-  changelogs: CHANGE LOGS
-  projects: PROJECTS
-  about: ABOUT
-  changelogs-title: What's New?
-  forms:
-    create-project: Create New Project
-    name: Project Name
-    description: Project Description
-    folder-name: Folder Name
-    validate-already-exist: Project with that folder name is already exist
-search: Search
-search-source: From %s
-browse: Browse
-open-directory: Select Directory
-open-file: Select File
-ok: Ok
 cancel: Cancel
-apply: Apply
-directory: Folder
-file-already-exist: File already exist
-file-size:
-  B: "%sB"
-  kB: "%skB"
-  mB: "%smB"
-  gB: "%sgB"
-time-since:
-  secondly: "%s SECS AGO"
-  minutely: "%s MINS AGO"
-  hourly: "%sH AGO"
-  yesterday: "YESTERDAY"
-  daily: "%sD AGO"
-  monthly: "%sM AGO"
-module:
-  unknown:
-    name: Unknown File
-settings:
-  title: Settings
-  plugins:
-    enable: Enable
-  app-settings:
-    name: App Settings
-  general:
-    name: General
-    items:
-      action-buffer: Action buffer
-      max-opened-tabs: Max Opened Tabs
-      workspace-directory: Workspace Directory
-  appearance:
-    name: Appearance
-    items:
-      theme: Theme
-      language: Language
-      show-dashboard-at-start: Show Dashboard at Start
 editor:
-  title: NodeFlow - %s
-  title-no-project: NodeFlow
-  loading-file: Loading File
-  navigation:
-    project-files: Project
-    module-structure: Structure
-    plugin-options: Facets
-  file: File
-  edit: Edit
-  view: View
-  help: Help
-  copy-stacktrace: Copy Error Message
-  error:
-    open-file: UNABLE TO OPEN THE FILE
-    unknown-file: UNKNOWN FILE
-    unknown-file-info: |-
-      We do not know how to open this file type. Perhaps you forgot to install required plugins for this file type?
-  menu-file:
-    new: New
-    import: Import
-    export: Export
-    close-project: Close Project
-    dashboard: Dashboard
-    settings: Settings
-    exit: Exit
-  menu-edit:
-    undo: Undo
-    redo: Redo
-    cut: Cut
-    copy: Copy
-    paste: Paste
-    delete: Delete
-    find: Find
-    replace: Replace
-    select-all: Select All
-  menu-view:
-    zoom-in: Zoom In
-    zoom-out: Zoom Out
-    zoom-fit: Zoom Fit
-    zoom-selected: Zoom to Fit Selection
-  menu-help:
-    discord: Discord
-    github: Github
-    donate: Donate
-    report-issue: Report Issue
+    title-no-project: NodeFlow
+    edit: Edit
+    error:
+        unknown-file-info: We do not know how to open this file type. Perhaps you
+            forgot to install required plugins for this file type?
+        unknown-file: UNKNOWN FILE
+        open-file: UNABLE TO OPEN THE FILE
+    menu-view:
+        zoom-fit: Zoom Fit
+        zoom-selected: Zoom to Fit Selection
+        zoom-out: Zoom Out
+        zoom-in: Zoom In
+    title: NodeFlow - %s
+    loading-file: Loading File
+    menu-edit:
+        undo: Undo
+        cut: Cut
+        find: Find
+        replace: Replace
+        select-all: Select All
+        copy: Copy
+        paste: Paste
+        redo: Redo
+        delete: Delete
+    help: Help
+    menu-file:
+        exit: Exit
+        new: New
+        settings: Settings
+        import: Import
+        close-project: Close Project
+        export: Export
+        dashboard: Dashboard
+    navigation:
+        plugin-options: Facets
+        project-files: Project
+        module-structure: Structure
+    view: View
+    file: File
+    menu-help:
+        github: Github
+        discord: Discord
+        report-issue: Report Issue
+        donate: Donate
+    copy-stacktrace: Copy Error Message
+settings:
+    general:
+        name: General
+        items:
+            workspace-directory: Workspace Directory
+            max-opened-tabs: Max Opened Tabs
+            action-buffer: Action buffer
+    appearance:
+        name: Appearance
+        items:
+            language: Language
+            theme: Theme
+            show-dashboard-at-start: Show Dashboard at Start
+    app-settings:
+        name: App Settings
+    plugins:
+        enable: Enable
+    title: Settings
+file-already-exist: File already exist
+time-since:
+    yesterday: YESTERDAY
+    daily: '%sD AGO'
+    monthly: '%sM AGO'
+    hourly: '%sH AGO'
+    minutely: '%sMINS AGO'
+    secondly: '%sSECS AGO'
+apply: Apply
+module:
+    unknown:
+        name: Unknown File
+search-source: From %s
+open-directory: Select Directory
+loading: Loading
+directory: Folder
+search: Search
+color-chooser:
+    red: 'Red:'
+    saturation: 'Saturation:'
+    web-color: 'HEX Color:'
+    brightness: 'Brightness:'
+    green: 'Green:'
+    blue: 'Blue:'
+    web: Web
+    hsb: HSB
+    hue: 'Hue:'
+    opacity: 'Opacity:'
+    rgb: RGB
+file-size:
+    B: '%sB'
+    mB: '%smB'
+    kB: '%skB'
+    gB: '%sgB'
+name: English (US)
+open-file: Select File
+credit: English Locale by Thito Yalasatria Sunarya
+ok: Ok
+dashboard:
+    projects: PROJECTS
+    changelogs: CHANGE LOGS
+    about: ABOUT
+    changelogs-title: What's New?
+    title: Dashboard
+    forms:
+        create-project: Create New Project
+        name: Project Name
+        description: Project Description
+        validate-already-exist: Project with that folder name is already exist
+        folder-name: Folder Name
+forms:
+    validate-not-empty: Field must not be empty
+browse: Browse

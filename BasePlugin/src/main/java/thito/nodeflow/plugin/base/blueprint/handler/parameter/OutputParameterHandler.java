@@ -20,7 +20,7 @@ public class OutputParameterHandler extends JavaParameterHandler {
         this.type = type;
         this.genericStorage = genericStorage;
         this.outputPort = new NodePort(true, Color.BLACK, PortShape.CIRCLE);
-        this.outputPort.colorProperty().bind(BlueprintManager.getBlueprintManager().getTypeColor(genericStorage, type));
+        this.outputPort.colorProperty().bind(BlueprintRegistry.getTypeColor(genericStorage, type));
     }
 
     @Override

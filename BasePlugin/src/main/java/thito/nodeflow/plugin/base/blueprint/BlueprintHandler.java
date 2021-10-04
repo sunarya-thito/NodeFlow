@@ -7,22 +7,26 @@ import thito.nodeflow.engine.node.state.*;
 import thito.nodeflow.plugin.base.blueprint.state.*;
 
 public class BlueprintHandler implements NodeCanvasHandler {
-    private final BlueprintManager manager = BlueprintManager.getBlueprintManager();
+    private final BlueprintRegistry registry;
+    private final BlueprintCanvas canvas;
 
-    @Override
-    public NodeHandler createHandler(Node node, HandlerState state) {
-        NodeProvider nodeProvider = manager.getNodeProviders().stream()
-                .filter(provider -> provider.getId().equals(((BlueprintNodeState) state).providerId))
-                .findAny().orElse(manager.getUnknownNodeProvider());
-        return nodeProvider.createHandler(node, (BlueprintNodeState) state);
+    public BlueprintHandler(BlueprintRegistry registry, BlueprintCanvas canvas) {
+        this.registry = registry;
+        this.canvas = canvas;
+    }
+
+    public BlueprintRegistry getRegistry() {
+        return registry;
+    }
+
+    public BlueprintCanvas getCanvas() {
+        return canvas;
     }
 
     @Override
-    public EventNodeHandler createEventHandler(Node node, HandlerState state) {
-        EventNodeProvider eventNodeProvider = manager.getEventNodeProviders().stream()
-                .filter(provider -> provider.getId().equals(((BlueprintNodeState) state).providerId))
-                .findAny().orElse(manager.getUnknownEventNodeProvider());
-        return eventNodeProvider.createHandler(node, (BlueprintNodeState) state);
+    public NodeHandler createHandler(Node node, HandlerState state) {
+        NodeProvider nodeProvider = registry.getProviderById(((BlueprintNodeState) state).providerId);
+        return nodeProvider.createHandler(this, node, (BlueprintNodeState) state);
     }
 
     @Override

@@ -6,7 +6,6 @@ import thito.nodeflow.engine.node.state.*;
 
 public interface NodeCanvasHandler {
     NodeHandler createHandler(Node node, HandlerState state);
-    EventNodeHandler createEventHandler(Node node, HandlerState state);
     NodeGroupSkin createGroupSkin(NodeGroup group);
     NodeCanvasSkin createCanvasSkin(NodeCanvas canvas);
 }

@@ -24,6 +24,10 @@ public class APITest {
                         LField local3 = body.createLocal(Java.Class(Integer.class));
                         LField local4 = body.createLocal(Java.Class(Double.class));
                         LField local5 = body.createLocal(Java.Class(Boolean.class));
+                        LField local6 = body.createLocal(Java.Class(Object.class));
+                        local6.set(Array.newArray(Java.Class(String.class), "test", "lmao"));
+                        local4.set(local6.get());
+                        local6.set(new String[] {"this", "is", "an", "example"});
                         local5.set(10);
                         local4.set(3419);
                         local3.set(124.421d);
@@ -33,6 +37,7 @@ public class APITest {
                         Try.This(() -> {
                             local4.set("test");
                             local3.set("124e1");
+                            local3.set(local6.get());
                         }).Catch(Java.Class(NumberFormatException.class), e -> {
                             e.method("printStackTrace").invokeVoid();
                         });

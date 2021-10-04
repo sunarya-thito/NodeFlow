@@ -15,6 +15,10 @@ public abstract class JavaParameterHandler implements NodeParameterHandler {
         this.parameter = parameter;
     }
 
+    public BlueprintHandler getBlueprintHandler() {
+        return (BlueprintHandler) parameter.getNode().getCanvas().getHandler();
+    }
+
     @Override
     public NodeParameter getParameter() {
         return parameter;

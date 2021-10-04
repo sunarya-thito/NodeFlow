@@ -64,6 +64,38 @@ public class Array {
         };
     }
     @Contract(pure = true)
+    public static Reference newArray(IClass type, Object...values) {
+        return new Reference(Java.ArrayClass(type, 1)) {
+            @Override
+            public void writeByteCode() {
+                BCHelper.writeToContext(Java.Class(int.class), values.length);
+                MethodContext context = MethodContext.getContext();
+                context.pushNode(new TypeInsnNode(Opcodes.ANEWARRAY, BCHelper.getClassPath(type)));
+                for (int i = 0; i < values.length; i++) {
+                    context.pushNode(new InsnNode(Opcodes.DUP));
+                    BCHelper.writeToContext(Java.Class(int.class), i);
+                    BCHelper.writeToContext(type, values[i]);
+                    context.pushNode(new InsnNode(Opcodes.AASTORE));
+                }
+            }
+
+            @Override
+            public void writeSourceCode() {
+                SourceCode sourceCode = SourceCode.getContext();
+                sourceCode.getLine().append("new ");
+                sourceCode.getLine().append(sourceCode.simplifyType(type));
+                sourceCode.getLine().append("[] {");
+                for (int i = 0; i < values.length; i++) {
+                    if (i != 0) {
+                        sourceCode.getLine().append(", ");
+                    }
+                    BCHelper.writeToSourceCode(type, values[i]);
+                }
+                sourceCode.getLine().append('}');
+            }
+        };
+    }
+    @Contract(pure = true)
     public static Reference newInstance(IClass type, Object...dimensions) {
         if (dimensions.length == 1) {
             return new Reference(Java.ArrayClass(type, 1)) {

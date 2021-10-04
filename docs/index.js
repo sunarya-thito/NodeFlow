@@ -1,4 +1,3 @@
-
 const MEDIA = [{"type":"youtube", "media":"ckwZN9jMQ5k"}];
 document.addEventListener('contextmenu', event => event.preventDefault());
 function download(url) {
@@ -36,7 +35,7 @@ $(document).ready(() => {
     });
     let children = $('#slide-container').children();
     children.each((index, element) => {
-        if (index == 0) {
+        if (index === 0) {
             $('#slider').append('<li data-target="big-header" data-slide-to="'+index+'" class="active"></li>');
             $(element).addClass('active');
         } else {

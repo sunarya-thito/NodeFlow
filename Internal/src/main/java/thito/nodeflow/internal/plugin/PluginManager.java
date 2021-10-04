@@ -2,12 +2,15 @@ package thito.nodeflow.internal.plugin;
 
 import com.sun.javafx.css.*;
 import thito.nodeflow.config.*;
+import thito.nodeflow.internal.*;
 import thito.nodeflow.internal.plugin.event.EventListener;
 import thito.nodeflow.internal.plugin.event.*;
 import thito.nodeflow.internal.project.*;
 import thito.nodeflow.internal.project.module.*;
 import thito.nodeflow.internal.language.*;
 import thito.nodeflow.internal.resource.*;
+import thito.nodeflow.internal.task.TaskThread;
+import thito.nodeflow.internal.ui.editor.Editor;
 
 import java.io.*;
 import java.lang.reflect.*;
@@ -26,6 +29,7 @@ public class PluginManager {
     private List<ProjectExport> exporter = new ArrayList<>();
     private List<FileModule> moduleList = new ArrayList<>();
     private Map<Plugin, List<String>> styleSheetMap = new HashMap<>();
+    private List<ProjectHandlerRegistry> projectHandlerRegistryList = new ArrayList<>();
     private ArrayList<EventListener> listeners = new ArrayList<>();
     private UnknownFileModule unknownFileModule = new UnknownFileModule();
 
@@ -42,6 +46,42 @@ public class PluginManager {
         return plugin;
     }
 
+    public List<ProjectHandlerRegistry> getProjectHandlerRegistryList() {
+        return Collections.unmodifiableList(projectHandlerRegistryList);
+    }
+
+    public void registerProjectHandlerRegistry(ProjectHandlerRegistry registry) {
+        if (projectHandlerRegistryList.contains(registry)) throw new IllegalArgumentException("already registered");
+        projectHandlerRegistryList.add(registry);
+        TaskThread.UI().schedule(() -> {
+            for (Editor editor : NodeFlow.getInstance().getActiveEditors()) {
+                Project project = editor.projectProperty().get();
+                if (project != null) {
+                    TaskThread.BACKGROUND().schedule(() -> {
+                        project.getProjectHandlers().add(registry.loadHandler(project, project.getConfiguration().getOrCreateMap("handler."+registry.getId())));
+                    });
+                }
+            }
+        });
+    }
+
+    public boolean isProjectHandlerRegistered(ProjectHandlerRegistry registry) {
+        return projectHandlerRegistryList.contains(registry);
+    }
+
+    public void unregisterProjectHandlerRegistry(ProjectHandlerRegistry registry) {
+        if (!projectHandlerRegistryList.contains(registry)) throw new IllegalArgumentException("not registered");
+        projectHandlerRegistryList.remove(registry);
+        TaskThread.UI().schedule(() -> {
+            for (Editor editor : NodeFlow.getInstance().getActiveEditors()) {
+                Project project = editor.projectProperty().get();
+                if (project != null) {
+                    project.getProjectHandlers().removeIf(x -> x.getRegistry() == registry);
+                }
+            }
+        });
+    }
+
     public Collection<Plugin> getPlugins() {
         return Collections.unmodifiableList(pluginList);
     }
@@ -49,6 +89,9 @@ public class PluginManager {
     public void loadPluginLocale(Language target, Plugin plugin, InputStream inputStream) throws IOException {
         try (InputStreamReader reader = new InputStreamReader(inputStream)) {
             MapSection section = Section.parseToMap(reader);
+            // find an existing language
+            Language finalTarget = target;
+            target = NodeFlow.getInstance().getAvailableLanguages().stream().filter(x -> x.getCode().equals(finalTarget.getCode())).findAny().orElse(target);
             target.loadLanguage(section, plugin.getId());
         }
     }

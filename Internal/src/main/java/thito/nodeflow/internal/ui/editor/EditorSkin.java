@@ -2,23 +2,23 @@ package thito.nodeflow.internal.ui.editor;
 
 import javafx.application.*;
 import javafx.beans.*;
+import javafx.beans.binding.*;
+import javafx.beans.value.*;
 import javafx.collections.*;
 import javafx.event.*;
 import javafx.geometry.*;
 import javafx.scene.control.*;
 import javafx.scene.image.*;
 import javafx.scene.layout.*;
-import thito.nodeflow.internal.project.*;
-import thito.nodeflow.internal.search.*;
-import thito.nodeflow.internal.ui.dashboard.*;
-import thito.nodeflow.internal.ui.handler.*;
 import thito.nodeflow.internal.binding.*;
 import thito.nodeflow.internal.language.*;
+import thito.nodeflow.internal.project.*;
+import thito.nodeflow.internal.search.*;
 import thito.nodeflow.internal.task.*;
 import thito.nodeflow.internal.ui.Skin;
 import thito.nodeflow.internal.ui.*;
-
-import java.util.*;
+import thito.nodeflow.internal.ui.dashboard.*;
+import thito.nodeflow.internal.ui.handler.*;
 
 public class EditorSkin extends Skin {
 
@@ -196,8 +196,8 @@ public class EditorSkin extends Skin {
                     if (searchSession == null) continue;
                     for (SearchResult result : searchSession.getResults()) {
                         SearchResultItem item = new SearchResultItem(result.getTitle(), I18n.$("search-source").format(searchSession.getName()), result);
-                        String url = context.getProvider().getIconURL();
-                        if (url != null) item.iconProperty().set(new Image(url));
+                        ObservableValue<String> iconUrl = context.getProvider().iconURLProperty();
+                        if (iconUrl != null) item.iconProperty().bind(Bindings.createObjectBinding(() -> new Image(iconUrl.getValue()), iconUrl));
                         TaskThread.UI().schedule(() -> {
                             searchPopup.getSearchResultItems().add(item);
                         });

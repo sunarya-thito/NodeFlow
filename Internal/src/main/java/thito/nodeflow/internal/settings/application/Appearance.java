@@ -2,6 +2,7 @@ package thito.nodeflow.internal.settings.application;
 
 import javafx.beans.property.*;
 import thito.nodeflow.internal.*;
+import thito.nodeflow.internal.binding.*;
 import thito.nodeflow.internal.language.*;
 import thito.nodeflow.internal.settings.*;
 import thito.nodeflow.internal.settings.canvas.*;
@@ -20,7 +21,7 @@ public class Appearance extends SettingsCanvas {
     public final ObjectProperty<Language> language = new SimpleObjectProperty<>(NodeFlow.getInstance().getDefaultLanguage());
 
     {
-        theme.bindBidirectional(ThemeManager.getInstance().themeProperty());
-        language.bindBidirectional(Language.languageProperty());
+        ThemeManager.getInstance().themeProperty().bindBidirectional(theme);
+        Language.languageProperty().bindBidirectional(language);
     }
 }

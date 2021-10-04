@@ -2,6 +2,7 @@ package thito.nodeflow.internal.settings.application;
 
 import javafx.beans.property.*;
 import thito.nodeflow.internal.*;
+import thito.nodeflow.internal.project.*;
 import thito.nodeflow.internal.settings.*;
 import thito.nodeflow.internal.settings.canvas.*;
 
@@ -15,5 +16,12 @@ public class General extends SettingsCanvas {
 
     @Item("${settings.general.items.action-buffer}") @NumberItem(min = 0, max = 150)
     public final ObjectProperty<Integer> actionBuffer = new SimpleObjectProperty<>(100);
+
+    {
+        NodeFlow.getInstance().workspaceProperty().set(new Workspace(workspaceDirectory.get()));
+        workspaceDirectory.addListener((obs, old, val) -> {
+            NodeFlow.getInstance().workspaceProperty().set(new Workspace(val));
+        });
+    }
 
 }

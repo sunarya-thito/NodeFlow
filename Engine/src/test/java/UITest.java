@@ -1,18 +1,24 @@
-import javafx.application.*;
-import javafx.beans.property.*;
-import javafx.scene.*;
-import javafx.scene.image.*;
-import javafx.scene.input.*;
-import javafx.scene.layout.*;
-import javafx.scene.paint.*;
-import javafx.stage.*;
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 import thito.nodeflow.engine.node.*;
-import thito.nodeflow.engine.node.Node;
-import thito.nodeflow.engine.node.handler.*;
+import thito.nodeflow.engine.node.handler.NodeCanvasHandler;
+import thito.nodeflow.engine.node.handler.NodeHandler;
+import thito.nodeflow.engine.node.handler.NodeParameterHandler;
 import thito.nodeflow.engine.node.skin.*;
-import thito.nodeflow.engine.node.state.*;
+import thito.nodeflow.engine.node.state.HandlerState;
 
-import java.util.*;
+import java.util.Random;
 
 public class UITest extends Application {
 
@@ -26,11 +32,6 @@ public class UITest extends Application {
 
     public void start(Stage primaryStage) throws Exception {
         NodeCanvas canvas = new NodeCanvas(new NodeCanvasHandler() {
-
-            @Override
-            public EventNodeHandler createEventHandler(Node node, HandlerState state) {
-                return null;
-            }
 
             @Override
             public NodeHandler createHandler(thito.nodeflow.engine.node.Node node, HandlerState state) {

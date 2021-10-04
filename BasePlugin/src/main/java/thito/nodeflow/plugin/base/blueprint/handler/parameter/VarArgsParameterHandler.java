@@ -26,7 +26,7 @@ public class VarArgsParameterHandler extends ConstantHolderParameterHandler {
             this.type = ((Class<?>) type).getComponentType();
         } else throw new UnsupportedOperationException(type.getTypeName());
         this.inputPort = new NodePort(false, Color.BLACK, PortShape.CIRCLE);
-        this.inputPort.colorProperty().bind(BlueprintManager.getBlueprintManager().getTypeColor(genericStorage, type));
+        this.inputPort.colorProperty().bind(BlueprintRegistry.getTypeColor(genericStorage, type));
     }
 
 

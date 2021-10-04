@@ -19,7 +19,7 @@ public class FieldInputValueParameterHandler extends ConstantHolderParameterHand
         this.genericStorage = genericStorage;
         this.field = field;
         port = new NodePort(false, Color.BLACK, PortShape.CIRCLE);
-        port.colorProperty().bind(BlueprintManager.getBlueprintManager().getTypeColor(genericStorage, field.getGenericType()));
+        port.colorProperty().bind(BlueprintRegistry.getTypeColor(genericStorage, field.getGenericType()));
     }
 
     @Override

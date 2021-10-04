@@ -12,9 +12,9 @@
                             <ToggleButton class="nav-button" id="structure-nav" ToggleButton.group="navigation-editor">
                                 <Label>${editor.navigation.module-structure}</Label>
                             </ToggleButton>
-<!--                            <ToggleButton class="nav-button" id="facets-nav" ToggleButton.group="navigation-editor">-->
-<!--                                <Label>${editor.navigation.plugin-options}</Label>-->
-<!--                            </ToggleButton>-->
+                            <ToggleButton class="nav-button" id="facets-nav" ToggleButton.group="navigation-editor">
+                                <Label>${editor.navigation.plugin-options}</Label>
+                            </ToggleButton>
                         </VBox>
                     </VBox>
                     <VBox id="viewport" HBox.grow="ALWAYS">
