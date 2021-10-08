@@ -9,7 +9,8 @@ There are few limitations when using this software
 * Java Class Abstraction - You can create a class that extends an interface/abstract class, however
 you can't create an abstract class that is extendable for other class.
 * Non-OOP - The software applies Event-Driven programming instead of pure OOP, but we also provide a record module
-  (similar to record feature in the latest java version) that is good enough to provide OOP functionality.
+  (similar to record feature in the latest java version) that is good enough to provide OOP functionality.\
+* Java 17 - The project cannot be compiled and ran using JDK 17+ due to illegal reflective access.
   
 ## Building
 To build this repository, you will need JDK 16 installed on your device.

@@ -9,7 +9,7 @@ import thito.nodeflow.javadoc.exporter.*;
 import java.io.*;
 
 @Mojo(name = "generate-docs")
-public class GenerateDocs extends AbstractMojo {
+public class GenerateDocsMojo extends AbstractMojo {
 
     @Parameter(required = true, property = "javaDocsUrl")
     String javaDocsUrl;

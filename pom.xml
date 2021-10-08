@@ -19,12 +19,11 @@
         <module>Resources</module>
         <module>Configuration</module>
         <module>JVMDebugger</module>
-        <module>Bundler</module>
     </modules>
 
     <properties>
-        <maven.compiler.source>16</maven.compiler.source>
-        <maven.compiler.target>16</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
     </properties>
 
     <distributionManagement>
@@ -50,7 +49,6 @@
                         </goals>
                         <configuration>
                             <outputDirectory>${project.basedir}/target/Libraries</outputDirectory>
-                            <excludeArtifactIds>javafx-base,javafx-controls,javafx-graphics</excludeArtifactIds>
                         </configuration>
                         <inherited>false</inherited>
                     </execution>

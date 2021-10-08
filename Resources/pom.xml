@@ -24,6 +24,16 @@
                 <version>1.0-SNAPSHOT</version>
                 <executions>
                     <execution>
+                        <id>bundle-jdk</id>
+                        <goals>
+                            <goal>bundle-jdk</goal>
+                        </goals>
+                        <phase>package</phase>
+                        <configuration>
+                            <targetDirectory>../target/Bundled</targetDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>extract-dark-theme</id>
                         <goals>
                             <goal>extract-style</goal>

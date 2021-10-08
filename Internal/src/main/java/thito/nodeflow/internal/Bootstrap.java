@@ -23,6 +23,7 @@ public class Bootstrap {
             Module unnamedModule = getClass().getClassLoader().getUnnamedModule();
             for (Module module : ModuleLayer.boot().modules()) {
                 for (String pack : module.getPackages()) {
+                    System.out.println("Opening "+module.getName()+"/"+pack+"...");
                     method.invoke(module, pack, unnamedModule, true, true);
                 }
             }
