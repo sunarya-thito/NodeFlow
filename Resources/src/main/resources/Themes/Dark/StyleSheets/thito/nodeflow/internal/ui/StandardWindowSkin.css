@@ -38,7 +38,7 @@ StandardWindowSkin:maximized {
 }
 
 #window-title {
-    -fx-text-fill: white;
+    -fx-text-fill: rgba(255, 255, 255, 0.8);
     -fx-font-family: Roboto;
     -fx-font-size: 14;
 }

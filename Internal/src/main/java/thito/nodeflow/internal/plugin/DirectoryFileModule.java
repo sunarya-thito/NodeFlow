@@ -24,7 +24,7 @@ public class DirectoryFileModule implements FileModule {
     }
 
     @Override
-    public FileStructure createHandler(Project project, Resource resource) {
+    public FileViewer createViewer(Project project, Resource resource) {
         return null;
     }
 

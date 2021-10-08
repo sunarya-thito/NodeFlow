@@ -3,6 +3,7 @@ package thito.nodeflow.java;
 import org.apache.commons.text.*;
 import org.objectweb.asm.*;
 import org.objectweb.asm.tree.*;
+import thito.nodeflow.java.generic.TClass;
 import thito.nodeflow.java.known.*;
 import thito.nodeflow.java.util.*;
 
@@ -142,6 +143,12 @@ public class BCHelper {
         }
         if (type.equals(Java.Class(boolean.class))) {
             return "Z";
+        }
+        if (type instanceof TClass) {
+            if (type.getInterfaces().length > 0) {
+                return "T" + type.getName() + ":" + getDescriptor(type.getSuperClass()) + ":" + Arrays.stream(type.getInterfaces()).map(BCHelper::getDescriptor).collect(Collectors.joining(":"));
+            }
+            return "T" + type.getName() + ":"+ getDescriptor(type.getSuperClass());
         }
         if (type.isArray()) return type.getName().replace('.', '/');
         return "L"+getClassPath(type)+";";

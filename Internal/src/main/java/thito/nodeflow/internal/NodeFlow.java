@@ -7,7 +7,6 @@ import thito.nodeflow.config.*;
 import thito.nodeflow.internal.plugin.*;
 import thito.nodeflow.internal.project.*;
 import thito.nodeflow.internal.settings.*;
-import thito.nodeflow.internal.settings.application.*;
 import thito.nodeflow.internal.ui.editor.*;
 import thito.nodeflow.internal.application.*;
 import thito.nodeflow.internal.language.*;
@@ -171,6 +170,7 @@ public class NodeFlow extends ApplicationResources {
     public void shutdown() {
         ResourceWatcher.getResourceWatcher().close();
         TaskManager.getInstance().shutdown();
+        Settings.getSettings().saveGlobalConfiguration();
     }
 
     @Override

@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ASMIdeaPluginConfiguration">
     <asm skipDebug="true" skipFrames="false" skipCode="false" expandFrames="false" />
-    <groovy codeStyle="LEGACY" />
+    <groovy codeStyle="GROOVIFIER_0_2_0" />
   </component>
   <component name="ASMPluginConfiguration">
     <asm skipDebug="false" skipFrames="false" skipCode="false" expandFrames="false" />
@@ -11,7 +11,6 @@
   <component name="EasyI18nSettings">
     <option name="filePattern" value=".*.yml" />
     <option name="localesPath" value="C:\Users\Thito\IdeaProjects\NodeFlow Software\Resources\src\main\resources\Locales" />
-    <option name="pathPrefix" value="" />
     <option name="previewLocale" value="en_us" />
   </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />

@@ -4,6 +4,8 @@ import thito.nodeflow.engine.node.*;
 import thito.nodeflow.engine.node.handler.*;
 import thito.nodeflow.internal.language.*;
 import thito.nodeflow.plugin.base.blueprint.*;
+import thito.nodeflow.plugin.base.blueprint.compiler.CompilerContext;
+import thito.nodeflow.plugin.base.blueprint.compiler.NodeCompiler;
 import thito.nodeflow.plugin.base.blueprint.handler.UnknownNodeHandler;
 import thito.nodeflow.plugin.base.blueprint.state.*;
 
@@ -21,6 +23,10 @@ public class UnknownNodeProvider implements NodeProvider {
     @Override
     public NodeHandler createHandler(BlueprintHandler blueprintHandler, Node node, BlueprintNodeState handlerState) {
         return new UnknownNodeHandler(node, handlerState);
+    }
+
+    @Override
+    public void compile(CompilerContext context, NodeCompiler nodeCompiler) {
     }
 
     @Override

@@ -27,7 +27,6 @@ public class BluePrint implements PluginInstance {
     @Override
     public void onEnable() {
         PluginManager pluginManager = PluginManager.getPluginManager();
-//        pluginManager.registerProjectHandlerRegistry(new );
         pluginManager.registerFileModule(new BlueprintModule());
     }
 

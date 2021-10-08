@@ -20,9 +20,11 @@ public class Settings {
         Settings settings = getSettings();
         unloadProjectSettings(project);
         for (Class<? extends SettingsCanvas> canvas : SettingsManager.getSettingsManager().getSettingsCanvasList()) {
+            Category c = canvas.getAnnotation(Category.class);
+            if (c != null && c.context() == SettingsContext.GLOBAL) continue;
             ReflectedSettingsCategory category = SettingsCanvas.readCanvas(canvas);
             SettingsContext context = category.getContext();
-            if (context == SettingsContext.PROJECT) {
+            if (context == SettingsContext.PROJECT || context == SettingsContext.ALL) {
                 settings.putCategory(project, category);
             }
         }
@@ -35,7 +37,9 @@ public class Settings {
                 if (c.getContext() == SettingsContext.PROJECT) {
                     for (SettingsItem<?> item : c.getItems()) {
                         SettingsProperty<?> property = item.createProperty();
-                        property.save(project.getConfiguration(), "settings." + c.getKey() + "." + item.getKey());
+                        if (c.getContext() == SettingsContext.PROJECT || c.getContext() == SettingsContext.ALL) {
+                            property.save(project.getConfiguration(), "settings." + c.getKey() + "." + item.getKey());
+                        }
                     }
                 }
             }
@@ -48,7 +52,7 @@ public class Settings {
 
     private Map<ProjectProperties, List<SettingsCategory>> categoryMap = new LinkedHashMap<>();
 
-    public void load() {
+    public void loadGlobalConfiguration() {
         Section globalConfiguration = NodeFlow.getInstance().readFromConfiguration();
         for (Map.Entry<ProjectProperties, List<SettingsCategory>> entry : categoryMap.entrySet()) {
             ProjectProperties properties = entry.getKey();
@@ -62,21 +66,21 @@ public class Settings {
                         }
                     }
                 }
-            } else {
-                for (SettingsCategory c : entry.getValue()) {
-                    for (SettingsItem<?> item : c.getItems()) {
-                        SettingsProperty<?> property = item.createProperty();
-                        if (!PluginManager.getPluginManager().fireEvent(new SettingsPreLoadEvent(property)).isCancelled()) {
-                            property.load(properties.getConfiguration(), "settings." + c.getKey() + "." + item.getKey());
-                            PluginManager.getPluginManager().fireEvent(new SettingsLoadEvent(property));
-                        }
-                    }
-                }
+//            } else {
+//                for (SettingsCategory c : entry.getValue()) {
+//                    for (SettingsItem<?> item : c.getItems()) {
+//                        SettingsProperty<?> property = item.createProperty();
+//                        if (!PluginManager.getPluginManager().fireEvent(new SettingsPreLoadEvent(property)).isCancelled()) {
+//                            property.load(properties.getConfiguration(), "settings." + c.getKey() + "." + item.getKey());
+//                            PluginManager.getPluginManager().fireEvent(new SettingsLoadEvent(property));
+//                        }
+//                    }
+//                }
             }
         }
     }
 
-    public void save() {
+    public void saveGlobalConfiguration() {
         Section globalConfiguration = NodeFlow.getInstance().readFromConfiguration();
         for (Map.Entry<ProjectProperties, List<SettingsCategory>> entry : categoryMap.entrySet()) {
             ProjectProperties properties = entry.getKey();
@@ -89,17 +93,18 @@ public class Settings {
                         }
                     }
                 }
-            } else {
-                for (SettingsCategory c : entry.getValue()) {
-                    for (SettingsItem<?> item : c.getItems()) {
-                        SettingsProperty<?> property = item.createProperty();
-                        if (!PluginManager.getPluginManager().fireEvent(new SettingsSaveEvent(property)).isCancelled()) {
-                            property.save(properties.getConfiguration(), "settings." + c.getKey() + "." + item.getKey());
-                        }
-                    }
-                }
+//            } else {
+//                for (SettingsCategory c : entry.getValue()) {
+//                    for (SettingsItem<?> item : c.getItems()) {
+//                        SettingsProperty<?> property = item.createProperty();
+//                        if (!PluginManager.getPluginManager().fireEvent(new SettingsSaveEvent(property)).isCancelled()) {
+//                            property.save(properties.getConfiguration(), "settings." + c.getKey() + "." + item.getKey());
+//                        }
+//                    }
+//                }
             }
         }
+        NodeFlow.getInstance().saveToConfiguration(globalConfiguration);
     }
 
     void putCategory(ProjectProperties project, SettingsCategory category) {

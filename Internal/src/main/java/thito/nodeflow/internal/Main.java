@@ -85,7 +85,7 @@ public class Main extends Application {
             nodeFlow.submitProgressedTask((progress, stat) -> {
                 stat.set("Loading settings configuration");
                 progress.set(0);
-                Settings.getSettings().load();
+                Settings.getSettings().loadGlobalConfiguration();
                 progress.set(1);
             });
 

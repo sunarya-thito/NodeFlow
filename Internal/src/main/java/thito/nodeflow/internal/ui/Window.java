@@ -5,6 +5,7 @@ import javafx.beans.*;
 import javafx.beans.property.*;
 import javafx.css.*;
 import javafx.scene.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.*;
@@ -40,6 +41,8 @@ public abstract class Window {
                 root.getChildren().add(0, val);
             }
         });
+
+        stage.getIcons().add(new Image("rsrc:Images/SplashedLogo.png"));
 
         stage.getProperties().put(Window.class, this);
 

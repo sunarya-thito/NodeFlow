@@ -1,6 +1,7 @@
 package thito.nodeflow.internal.ui;
 
 import javafx.beans.property.*;
+import thito.nodeflow.internal.plugin.Plugin;
 import thito.nodeflow.internal.task.*;
 
 import java.io.*;
@@ -51,21 +52,53 @@ public class ThemeManager {
         });
     }
 
-    protected StyleSheet setSheetContents(Theme theme, StyleSheet sheet, Class<?> name) {
-        try{
-            URLConnection connection = new URL("rsrc:Themes/"+URLEncoder.encode(theme.getName(), StandardCharsets.UTF_8)+"/Layouts/"+name.getName().replace('.', '/')+".xml").openConnection();
-            connection.setUseCaches(false);
-            connection.setDefaultUseCaches(false);
-            try (InputStream inputStream = connection.getInputStream()) {
-                sheet.layoutProperty().set(new String(inputStream.readAllBytes(), StandardCharsets.UTF_8));
+    private byte[] read(URL url) {
+        try {
+            URLConnection urlConnection = url.openConnection();
+            urlConnection.setUseCaches(false);
+            urlConnection.setDefaultUseCaches(false);
+            try (InputStream inputStream = urlConnection.getInputStream()) {
+                return inputStream.readAllBytes();
             }
-        } catch (Throwable e) {
+        } catch (FileNotFoundException e) {
+            return null;
+        } catch (Throwable t) {
+            t.printStackTrace();
+            return null;
+        }
+    }
+
+    protected StyleSheet setSheetContents(Theme theme, StyleSheet sheet, Class<?> name) {
+        try {
+            byte[] localLayout = read(new URL("rsrc:Themes/" + URLEncoder.encode(theme.getName(), StandardCharsets.UTF_8) + "/Layouts/" + name.getName().replace('.', '/') + ".xml"));
+            if (localLayout != null) {
+                sheet.layoutProperty().set(new String(localLayout, StandardCharsets.UTF_8));
+            } else {
+                Plugin plugin = Plugin.getPlugin(name);
+                if (plugin != null) {
+                    URL resource = plugin.getClassLoader().getResource("Themes/" + name.getName().replace('.', '/') + ".xml");
+                    if (resource != null) {
+                        localLayout = read(resource);
+                        if (localLayout != null) {
+                            sheet.layoutProperty().set(new String(localLayout, StandardCharsets.UTF_8));
+                        }
+                    }
+                }
+            }
+        } catch (MalformedURLException e) {
             e.printStackTrace();
         }
         Class<?> clazz = name;
         sheet.getCssFiles().clear();
         while (Skin.class.isAssignableFrom(clazz)) {
             sheet.getCssFiles().add(0, "rsrc:Themes/"+URLEncoder.encode(theme.getName(), StandardCharsets.UTF_8)+"/StyleSheets/"+clazz.getName().replace('.', '/')+".css");
+            Plugin plugin = Plugin.getPlugin(clazz);
+            if (plugin != null) {
+                URL resource = plugin.getClassLoader().getResource("Themes/" + clazz.getName().replace('.', '/') + ".css");
+                if (resource != null) {
+                    sheet.getCssFiles().add(0, resource.toExternalForm());
+                }
+            }
             clazz = clazz.getSuperclass();
         }
         return sheet;

@@ -23,7 +23,8 @@ public class Editor {
                 }
                 old.getProperties().closeProject();
             }
-            openedFiles.removeIf(x -> x instanceof FileTab);
+//            openedFiles.removeIf(x -> x instanceof FileTab);
+            openedFiles.clear();
             if (val != null) {
                 // kinda wonder if this actually gonna happen
                 Editor oldEditor = val.editorProperty().get();

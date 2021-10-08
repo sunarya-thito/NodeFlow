@@ -4,6 +4,8 @@ import thito.nodeflow.engine.node.*;
 import thito.nodeflow.engine.node.handler.*;
 import thito.nodeflow.internal.language.*;
 import thito.nodeflow.plugin.base.blueprint.*;
+import thito.nodeflow.plugin.base.blueprint.compiler.CompilerContext;
+import thito.nodeflow.plugin.base.blueprint.compiler.NodeCompiler;
 import thito.nodeflow.plugin.base.blueprint.handler.*;
 import thito.nodeflow.plugin.base.blueprint.handler.parameter.*;
 import thito.nodeflow.plugin.base.blueprint.state.*;
@@ -27,6 +29,11 @@ public class GetFieldNodeProvider implements NodeProvider {
                 field.getDeclaringClass().getName() +
                 "#" +
                 field.getName();
+    }
+
+    @Override
+    public void compile(CompilerContext context, NodeCompiler nodeCompiler) {
+
     }
 
     @Override

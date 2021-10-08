@@ -1,26 +1,24 @@
 package thito.nodeflow.plugin.base.blueprint;
 
-import thito.nodeflow.engine.node.*;
-import thito.nodeflow.engine.node.handler.*;
-import thito.nodeflow.engine.node.skin.*;
-import thito.nodeflow.engine.node.state.*;
-import thito.nodeflow.plugin.base.blueprint.state.*;
+import thito.nodeflow.engine.node.Node;
+import thito.nodeflow.engine.node.NodeCanvas;
+import thito.nodeflow.engine.node.NodeGroup;
+import thito.nodeflow.engine.node.handler.NodeCanvasHandler;
+import thito.nodeflow.engine.node.handler.NodeHandler;
+import thito.nodeflow.engine.node.skin.NodeCanvasSkin;
+import thito.nodeflow.engine.node.skin.NodeGroupSkin;
+import thito.nodeflow.engine.node.state.HandlerState;
+import thito.nodeflow.plugin.base.blueprint.state.BlueprintNodeState;
 
 public class BlueprintHandler implements NodeCanvasHandler {
     private final BlueprintRegistry registry;
-    private final BlueprintCanvas canvas;
 
-    public BlueprintHandler(BlueprintRegistry registry, BlueprintCanvas canvas) {
+    public BlueprintHandler(BlueprintRegistry registry) {
         this.registry = registry;
-        this.canvas = canvas;
     }
 
     public BlueprintRegistry getRegistry() {
         return registry;
-    }
-
-    public BlueprintCanvas getCanvas() {
-        return canvas;
     }
 
     @Override
