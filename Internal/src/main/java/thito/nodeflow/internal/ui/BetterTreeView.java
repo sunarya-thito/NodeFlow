@@ -56,8 +56,11 @@ public class BetterTreeView extends BorderPane {
 
         private void initialize() {
             toTop = new Line();
+            toTop.getStyleClass().add("to-top-line");
             toBottom = new Line();
+            toBottom.getStyleClass().add("to-bottom-line");
             toRight = new Line();
+            toRight.getStyleClass().add("to-right-line");
             toTop.endYProperty().bind(heightProperty().divide(2));
             toBottom.endYProperty().bind(heightProperty().divide(2));
             toRight.endXProperty().bind(widthProperty().divide(2));

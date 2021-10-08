@@ -1,6 +1,0 @@
-id: website
-name: WebsitePlugin
-version: 1.0
-main: thito.nodeflow.website.WebsitePlugin
-authors:
-  - Thito Yalasatria Sunarya

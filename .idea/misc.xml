@@ -29,6 +29,7 @@
     <option name="ignoredFiles">
       <set>
         <option value="$PROJECT_DIR$/Library/pom.xml" />
+        <option value="$PROJECT_DIR$/WebsitePlugin/pom.xml" />
       </set>
     </option>
   </component>

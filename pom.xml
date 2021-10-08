@@ -17,10 +17,9 @@
         <module>Launcher</module>
         <module>Setup</module>
         <module>Resources</module>
-        <module>Bundler</module>
         <module>Configuration</module>
         <module>JVMDebugger</module>
-        <module>WebsitePlugin</module>
+        <module>Bundler</module>
     </modules>
 
     <properties>
