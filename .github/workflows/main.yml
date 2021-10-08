@@ -39,6 +39,8 @@ jobs:
         run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
       - name: Change Version
         run: mvn --batch-mode versions:set -DgenerateBackupPoms=false -DgroupId=thito.nodeflow -DprocessAllModules -DnewVersion=${{ steps.vars.outputs.sha_short }}
+      - name: Reset Version
+        run: cd Bundler & mvn --batch-mode versions:set -DgenerateBackupPoms=false -DnewVersion=2.0
       - name: Build and Deploy with Maven
         run: mvn --batch-mode --update-snapshots deploy
         env:
