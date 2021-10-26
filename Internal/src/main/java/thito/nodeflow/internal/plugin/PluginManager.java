@@ -33,6 +33,10 @@ public class PluginManager {
     private ArrayList<EventListener> listeners = new ArrayList<>();
     private UnknownFileModule unknownFileModule = new UnknownFileModule();
 
+    public PluginManager() {
+        moduleList.add(new DirectoryFileModule());
+    }
+
     public List<FileModule> getModuleList() {
         return Collections.unmodifiableList(moduleList);
     }

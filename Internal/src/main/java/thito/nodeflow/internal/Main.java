@@ -49,6 +49,7 @@ public class Main extends Application {
         NodeFlow nodeFlow = new NodeFlow();
         nodeFlow.registerProtocol("rsrc", new ResourceProtocol());
         nodeFlow.registerProtocol("plugin", new PluginResourceProtocol());
+        nodeFlow.registerProtocol("theme", new ThemeProtocol());
 
         TaskManager.init();
 

@@ -1,4 +1,10 @@
 cancel: Cancel
+dialogs:
+    new-file:
+        title: Create New File
+        fields:
+            name: Name
+            type: Type
 editor:
     title-no-project: NodeFlow
     edit: Edit
@@ -115,4 +121,5 @@ dashboard:
         folder-name: Folder Name
 forms:
     validate-not-empty: Field must not be empty
+    validate-invalid-filename: Invalid file name
 browse: Browse

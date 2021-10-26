@@ -7,6 +7,7 @@ import thito.nodeflow.internal.resource.*;
 import thito.nodeflow.internal.task.*;
 
 import java.io.*;
+import java.util.Objects;
 
 public class FileTab extends EditorTab {
 
@@ -49,11 +50,12 @@ public class FileTab extends EditorTab {
                     int size = (int) sizeLong;
                     if (sizeLong != size) throw new IllegalStateException("FILE TOO LARGE");
                     byte[] buffer = new byte[size];
-                    for (int i = 0; i < buffer.length; i++) {
-                        int read = inputStream.read();
-                        if (read == -1) throw new IllegalStateException("UNEXPECTED END OF FILE");
-                        buffer[i] = (byte) read;
-                        int finalI = i;
+                    int len = 0;
+                    while (len < size) {
+                        int totalRead = inputStream.read(buffer, len, Math.min(1024 * 8, size - len));
+                        if (totalRead == -1) break;
+                        len += totalRead;
+                        int finalI = len;
                         TaskThread.UI().schedule(() -> {
                             loading.getProgressBar().setProgress(finalI / (double) buffer.length);
                         });
@@ -83,7 +85,7 @@ public class FileTab extends EditorTab {
         TabPane pane = tab.getTabPane();
         if (pane != null) {
             for (Tab other : pane.getTabs()) {
-                if (other != tab && other.getText().equals(resource.getName())) {
+                if (other != tab && Objects.equals(other.getText(), resource.getName())) {
                     tab.setText(resource.toFile().getPath());
                     return;
                 }

@@ -5,7 +5,6 @@ import thito.nodeflow.java.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Deprecated
 public class TClass extends AbstractClass {
     private IClass superClass;
     private IClass[] interfaces;

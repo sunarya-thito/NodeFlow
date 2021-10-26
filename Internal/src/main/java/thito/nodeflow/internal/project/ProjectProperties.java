@@ -51,7 +51,10 @@ public class ProjectProperties {
             oldEditor = oldProject.editorProperty().get();
             if (oldEditor != null) {
                 if (oldEditor.projectProperty().get() == oldProject) {
-                    oldEditor.projectProperty().set(null);
+                    Editor finalOldEditor1 = oldEditor;
+                    TaskThread.UI().schedule(() -> {
+                        finalOldEditor1.projectProperty().set(null);
+                    });
                 }
             }
         }
@@ -66,7 +69,9 @@ public class ProjectProperties {
         } else {
             for (Editor editor : NodeFlow.getInstance().getActiveEditors()) {
                 if (editor.projectProperty().get() == null) {
-                    editor.projectProperty().set(project);
+                    TaskThread.UI().schedule(() -> {
+                        editor.projectProperty().set(project);
+                    });
                     return project;
                 }
             }

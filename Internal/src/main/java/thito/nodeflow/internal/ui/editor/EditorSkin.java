@@ -12,21 +12,24 @@ import javafx.scene.image.*;
 import javafx.scene.layout.*;
 import thito.nodeflow.internal.binding.*;
 import thito.nodeflow.internal.language.*;
+import thito.nodeflow.internal.plugin.PluginManager;
 import thito.nodeflow.internal.project.*;
+import thito.nodeflow.internal.project.module.FileModule;
+import thito.nodeflow.internal.resource.Resource;
+import thito.nodeflow.internal.resource.ResourceType;
 import thito.nodeflow.internal.search.*;
 import thito.nodeflow.internal.task.*;
 import thito.nodeflow.internal.ui.Skin;
 import thito.nodeflow.internal.ui.*;
 import thito.nodeflow.internal.ui.dashboard.*;
+import thito.nodeflow.internal.ui.form.CreateFileForm;
+import thito.nodeflow.internal.ui.form.Validator;
 import thito.nodeflow.internal.ui.handler.*;
 
 public class EditorSkin extends Skin {
 
     @Component("file-menu")
     Menu fileMenu;
-
-    @Component("file-create")
-    Menu fileCreateMenu;
 
     @Component("maximize-button")
     Button maximizeButton;
@@ -58,6 +61,10 @@ public class EditorSkin extends Skin {
     @Component("file-tabs")
     TabPane fileTabs;
 
+    @Component("file-create")
+    Menu newFile;
+    EditorFilePanelSkin filePanel = new EditorFilePanelSkin(this);
+
     private SearchPopup searchPopup;
     private int menuIndex;
     private int navPanelIndex;
@@ -76,8 +83,9 @@ public class EditorSkin extends Skin {
             // TODO open settings
         });
         registerActionHandler("window.openDashboard", ActionEvent.ACTION, event -> DashboardWindow.getWindow().show());
+
         registerActionHandler("editor.navigation.file", ActionEvent.ACTION, event -> {
-            navPanel.setCenter(new EditorFilePanelSkin(this));
+            navPanel.setCenter(filePanel);
         });
         ToggleGroup navigation = ToggleButtonSkinHandler.getGroup("navigation-editor");
         navigation.selectedToggleProperty().addListener((obs, old, val) -> {
@@ -95,6 +103,18 @@ public class EditorSkin extends Skin {
 
     @Override
     protected void onLayoutLoaded() {
+        for (FileModule module : PluginManager.getPluginManager().getModuleList()) {
+            MenuItem menuItem = new MenuItem();
+            menuItem.setGraphic(new ImageView(module.getIconURL(ThemeManager.getInstance().getTheme())));
+            menuItem.textProperty().bind(module.getDisplayName());
+            menuItem.addEventHandler(ActionEvent.ACTION, event -> {
+                TreeItem<Resource> selected = filePanel.getExplorerView().getSelectionModel().getSelectedItem();
+                Resource root = selected != null ? selected.getValue() : null;
+                if (root == null) root = getEditorWindow().getEditor().projectProperty().get().getSourceFolder();
+                showCreateFileForm(module, root);
+            });
+            newFile.getItems().add(menuItem);
+        }
         searchPopup = new SearchPopup();
         Menu parent = moduleMenu.getParentMenu();
         if (parent != null) {
@@ -166,6 +186,29 @@ public class EditorSkin extends Skin {
                 }
             } else {
                 searchPopup.hide();
+            }
+        });
+    }
+
+    static void showCreateFileForm(FileModule module, Resource root) {
+        if (root.getType() == ResourceType.FILE) {
+            root = root.getParent();
+        }
+        CreateFileForm form = new CreateFileForm();
+        Validator<Resource> resourceValidator = module.getFileValidator();
+        Resource finalRoot = root;
+        form.name.validate(
+                Validator.combine(
+                        Validator.combine(
+                                Validator.mustNotEmpty(),
+                                Validator.validFilename()),
+                        value -> resourceValidator.validate(finalRoot.getChild(value))));
+        form.type.validate(Validator.mustNotEmpty());
+        form.type.set(module);
+        FormDialog.create(I18n.$("dialogs.new-file.title"), form).show(result -> {
+            if (result != null) {
+                Resource newFile = finalRoot.getChild(result.name.get());
+                result.type.get().createFile(newFile);
             }
         });
     }

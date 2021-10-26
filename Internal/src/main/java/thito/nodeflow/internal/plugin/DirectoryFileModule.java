@@ -15,12 +15,12 @@ public class DirectoryFileModule implements FileModule {
 
     @Override
     public String getIconURL(Theme theme) {
-        return null;
+        return "rsrc:Themes/" + theme.getName() + "/Icons/Folder.png";
     }
 
     @Override
     public boolean acceptResource(Resource resource) {
-        return resource.getType() == ResourceType.DIRECTORY;
+        return resource != null && resource.getType() == ResourceType.DIRECTORY;
     }
 
     @Override
@@ -30,11 +30,12 @@ public class DirectoryFileModule implements FileModule {
 
     @Override
     public Validator<Resource> getFileValidator() {
-        return null;
+        return Validator.resourceExistValidator();
     }
 
     @Override
     public void createFile(Resource resource) {
-
+        System.out.println("MAKING DIRS: "+resource.toFile());
+        resource.toFile().mkdirs();
     }
 }

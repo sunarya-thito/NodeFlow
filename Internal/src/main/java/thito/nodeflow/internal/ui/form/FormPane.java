@@ -35,7 +35,7 @@ public class FormPane extends VBox {
         validate();
     }
 
-    private void validate() {
+    public void validate() {
         for (FormProperty<?> formProperty : formPropertyList) {
             for (Validator validator : formProperty.getValidatorList()) {
                 I18n inv = validator.validate(formProperty.getValue());

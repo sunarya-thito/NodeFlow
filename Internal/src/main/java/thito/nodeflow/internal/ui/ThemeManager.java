@@ -19,7 +19,6 @@ public class ThemeManager {
 
     private final ObjectProperty<Theme> theme = new SimpleObjectProperty<>();
     private final Map<Class<?>, StyleSheet> sheetMap = new HashMap<>();
-    private final ColorPalette colorPalette = new ColorPalette();
 
     public static void init() {
         if (instance != null) throw new IllegalStateException("already initialized");
@@ -34,19 +33,8 @@ public class ThemeManager {
         });
     }
 
-    public ColorPalette getColorPalette() {
-        return colorPalette;
-    }
 
     protected void updateTheme(Theme theme) {
-        try {
-//            URL styleJson = new URL("rsrc:Themes/" + URLEncoder.encode(theme.getName(), StandardCharsets.UTF_8) + "/Colors.json");
-            try (InputStream inputStream = new FileInputStream("Themes/" + theme.getName() + "/Colors.json")) {
-                colorPalette.load(inputStream);
-            }
-        } catch (Throwable t) {
-            t.printStackTrace();
-        }
         sheetMap.forEach((key, sheet) -> {
             setSheetContents(theme, sheet, key);
         });

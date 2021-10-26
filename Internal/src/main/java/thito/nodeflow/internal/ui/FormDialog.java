@@ -53,6 +53,7 @@ public class FormDialog<T extends Form> {
             window.close();
             result.accept(null);
         });
+        formPane.validate();
         window.show();
     }
 }

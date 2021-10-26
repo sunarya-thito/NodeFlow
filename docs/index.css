@@ -284,6 +284,7 @@ body {
 
 .download-buttons {
     display: flex;
+    gap: 10%;
 }
 
 .java-check {

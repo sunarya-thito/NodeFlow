@@ -19,35 +19,6 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>thito.nodeflow</groupId>
-                <artifactId>nodeflow-build-helper</artifactId>
-                <version>1.0-SNAPSHOT</version>
-                <executions>
-<!--                    <execution>-->
-<!--                        <id>bundle-jdk</id>-->
-<!--                        <goals>-->
-<!--                            <goal>bundle-jdk</goal>-->
-<!--                        </goals>-->
-<!--                        <phase>package</phase>-->
-<!--                        <configuration>-->
-<!--                            <targetDirectory>../target/Bundled</targetDirectory>-->
-<!--                        </configuration>-->
-<!--                    </execution>-->
-                    <execution>
-                        <id>extract-dark-theme</id>
-                        <goals>
-                            <goal>extract-style</goal>
-                        </goals>
-                        <phase>package</phase>
-                        <configuration>
-                            <sourceRoot>Themes/Dark</sourceRoot>
-                            <styleFile>Colors</styleFile>
-                            <pattern>-nodeflow-color-palette-%s</pattern>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <artifactId>maven-deploy-plugin</artifactId>
                 <version>3.0.0-M1</version>
                 <configuration>

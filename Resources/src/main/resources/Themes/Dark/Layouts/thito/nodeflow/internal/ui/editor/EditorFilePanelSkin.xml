@@ -4,7 +4,30 @@
     </Components>
     <Layout>
         <VBox class="file-explorer-root">
-            <ResourceExplorerView id="file-explorer" VBox.grow="ALWAYS"/>
+            <ResourceExplorerView id="file-explorer" VBox.grow="ALWAYS">
+                <ContextMenu>
+                    <Menu id="file-new">
+                        <Text>${editor.menu-file.new}</Text>
+                    </Menu>
+                    <Item id="file-import">
+                        <Text>${editor.menu-file.import}</Text>
+                    </Item>
+                    <Separator/>
+                    <Item id="file-cut">
+                        <Text>${editor.menu-edit.cut}</Text>
+                    </Item>
+                    <Item id="file-copy">
+                        <Text>${editor.menu-edit.copy}</Text>
+                    </Item>
+                    <Item id="file-paste">
+                        <Text>${editor.menu-edit.paste}</Text>
+                    </Item>
+                    <Separator/>
+                    <Item id="file-delete">
+                        <Text>${editor.menu-edit.delete}</Text>
+                    </Item>
+                </ContextMenu>
+            </ResourceExplorerView>
         </VBox>
     </Layout>
 </NodeFlow>

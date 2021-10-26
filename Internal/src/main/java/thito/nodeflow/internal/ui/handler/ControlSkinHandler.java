@@ -11,7 +11,9 @@ public class ControlSkinHandler implements SkinHandler<Control> {
         if (contextMenu != null) {
             ContextMenu m = new ContextMenu();
             for (Element child : contextMenu.children()) {
-                m.getItems().add(MenuBarSkinHandler.createMenuItem(parser, child));
+                MenuItem menuItem = MenuBarSkinHandler.createMenuItem(parser, child);
+                parser.handleMenu(menuItem, child);
+                m.getItems().add(menuItem);
             }
             node.setContextMenu(m);
         }

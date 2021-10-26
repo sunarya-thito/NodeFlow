@@ -22,6 +22,9 @@ $(document).ready(() => {
     $('#join-discord-button').click(() => {
         openInNewTab('https://discord.gg/DquZxC4ZeB');
     });
+    $('#download-java').click(() => {
+        openInNewTab('https://adoptium.net/archive.html?variant=openjdk16');
+    });
     $(scrollElement).scroll(() => {
         if ($(scrollElement).scrollTop() > $('#intro').height() - $('#header').height()) {
             $('.full-header-bg').removeClass('transparent-header');

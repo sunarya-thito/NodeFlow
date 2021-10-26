@@ -71,10 +71,11 @@ public abstract class Window {
         });
 
         // Colors.json binding
-        root.styleProperty().bind(ThemeManager.getInstance().getColorPalette().styleProperty());
+//        root.styleProperty().bind(ThemeManager.getInstance().getColorPalette().styleProperty());
 
         Scene scene = new Scene(root, -1, -1, false, SceneAntialiasing.BALANCED);
         scene.setFill(Color.TRANSPARENT);
+        scene.getStylesheets().add("theme:StyleSheets/thito/nodeflow/internal/ui/Skin.css");
         scene.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.F5) {
                 System.out.println("RELOAD");

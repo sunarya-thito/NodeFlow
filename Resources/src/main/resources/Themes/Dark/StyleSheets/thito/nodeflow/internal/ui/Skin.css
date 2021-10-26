@@ -59,20 +59,21 @@
     -fx-graphic: url("rsrc:Themes/Dark/Icons/CloseButtonHovered.png");
 }
 
-ResourceExplorerView .cell {
+/*#file-explorer .cell:directory {*/
+/*    -fx-graphic: url("rsrc:Themes/Dark/Icons/Folder.png");*/
+/*}*/
+
+#file-explorer .cell {
     -fx-graphic-text-gap: 8;
+/*    -fx-graphic: url("rsrc:Themes/Dark/Icons/UnknownFile.png");*/
 }
 
-ResourceExplorerView .cell:empty {
-    -fx-graphic: null;
-}
+/*#file-explorer .cell:empty {*/
+/*    -fx-graphic: null;*/
+/*}*/
 
-ResourceExplorerView .file {
-    -fx-graphic: url("rsrc:Themes/Dark/Icons/UnknownFile.png");
-}
-
-ResourceExplorerView .directory {
-    -fx-graphic: url("rsrc:Themes/Dark/Icons/Folder.png");
+.menu-item > .graphic-container {
+    -fx-padding: 0 12 0 0;
 }
 
 .context-menu .menu-item {

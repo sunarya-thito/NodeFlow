@@ -9,16 +9,16 @@
         <outputRelativeToContentRoot value="true" />
         <module name="nodeflow-jvm-debugger" />
         <module name="nodeflow-build-helper" />
-        <module name="BasePlugin" />
-        <module name="nodeflow-engine" />
-        <module name="code-engine" />
-        <module name="Bundler" />
         <module name="nodeflow-launcher" />
+        <module name="BasePlugin" />
         <module name="nodeflow-setup" />
+        <module name="nodeflow-engine" />
         <module name="nodeflow-internal" />
+        <module name="code-engine" />
         <module name="nodeflow-resources" />
         <module name="base-plugin" />
         <module name="config" />
+        <module name="Bundler" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

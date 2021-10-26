@@ -37,6 +37,7 @@ public class FormProperty<T> extends SimpleObjectProperty<T> {
     }
 
     public FormProperty<T> validate(Validator<T> validator) {
+        if (validator != null)
         validatorLinkedList.add(validator);
         return this;
     }

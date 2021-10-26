@@ -1,16 +1,15 @@
 package thito.nodeflow.internal.ui.resource;
 
-import javafx.beans.property.*;
-import javafx.css.*;
-import javafx.scene.control.*;
-import javafx.scene.input.*;
-import thito.nodeflow.internal.resource.*;
+import javafx.scene.control.TreeCell;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import thito.nodeflow.internal.plugin.PluginManager;
+import thito.nodeflow.internal.project.module.FileModule;
+import thito.nodeflow.internal.resource.Resource;
+import thito.nodeflow.internal.resource.ResourceType;
+import thito.nodeflow.internal.ui.ThemeManager;
 
 public class ResourceCell extends TreeCell<Resource> {
-    public static final PseudoClass DIRECTORY = PseudoClass.getPseudoClass("directory");
-    public static final PseudoClass FILE = PseudoClass.getPseudoClass("file");
-    private ObjectProperty<ResourceType> resourceType = new SimpleObjectProperty<>();
-    private ObjectProperty<String> extension = new SimpleObjectProperty<>();
     private ResourceExplorerView view;
     public ResourceCell(ResourceExplorerView view) {
         this.view = view;
@@ -19,47 +18,32 @@ public class ResourceCell extends TreeCell<Resource> {
                 view.getSelectionModel().clearSelection();
             }
         });
-        extension.addListener((obs, old, val) -> {
-            if (old != null) {
-                pseudoClassStateChanged(PseudoClass.getPseudoClass(old.toLowerCase()), false);
-                getStyleClass().remove(old.toLowerCase());
-            }
-            if (val != null) {
-                pseudoClassStateChanged(PseudoClass.getPseudoClass(val.toLowerCase()), true);
-                getStyleClass().add(val.toLowerCase());
-            }
-        });
-        resourceType.addListener((obs, old, val) -> {
-            if (val == ResourceType.FILE) {
-                pseudoClassStateChanged(FILE, true);
-                pseudoClassStateChanged(DIRECTORY, false);
-                getStyleClass().add("file");
-                getStyleClass().remove("directory");
-            } else {
-                pseudoClassStateChanged(FILE, false);
-                getStyleClass().remove("file");
-                if (val == ResourceType.DIRECTORY) {
-                    pseudoClassStateChanged(DIRECTORY, true);
-                    getStyleClass().add("directory");
-                } else {
-                    pseudoClassStateChanged(DIRECTORY, false);
-                    getStyleClass().remove("directory");
-                }
-            }
-        });
+    }
+
+    public ResourceExplorerView getView() {
+        return view;
     }
 
     @Override
     protected void updateItem(Resource resource, boolean b) {
         super.updateItem(resource, b);
         if (!b) {
-            resourceType.bind(resource.typeProperty());
-            extension.set(resource.getExtension());
+            ResourceType type = resource.getType();
+            if (type == ResourceType.DIRECTORY) {
+                setGraphic(new ImageView("theme:Icons/Folder.png"));
+            } else if (type == ResourceType.FILE) {
+                FileModule module = PluginManager.getPluginManager().getModule(resource);
+                if (module == null) {
+                    setGraphic(new ImageView("theme:Icons/UnknownFile.png"));
+                } else {
+                    setGraphic(new ImageView(module.getIconURL(ThemeManager.getInstance().getTheme())));
+                }
+            } else {
+                setGraphic(null);
+            }
             setText(resource.getFileName());
         } else {
-            resourceType.unbind();
-            resourceType.set(null);
-            extension.set(null);
+            setGraphic(null);
             setText(null);
         }
     }

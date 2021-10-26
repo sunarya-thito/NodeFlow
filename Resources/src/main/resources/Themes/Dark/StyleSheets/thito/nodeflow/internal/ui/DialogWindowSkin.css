@@ -99,6 +99,7 @@ DialogWindowSkin:maximized {
 FormPane {
     -fx-padding: 25;
     -fx-spacing: 20;
+    -fx-pref-width: 400;
 }
 
 .buttons {
@@ -153,4 +154,21 @@ FormPane {
 
 .form-field-container .text-area .content, .form-field-container .text-area .scroll-pane, .form-field-container .text-area .viewport {
     -fx-background-color: transparent;
+}
+
+.form-field-container .combo-box {
+    -fx-max-width: infinity;
+    -fx-max-height: infinity;
+    -fx-background-color: #1A202C;
+    -fx-padding: 7 5;
+}
+
+.form-field-container .combo-box > .cell {
+    -fx-text-fill: white;
+    -fx-font-size: 13;
+    -fx-font-family: Roboto;
+}
+
+.form-field-container .combo-box .arrow {
+    -fx-background-color: white;
 }
