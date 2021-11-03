@@ -1,10 +1,12 @@
 package thito.nodeflow.internal.protocol;
 
-import thito.nodeflow.internal.plugin.*;
+import thito.nodeflow.internal.plugin.Plugin;
 
-import java.io.*;
-import java.net.*;
-import java.nio.charset.*;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLStreamHandler;
 
 public class PluginResourceProtocol extends URLStreamHandler {
 
@@ -22,33 +24,8 @@ public class PluginResourceProtocol extends URLStreamHandler {
         }
         Plugin plugin = Plugin.getPlugin(caller);
         if (plugin == null) throw new IOException("not inside plugin scope");
-        return new URLConnection(u) {
-            private boolean connected;
-            private InputStream inputStream;
-
-            @Override
-            public void connect() throws IOException {
-                if (!connected) {
-                    connected = true;
-                    String path = URLDecoder.decode(u.getFile(), StandardCharsets.UTF_8);
-                    InputStream stream = plugin.getClassLoader().getResourceAsStream(path);
-                    if (stream == null) throw new FileNotFoundException(path);
-                    inputStream = new FilterInputStream(stream) {
-                        @Override
-                        public void close() throws IOException {
-                            super.close();
-                            connected = false;
-                            inputStream = null;
-                        }
-                    };
-                }
-            }
-
-            @Override
-            public InputStream getInputStream() throws IOException {
-                connect();
-                return inputStream;
-            }
-        };
+        URL url = plugin.getClassLoader().getResource(u.getPath());
+        if (url == null) throw new FileNotFoundException(u.getPath());
+        return url.openConnection();
     }
 }

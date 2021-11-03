@@ -1,0 +1,19 @@
+#structure-tree {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+#structure-tree .cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-family: Roboto;
+    -fx-font-size: 13;
+}
+
+#structure-tree .cell .arrow {
+    -fx-background-color: #7C899B;
+}
+
+#structure-tree .cell:selected {
+    -fx-background-color: #313949;
+}

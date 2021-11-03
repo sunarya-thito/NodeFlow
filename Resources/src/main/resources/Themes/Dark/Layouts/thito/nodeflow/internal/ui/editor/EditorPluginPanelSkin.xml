@@ -1,0 +1,7 @@
+<NodeFlow>
+    <Layout>
+        <ScrollPane id="editor-plugin-panel">
+            <VBox id="container"/>
+        </ScrollPane>
+    </Layout>
+</NodeFlow>

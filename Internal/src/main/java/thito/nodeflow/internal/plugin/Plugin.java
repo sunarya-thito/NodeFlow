@@ -1,8 +1,13 @@
 package thito.nodeflow.internal.plugin;
 
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import thito.nodeflow.internal.language.*;
 import thito.nodeflow.internal.settings.*;
 import thito.nodeflow.internal.settings.canvas.*;
+import thito.nodeflow.internal.task.BatchTask;
 
 import java.io.*;
 import java.lang.reflect.*;
@@ -85,22 +90,26 @@ public class Plugin {
         return name;
     }
 
-    protected void initialize() throws NoSuchMethodException, InvocationTargetException,
+    public BatchTask load() throws NoSuchMethodException, InvocationTargetException,
             InstantiationException, IllegalAccessException {
         instance = (PluginInstance) mainClass.getConstructor().newInstance();
-        instance.onLoad();
+        return instance.createLoaderTask();
     }
 
-    public void launch() {
+    public BatchTask initialize() {
+        BatchTask initializationTask = null;
         if (getPluginSettings().getEnable().getValue()) {
-            instance.onEnable();
+            initializationTask = instance.createInitializationTask();
         }
         pluginSettings.getEnable().valueProperty().addListener((obs, old, val) -> {
+            BatchTask batchTask;
             if (val) {
-                instance.onEnable();
+                batchTask = instance.createInitializationTask();
             } else {
-                instance.onDisable();
+                batchTask = instance.createShutdownTask();
             }
+            // TODO process the batch task
         });
+        return initializationTask;
     }
 }

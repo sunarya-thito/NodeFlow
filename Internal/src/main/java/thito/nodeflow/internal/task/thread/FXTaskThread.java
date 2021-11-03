@@ -54,6 +54,7 @@ public class FXTaskThread implements TaskThread {
             public TaskState getState() {
                 return state.get();
             }
+
         };
     }
 

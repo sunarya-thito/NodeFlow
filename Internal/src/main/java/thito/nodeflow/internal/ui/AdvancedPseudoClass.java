@@ -6,6 +6,7 @@ import javafx.collections.*;
 import javafx.css.*;
 import javafx.geometry.*;
 import javafx.scene.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 
 import java.lang.reflect.*;
@@ -16,6 +17,8 @@ public class AdvancedPseudoClass {
     static List<CssMetaData<? extends Styleable, ?>> NODE_STYLEABLES;
     static CssMetaData<Node, Number> fxLayoutX, fxLayoutY;
     static CssMetaData<Node, Pos> fxBorderPaneAlignment;
+    static CssMetaData<Node, Number> fxFitWidth;
+    static CssMetaData<Node, Number> fxFitHeight;
     static {
         try {
             inject();

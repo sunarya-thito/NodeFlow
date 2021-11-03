@@ -1,5 +1,6 @@
 package thito.nodeflow.internal.task;
 
+import javafx.beans.Observable;
 import javafx.beans.property.*;
 import javafx.util.*;
 
@@ -10,7 +11,7 @@ public interface TaskThread {
     static TaskThread UI() {
         return TaskManager.getInstance().getUIThread();
     }
-    static TaskThread BACKGROUND() {
+    static TaskThread BG() {
         return TaskManager.getInstance().getBackgroundThread();
     }
     boolean isInThread();
@@ -22,5 +23,9 @@ public interface TaskThread {
     String getThreadName();
     default void checkThread() {
         if (!isInThread()) throw new IllegalStateException("not in "+getThreadName()+" thread");
+    }
+    default <T extends Observable> T lock(T observable) {
+        observable.addListener(obs -> checkThread());
+        return observable;
     }
 }

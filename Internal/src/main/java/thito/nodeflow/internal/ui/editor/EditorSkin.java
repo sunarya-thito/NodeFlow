@@ -1,30 +1,37 @@
 package thito.nodeflow.internal.ui.editor;
 
-import javafx.application.*;
-import javafx.beans.*;
-import javafx.beans.binding.*;
-import javafx.beans.value.*;
-import javafx.collections.*;
-import javafx.event.*;
-import javafx.geometry.*;
+import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.ListChangeListener;
+import javafx.event.ActionEvent;
+import javafx.geometry.Bounds;
 import javafx.scene.control.*;
-import javafx.scene.image.*;
-import javafx.scene.layout.*;
-import thito.nodeflow.internal.binding.*;
-import thito.nodeflow.internal.language.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import org.dockfx.DockPane;
+import thito.nodeflow.internal.binding.ThreadBinding;
+import thito.nodeflow.internal.editor.Editor;
+import thito.nodeflow.internal.language.I18n;
 import thito.nodeflow.internal.plugin.PluginManager;
-import thito.nodeflow.internal.project.*;
+import thito.nodeflow.internal.project.Project;
 import thito.nodeflow.internal.project.module.FileModule;
 import thito.nodeflow.internal.resource.Resource;
 import thito.nodeflow.internal.resource.ResourceType;
 import thito.nodeflow.internal.search.*;
-import thito.nodeflow.internal.task.*;
+import thito.nodeflow.internal.task.TaskThread;
+import thito.nodeflow.internal.ui.Component;
+import thito.nodeflow.internal.ui.FormDialog;
 import thito.nodeflow.internal.ui.Skin;
-import thito.nodeflow.internal.ui.*;
-import thito.nodeflow.internal.ui.dashboard.*;
+import thito.nodeflow.internal.ui.ThemeManager;
+import thito.nodeflow.internal.ui.dashboard.DashboardWindow;
 import thito.nodeflow.internal.ui.form.CreateFileForm;
+import thito.nodeflow.internal.ui.form.RenameResourceForm;
 import thito.nodeflow.internal.ui.form.Validator;
-import thito.nodeflow.internal.ui.handler.*;
+
+import java.io.File;
 
 public class EditorSkin extends Skin {
 
@@ -33,6 +40,15 @@ public class EditorSkin extends Skin {
 
     @Component("maximize-button")
     Button maximizeButton;
+
+    @Component("file-close-project")
+    MenuItem closeProject;
+
+    @Component("file-import")
+    MenuItem fileImport;
+
+    @Component("file-export")
+    MenuItem fileExport;
 
     @Component("editor-root")
     BorderPane root;
@@ -55,20 +71,18 @@ public class EditorSkin extends Skin {
     @Component("main-viewport")
     SplitPane mainViewport;
 
-    @Component("nav-panel")
-    BorderPane navPanel;
-
-    @Component("file-tabs")
-    TabPane fileTabs;
-
     @Component("file-create")
     Menu newFile;
+
+    @Component("editor-content")
+    DockPane editorContent;
+
     EditorFilePanelSkin filePanel = new EditorFilePanelSkin(this);
+    EditorStructurePanelSkin structurePanel = new EditorStructurePanelSkin(this);
+    EditorPluginPanelSkin pluginPanel = new EditorPluginPanelSkin(this);
 
     private SearchPopup searchPopup;
     private int menuIndex;
-    private int navPanelIndex;
-    private double navPanelDividerPosition;
     private EditorWindow editorWindow;
 
     public EditorSkin(EditorWindow editorWindow) {
@@ -83,26 +97,26 @@ public class EditorSkin extends Skin {
             // TODO open settings
         });
         registerActionHandler("window.openDashboard", ActionEvent.ACTION, event -> DashboardWindow.getWindow().show());
+        registerActionHandler("project.close", ActionEvent.ACTION, event -> {
+            editorWindow.getEditor().closeProject();
+        });
+        registerActionHandler("project.import", ActionEvent.ACTION, event -> {
+        });
+        registerActionHandler("project.export", ActionEvent.ACTION, event -> {
 
-        registerActionHandler("editor.navigation.file", ActionEvent.ACTION, event -> {
-            navPanel.setCenter(filePanel);
         });
-        ToggleGroup navigation = ToggleButtonSkinHandler.getGroup("navigation-editor");
-        navigation.selectedToggleProperty().addListener((obs, old, val) -> {
-            if (val != null) {
-                if (!mainViewport.getItems().contains(navPanel)) {
-                    mainViewport.getItems().add(navPanelIndex, navPanel);
-                    mainViewport.setDividerPosition(navPanelIndex, navPanelDividerPosition);
-                }
-            } else {
-                navPanelDividerPosition = mainViewport.getDividerPositions()[navPanelIndex];
-                mainViewport.getItems().remove(navPanelIndex);
-            }
-        });
+    }
+
+    public DockPane getEditorContent() {
+        return editorContent;
     }
 
     @Override
     protected void onLayoutLoaded() {
+        newFile.disableProperty().bind(editorWindow.getEditor().projectProperty().isNull());
+        fileImport.disableProperty().bind(editorWindow.getEditor().projectProperty().isNull());
+        fileExport.disableProperty().bind(editorWindow.getEditor().projectProperty().isNull());
+        closeProject.disableProperty().bind(editorWindow.getEditor().projectProperty().isNull());
         for (FileModule module : PluginManager.getPluginManager().getModuleList()) {
             MenuItem menuItem = new MenuItem();
             menuItem.setGraphic(new ImageView(module.getIconURL(ThemeManager.getInstance().getTheme())));
@@ -111,7 +125,7 @@ public class EditorSkin extends Skin {
                 TreeItem<Resource> selected = filePanel.getExplorerView().getSelectionModel().getSelectedItem();
                 Resource root = selected != null ? selected.getValue() : null;
                 if (root == null) root = getEditorWindow().getEditor().projectProperty().get().getSourceFolder();
-                showCreateFileForm(module, root);
+                showCreateFileForm(editorWindow.getEditor().projectProperty().get(), module, root);
             });
             newFile.getItems().add(menuItem);
         }
@@ -125,9 +139,6 @@ public class EditorSkin extends Skin {
             menuBar.getMenus().remove(menuIndex);
         }
 
-        navPanelIndex = mainViewport.getItems().indexOf(navPanel);
-        navPanelDividerPosition = mainViewport.getDividerPositions()[navPanelIndex];
-        mainViewport.getItems().remove(navPanelIndex);
 
         searchField.textProperty().addListener((obs, old, val) -> {
             updateSearch(val);
@@ -139,29 +150,6 @@ public class EditorSkin extends Skin {
         getScene().getWindow().widthProperty().addListener(obs -> updateSearchPopupPosition());
         getScene().getWindow().heightProperty().addListener(obs -> updateSearchPopupPosition());
         updateSearchPopupPosition();
-
-        editorWindow.getEditor().getOpenedTabs().addListener((ListChangeListener<EditorTab>) change -> {
-            while (change.next()) {
-                if (change.wasRemoved()) {
-                    for (EditorTab t : change.getRemoved()) {
-                        fileTabs.getTabs().remove(t.getTab());
-                    }
-                }
-                if (change.wasAdded()) {
-                    for (EditorTab t : change.getAddedSubList()) {
-                        fileTabs.getTabs().add(t.getTab());
-                    }
-                }
-            }
-        });
-        fileTabs.getTabs().addListener((InvalidationListener) obs -> {
-            for (Tab tab : fileTabs.getTabs()) {
-                FileTab fileTab = (FileTab) tab.getProperties().get(FileTab.class);
-                if (fileTab != null) {
-                    fileTab.updateName();
-                }
-            }
-        });
 
         editorWindow.getEditor().projectProperty().addListener((obs, old, val) -> {
             if (val == null) {
@@ -190,24 +178,80 @@ public class EditorSkin extends Skin {
         });
     }
 
-    static void showCreateFileForm(FileModule module, Resource root) {
+    public static void showRenameFileForm(FileModule m, Resource resource) {
+        RenameResourceForm form = new RenameResourceForm();
+        form.newName.set(resource.getName());
+        form.newName.validate(Validator.<String>mustNotEmpty()
+                .combine(Validator.validFilename())
+                .combine(Validator.resourceMustNotExist().map(value -> {
+                    String path = value;
+                    if (m != null) {
+                        String extension = m.getExtension();
+                        if (extension != null) {
+                            path += "." + extension;
+                        }
+                    }
+                    return resource.getParent().getChild(path);
+                })));
+        FormDialog.create(I18n.$("dialogs.rename-file.title"), form).show(result -> {
+            if (result != null) {
+                String path = result.newName.get();
+                if (m != null) {
+                    String extension = m.getExtension();
+                    if (extension != null) {
+                        path += "." + extension;
+                    }
+                }
+                resource.toFile().renameTo(resource.getParent().getChild(path).toFile());
+            }
+        });
+    }
+
+    public static void showCreateFileForm(Project project, FileModule module, Resource root) {
         if (root.getType() == ResourceType.FILE) {
             root = root.getParent();
         }
         CreateFileForm form = new CreateFileForm();
         Validator<Resource> resourceValidator = module.getFileValidator();
-        Resource finalRoot = root;
+        Validator<String> existenceValidator = value -> {
+            String path = form.name.get();
+            FileModule m = form.type.get();
+            if (m != null) {
+                String extension = m.getExtension();
+                if (extension != null) {
+                    path += "." + extension;
+                }
+            }
+            path = path.trim();
+            String dir = form.directory.get();
+            if (dir != null && !(dir = dir.trim()).isEmpty()) {
+                path = new File(dir, path).getPath();
+            }
+            return resourceValidator.validate(project.getSourceFolder().getChild(path));
+        };
+        form.directory.set(root.getPath(project.getSourceFolder()));
+        form.directory.validate(Validator.validFilename()
+                .combine(Validator.pathNotExist().map(x -> project.getSourceFolder().getChild(x))));
         form.name.validate(
                 Validator.combine(
                         Validator.combine(
                                 Validator.mustNotEmpty(),
                                 Validator.validFilename()),
-                        value -> resourceValidator.validate(finalRoot.getChild(value))));
+                        existenceValidator));
         form.type.validate(Validator.mustNotEmpty());
         form.type.set(module);
         FormDialog.create(I18n.$("dialogs.new-file.title"), form).show(result -> {
             if (result != null) {
-                Resource newFile = finalRoot.getChild(result.name.get());
+                String path = result.name.get();
+                String extension = result.type.get().getExtension();
+                if (extension != null) {
+                    path += "." + extension;
+                }
+                String dir = form.directory.get();
+                if (dir != null && !(dir = dir.trim()).isEmpty()) {
+                    path = new File(dir, path).getPath();
+                }
+                Resource newFile = project.getSourceFolder().getChild(path);
                 result.type.get().createFile(newFile);
             }
         });
@@ -233,20 +277,20 @@ public class EditorSkin extends Skin {
         Editor editor = editorWindow.getEditor();
         SearchQuery query = new SearchQuery(string);
         SearchThread.submit(() -> {
-            for (SearchableContentContext context : editor.getSearchableContentContexts()) {
-                for (SearchableContent content : context.getSearchableContentList()) {
-                    SearchSession searchSession = content.search(query);
-                    if (searchSession == null) continue;
-                    for (SearchResult result : searchSession.getResults()) {
-                        SearchResultItem item = new SearchResultItem(result.getTitle(), I18n.$("search-source").format(searchSession.getName()), result);
-                        ObservableValue<String> iconUrl = context.getProvider().iconURLProperty();
-                        if (iconUrl != null) item.iconProperty().bind(Bindings.createObjectBinding(() -> new Image(iconUrl.getValue()), iconUrl));
-                        TaskThread.UI().schedule(() -> {
-                            searchPopup.getSearchResultItems().add(item);
-                        });
-                    }
-                }
-            }
+//            for (SearchableContentContext context : editor.getSearchableContentContexts()) {
+//                for (SearchableContent content : context.getSearchableContentList()) {
+//                    SearchSession searchSession = content.search(query);
+//                    if (searchSession == null) continue;
+//                    for (SearchResult result : searchSession.getResults()) {
+//                        SearchResultItem item = new SearchResultItem(result.getTitle(), I18n.$("search-source").format(searchSession.getName()), result);
+//                        ObservableValue<String> iconUrl = context.getProvider().iconURLProperty();
+//                        if (iconUrl != null) item.iconProperty().bind(Bindings.createObjectBinding(() -> new Image(iconUrl.getValue()), iconUrl));
+//                        TaskThread.UI().schedule(() -> {
+//                            searchPopup.getSearchResultItems().add(item);
+//                        });
+//                    }
+//                }
+//            }
         });
     }
 

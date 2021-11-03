@@ -1,0 +1,7 @@
+<NodeFlow>
+    <Layout>
+        <VBox class="structure-panel-root">
+            <TreeView id="structure-tree" VBox.grow="ALWAYS"/>
+        </VBox>
+    </Layout>
+</NodeFlow>

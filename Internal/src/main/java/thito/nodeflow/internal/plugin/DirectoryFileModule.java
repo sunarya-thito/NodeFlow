@@ -19,6 +19,11 @@ public class DirectoryFileModule implements FileModule {
     }
 
     @Override
+    public String getExtension() {
+        return null;
+    }
+
+    @Override
     public boolean acceptResource(Resource resource) {
         return resource != null && resource.getType() == ResourceType.DIRECTORY;
     }
@@ -30,12 +35,11 @@ public class DirectoryFileModule implements FileModule {
 
     @Override
     public Validator<Resource> getFileValidator() {
-        return Validator.resourceExistValidator();
+        return Validator.resourceMustNotExist();
     }
 
     @Override
     public void createFile(Resource resource) {
-        System.out.println("MAKING DIRS: "+resource.toFile());
         resource.toFile().mkdirs();
     }
 }

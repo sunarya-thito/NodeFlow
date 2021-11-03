@@ -1,6 +1,8 @@
 package thito.nodeflow.internal.plugin;
 
-import java.util.logging.*;
+import thito.nodeflow.internal.task.BatchTask;
+
+import java.util.logging.Logger;
 
 public interface PluginInstance {
     default PluginManager getManager() {
@@ -12,7 +14,7 @@ public interface PluginInstance {
     default Logger getLogger() {
         return getPlugin().getLogger();
     }
-    void onLoad();
-    void onEnable();
-    void onDisable();
+    BatchTask createLoaderTask();
+    BatchTask createInitializationTask();
+    BatchTask createShutdownTask();
 }

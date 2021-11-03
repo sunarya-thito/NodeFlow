@@ -46,8 +46,8 @@ public class ProjectBoxSkin extends Skin {
         registerActionHandler("project.open", MouseEvent.MOUSE_CLICKED, event -> {
             event.consume();
             DashboardWindow.getWindow().close();
-            TaskThread.BACKGROUND().schedule(() -> {
-                projectProperties.openProject();
+            TaskThread.BG().schedule(() -> {
+                // TODO open project
             });
         });
     }

@@ -1,0 +1,19 @@
+<NodeFlow>
+    <Layout>
+        <VBox class="overlay-v-box">
+            <HBox class="overlay-h-box">
+                <BorderPane class="overlay-root">
+                    <Center>
+                        <VBox class="overlay-content">
+                            <Label id="title"/>
+                            <ProgressBar id="progressBar"/>
+                            <Button id="cancel-button">
+                                <Text>${cancel-button}</Text>
+                            </Button>
+                        </VBox>
+                    </Center>
+                </BorderPane>
+            </HBox>
+        </VBox>
+    </Layout>
+</NodeFlow>

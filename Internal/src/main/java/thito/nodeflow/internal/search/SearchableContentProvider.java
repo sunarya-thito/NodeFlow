@@ -1,7 +1,7 @@
 package thito.nodeflow.internal.search;
 
-import javafx.beans.value.*;
-import thito.nodeflow.internal.ui.editor.*;
+import javafx.beans.value.ObservableValue;
+import thito.nodeflow.internal.editor.Editor;
 
 public interface SearchableContentProvider {
     ObservableValue<String> iconURLProperty();

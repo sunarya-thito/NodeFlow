@@ -1,5 +1,7 @@
 .standard-window {
     -fx-background-color: #0E121A;
+    -fx-border-width: 1;
+    -fx-border-color: #383f4d;
 }
 
 .standard-window-header {
@@ -20,7 +22,6 @@
 StandardWindowSkin {
     -fx-background-color: transparent;
     -fx-padding: 20;
-    -fx-effect: dropshadow(gaussian, rgb(0, 0, 0, 0.7), 20, 0, 0, 0);
     -fx-pref-height: 600;
     -fx-pref-width: 800;
     -fx-min-width: 200;

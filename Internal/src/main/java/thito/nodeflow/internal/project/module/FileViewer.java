@@ -13,4 +13,5 @@ public interface FileViewer {
     Node getNode();
     ObservableList<Menu> getAdditionalMenus();
     void reload(byte[] data);
+    FileStructure getStructure();
 }

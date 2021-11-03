@@ -28,7 +28,6 @@ public class SearchResultSkin extends Skin {
         addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             SearchResult result = item.getSearchResult();
             result.navigate();
-            result.getContent().getContext().getEditor().getEditorWindow().getStage().requestFocus();
         });
         title.textProperty().bind(item.titleProperty());
         source.textProperty().bind(item.sourceProperty());

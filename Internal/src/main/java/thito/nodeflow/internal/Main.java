@@ -1,7 +1,6 @@
 package thito.nodeflow.internal;
 
 import javafx.application.*;
-import javafx.beans.binding.*;
 import javafx.beans.property.*;
 import javafx.stage.*;
 import thito.nodeflow.internal.binding.*;
@@ -12,11 +11,9 @@ import thito.nodeflow.internal.settings.application.*;
 import thito.nodeflow.internal.task.*;
 import thito.nodeflow.internal.ui.*;
 import thito.nodeflow.internal.ui.dashboard.*;
-import thito.nodeflow.internal.ui.editor.*;
 
 import java.io.*;
 import java.net.*;
-import java.util.*;
 import java.util.logging.*;
 
 public class Main extends Application {
@@ -74,6 +71,7 @@ public class Main extends Application {
         ThreadBinding.bind(splashScreen.progressProperty(), totalProgress, TaskThread.UI());
 
         TaskThread.IO().schedule(() -> {
+            BatchTask batchTask = new BatchTask();
             ThemeManager.init();
 
             ResourceWatcher.getResourceWatcher().open();
@@ -83,48 +81,26 @@ public class Main extends Application {
             settingsManager.registerCanvas(General.class);
             settingsManager.registerCanvas(Appearance.class);
 
-            nodeFlow.submitProgressedTask((progress, stat) -> {
-                stat.set("Loading settings configuration");
-                progress.set(0);
+            batchTask.submitTask(new ProgressedTask("Loading setting configuration", progress -> {
                 Settings.getSettings().loadGlobalConfiguration();
-                progress.set(1);
-            });
+            }));
 
-            runLoaderTask(nodeFlow.progressedTasks, 0, status, totalProgress, () -> {
-                Platform.runLater(() -> {
-                    logger.log(Level.INFO, "Starting Application...");
-                    Thread.setDefaultUncaughtExceptionHandler(new ReportedExceptionHandler());
+            nodeFlow.createInitializationTasks(batchTask);
+
+            batchTask.submitTask(new ProgressedTask("Finalizing things up", progress -> {
+                Thread.setDefaultUncaughtExceptionHandler(new ReportedExceptionHandler());
+                TaskThread.UI().schedule(() -> {
                     DashboardWindow dashboardWindow = new DashboardWindow();
-                    EditorWindow editorWindow = new Editor().getEditorWindow();
-                    editorWindow.show();
-
                     if (Settings.getSettings().getCategory(Appearance.class).showDashboardAtStart.get()) {
                         dashboardWindow.show();
                     }
-
                     splashScreen.close();
                 });
-            });
+            }));
+
+            logger.log(Level.INFO, "Starting application...");
+            batchTask.start(TaskThread.BG(), status, totalProgress);
         });
     }
 
-    private static void runLoaderTask(Queue<ProgressedTask> taskList, int progressDone, StringProperty status, DoubleProperty totalProgress, Runnable onDone) {
-        ProgressedTask finalTask = taskList.poll();
-        if (finalTask == null) {
-            onDone.run();
-            return;
-        }
-        Platform.runLater(() -> {
-            int remaining = taskList.size();
-            DoubleProperty currentProgress = new SimpleDoubleProperty();
-            totalProgress.bind(Bindings.createDoubleBinding(() -> {
-                int total = remaining + progressDone;
-                return (progressDone + currentProgress.get()) / (total + 1d);
-            }, currentProgress));
-            TaskThread.IO().schedule(() -> {
-                finalTask.run(currentProgress, status);
-                runLoaderTask(taskList, progressDone + 1, status, totalProgress, onDone);
-            });
-        });
-    }
 }

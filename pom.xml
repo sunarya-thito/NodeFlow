@@ -10,6 +10,7 @@
     <version>2.0</version>
 
     <modules>
+        <module>BasePlugin</module>
         <module>BuildHelper</module>
         <module>Engine</module>
         <module>CodeEngine</module>
@@ -62,9 +63,18 @@
             <id>OW2</id>
             <url>https://repository.ow2.org/nexus/content/repositories/snapshots/</url>
         </repository>
+        <repository>
+            <id>imagej</id>
+            <url>http://maven.imagej.net/content/repositories/public/</url>
+        </repository>
     </repositories>
 
     <dependencies>
+        <dependency>
+            <groupId>com.github.RobertBColton</groupId>
+            <artifactId>DockFX</artifactId>
+            <version>0.4b</version>
+        </dependency>
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
@@ -138,6 +148,11 @@
             <artifactId>gson</artifactId>
             <version>2.8.8</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.11.0</version>
         </dependency>
     </dependencies>
 </project>

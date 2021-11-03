@@ -1,5 +1,11 @@
 #editor-root {
     -fx-background-color: #0E121A;
+    -fx-border-width: 1;
+    -fx-border-color: #383f4d;
+}
+
+#left-caption {
+    -fx-spacing: 15;
 }
 
 #window-caption {
@@ -7,7 +13,9 @@
     -fx-min-height: 50;
     -fx-fill-height: true;
     -fx-spacing: 120;
-    -fx-padding: 0 5 0 20;
+    -fx-padding: 0 5 0 0;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: #383f4d;
 }
 
 #menu-bar, #menu-bar > .container > .menu {
@@ -24,6 +32,7 @@
     -fx-font-size: 13;
     -fx-padding: 5 15;
     -fx-max-width: 120;
+    -fx-min-width: 50;
 }
 
 #menu-bar .menu-button:hover, #menu-bar .menu-button:showing {
@@ -116,71 +125,7 @@
     -fx-pref-height: 50;
     -fx-pref-width: 50;
     -fx-background-color: transparent;
-    -fx-graphic: url("rsrc:Themes/Dark/Icons/EditorButton.png");
-}
-
-#expand-button:selected {
-    -fx-graphic: url("rsrc:Themes/Dark/Icons/ExpandedEditorButton.png");
-    -fx-min-width: 181;
-    -fx-pref-width: 181;
-}
-
-.nav-button {
-    -fx-background-color: transparent;
-    -fx-background-radius: 0;
-    -fx-padding: 0;
-    -fx-min-height: 50;
-    -fx-max-height: 50;
-    -fx-pref-height: 50;
-    -fx-alignment: center_left;
-    -fx-graphic-text-gap: 5;
-    -fx-max-width: Infinity;
-    -fx-content-display: CENTER;
-    -fx-text-fill: #C3CDDB;
-    -fx-font-family: Roboto;
-    -fx-font-size: 0;
-}
-
-.nav-button .text {
-    visibility: false;
-}
-
-.nav-button:width_181 {
-    -fx-content-display: LEFT;
-    -fx-font-size: 13;
-}
-
-.nav-button:width_181 .text {
-    visibility: true;
-}
-
-.nav-button:selected {
-    -fx-background-color: #232A38;
-    -fx-text-fill: #ED8936;
-}
-
-#file-nav {
-    -fx-graphic: url("rsrc:Themes/Dark/Icons/FileButton.png");
-}
-
-#file-nav:selected {
-    -fx-graphic: url("rsrc:Themes/Dark/Icons/FileButtonActive.png");
-}
-
-#structure-nav {
-    -fx-graphic: url("rsrc:Themes/Dark/Icons/StructureButton.png");
-}
-
-#structure-nav:selected {
-    -fx-graphic: url("rsrc:Themes/Dark/Icons/StructureButtonActive.png");
-}
-
-#facets-nav {
-    -fx-graphic: url("rsrc:Themes/Dark/Icons/PluginButton.png");
-}
-
-#facets-nav:selected {
-    -fx-graphic: url("rsrc:Themes/Dark/Icons/PluginButtonActive.png");
+    -fx-image: url("theme:Icons/EditorButton.png");
 }
 
 .editor-navigation-root {
@@ -188,25 +133,14 @@
     -fx-background-color: #1A202C;
 }
 
-.editor-navigation {
-    -fx-fill-width: true;
-    -fx-padding: 30 0;
-}
-
 .center-viewport {
-    -fx-orientation: HORIZONTAL;
     -fx-background-color: transparent;
     -fx-padding: 0;
-    -fx-skin: "thito.nodeflow.internal.ui.SplitPaneSkin";
 }
 
 .center-viewport .split-pane-divider {
     -fx-background-color: transparent;
     -fx-padding: 0 5;
-}
-
-.nav-panel {
-    -fx-background-color: #232A38;
 }
 
 .file-tabs {
@@ -269,7 +203,6 @@
 EditorSkin {
     -fx-background-color: transparent;
     -fx-padding: 20;
-    -fx-effect: dropshadow(gaussian, rgb(0, 0, 0, 0.7), 20, 0, 0, 0);
     -fx-pref-height: 800;
     -fx-pref-width: 1000;
     -fx-min-height: 600;

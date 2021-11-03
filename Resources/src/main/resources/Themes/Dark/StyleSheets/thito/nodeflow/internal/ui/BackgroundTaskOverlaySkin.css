@@ -1,0 +1,15 @@
+.overlay-h-box {
+    -fx-alignment: center;
+}
+
+.overlay-v-box {
+    -fx-alignment: center;
+}
+
+.overlay-root {
+    -fx-padding: 15 25;
+}
+
+.overlay-content {
+    -fx-spacing: 10;
+}

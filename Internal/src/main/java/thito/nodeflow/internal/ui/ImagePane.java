@@ -29,7 +29,6 @@ public class ImagePane extends Pane {
         }
     };
 
-    private ObjectProperty<Image> image = new SimpleObjectProperty<>();
     private ImageView imageView = new ImageView();
 
     public ImagePane() {

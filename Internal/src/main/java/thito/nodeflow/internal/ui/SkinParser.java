@@ -35,11 +35,6 @@ public class SkinParser {
         skinHandlerList.add(new ButtonSkinHandler());
     }
 
-//    public Node load(String html) {
-//        Document doc = Jsoup.parse(html);
-//        return load(doc.selectFirst("NodeFlow"));
-//    }
-
     public void loadComponents(Element components) {
         if (components != null) {
             for (Element component : components.children()) {

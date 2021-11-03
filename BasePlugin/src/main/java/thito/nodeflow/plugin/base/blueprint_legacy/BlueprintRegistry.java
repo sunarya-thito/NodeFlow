@@ -10,7 +10,6 @@ import java.util.*;
 
 public class BlueprintRegistry {
 
-
     private final ObservableList<NodeProviderCategory> categories = FXCollections.observableArrayList();
     private static final Map<Class<?>, Color> typeColorMap = new HashMap<>();
 

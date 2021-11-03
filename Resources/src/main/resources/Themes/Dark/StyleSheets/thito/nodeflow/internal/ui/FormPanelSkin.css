@@ -1,0 +1,30 @@
+.form-panel-root {
+    -fx-min-width: 50;
+}
+
+.form-panel-root .form-panel-header {
+    -fx-padding: 3 5 3 14;
+    -fx-background-color: #537ac9;
+}
+
+.form-panel-root .form-panel-content {
+
+}
+
+.form-panel-root .form-panel-header #title {
+    -fx-text-fill: rgba(255, 255, 255, 0.7);
+    -fx-font-family: "Roboto";
+    -fx-font-weight: bold;
+    -fx-font-size: 14;
+}
+
+.form-panel-root .form-panel-header #expand {
+    -fx-background-color: transparent;
+    -fx-graphic: "theme:Icons/Arrow.png";
+    -fx-opacity: 0.7;
+    -fx-rotate: 180;
+}
+
+.form-panel-root .form-panel-header #expand:selected {
+    -fx-rotate: 0;
+}

@@ -23,7 +23,7 @@
                         <Text>${editor.menu-edit.paste}</Text>
                     </Item>
                     <Separator/>
-                    <Item id="file-delete">
+                    <Item id="file-delete" action="editor.deleteSelectedFiles">
                         <Text>${editor.menu-edit.delete}</Text>
                     </Item>
                 </ContextMenu>

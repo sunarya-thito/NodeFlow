@@ -10,30 +10,6 @@ public class ResourceProtocol extends URLStreamHandler {
     @Override
     protected URLConnection openConnection(URL u) throws IOException {
         File file = new File(NodeFlow.RESOURCES_ROOT, URLDecoder.decode(u.getFile(), StandardCharsets.UTF_8));
-        return new URLConnection(u) {
-
-            private InputStream inputStream;
-            @Override
-            public void connect() throws IOException {
-                if (!connected) {
-                    inputStream = new FileInputStream(file) {
-                        @Override
-                        public void close() throws IOException {
-                            super.close();
-                            connected = false;
-                            inputStream = null;
-                        }
-                    };
-                    connected = true;
-                }
-            }
-
-            @Override
-            public InputStream getInputStream() throws IOException {
-                connect();
-                return inputStream;
-            }
-
-        };
+        return file.toURI().toURL().openConnection();
     }
 }

@@ -34,13 +34,15 @@ public class FormDialog<T extends Form> {
         borderPane.getStyleClass().add("form-root");
         Button okButton = new Button();
         okButton.getStyleClass().add("ok-button");
+        okButton.setMnemonicParsing(true);
         okButton.disableProperty().bind(Bindings.isNotEmpty(formPane.getInvalidFormPropertyList()));
         okButton.setDefaultButton(true);
-        okButton.textProperty().bind(I18n.$("ok"));
+        okButton.textProperty().bind(I18n.$("ok-button"));
         Button cancelButton = new Button();
         cancelButton.getStyleClass().add("cancel-button");
-        cancelButton.textProperty().bind(I18n.$("cancel"));
+        cancelButton.textProperty().bind(I18n.$("cancel-button"));
         cancelButton.setCancelButton(true);
+        cancelButton.setMnemonicParsing(true);
         HBox buttons = new HBox(okButton, cancelButton);
         buttons.getStyleClass().add("buttons");
         borderPane.setBottom(buttons);

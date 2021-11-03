@@ -1,22 +1,31 @@
 package thito.nodeflow.internal.plugin;
 
-import com.sun.javafx.css.*;
-import thito.nodeflow.config.*;
-import thito.nodeflow.internal.*;
+import com.sun.javafx.css.StyleManager;
+import thito.nodeflow.config.MapSection;
+import thito.nodeflow.config.Section;
+import thito.nodeflow.internal.NodeFlow;
+import thito.nodeflow.internal.editor.Editor;
+import thito.nodeflow.internal.editor.EditorManager;
+import thito.nodeflow.internal.language.Language;
+import thito.nodeflow.internal.plugin.event.Event;
+import thito.nodeflow.internal.plugin.event.EventHandler;
 import thito.nodeflow.internal.plugin.event.EventListener;
-import thito.nodeflow.internal.plugin.event.*;
-import thito.nodeflow.internal.project.*;
-import thito.nodeflow.internal.project.module.*;
-import thito.nodeflow.internal.language.*;
-import thito.nodeflow.internal.resource.*;
+import thito.nodeflow.internal.plugin.event.Listener;
+import thito.nodeflow.internal.project.Project;
+import thito.nodeflow.internal.project.ProjectExport;
+import thito.nodeflow.internal.project.module.FileModule;
+import thito.nodeflow.internal.project.module.UnknownFileModule;
+import thito.nodeflow.internal.resource.Resource;
 import thito.nodeflow.internal.task.TaskThread;
-import thito.nodeflow.internal.ui.editor.Editor;
 
-import java.io.*;
-import java.lang.reflect.*;
-import java.net.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.*;
-import java.util.logging.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class PluginManager {
     private static PluginManager pluginManager = new PluginManager();
@@ -41,15 +50,6 @@ public class PluginManager {
         return Collections.unmodifiableList(moduleList);
     }
 
-    public Plugin loadPlugin(File file) throws MalformedURLException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        PluginClassLoader pluginClassLoader = new PluginClassLoader(file, getClass().getClassLoader());
-        pluginClassLoader.load();
-        Plugin plugin = pluginClassLoader.getPlugin();
-        plugin.initialize();
-        pluginList.add(plugin);
-        return plugin;
-    }
-
     public List<ProjectHandlerRegistry> getProjectHandlerRegistryList() {
         return Collections.unmodifiableList(projectHandlerRegistryList);
     }
@@ -58,11 +58,11 @@ public class PluginManager {
         if (projectHandlerRegistryList.contains(registry)) throw new IllegalArgumentException("already registered");
         projectHandlerRegistryList.add(registry);
         TaskThread.UI().schedule(() -> {
-            for (Editor editor : NodeFlow.getInstance().getActiveEditors()) {
+            for (Editor editor : EditorManager.getActiveEditors()) {
                 Project project = editor.projectProperty().get();
                 if (project != null) {
-                    TaskThread.BACKGROUND().schedule(() -> {
-                        project.getProjectHandlers().add(registry.loadHandler(project, project.getConfiguration().getOrCreateMap("handler."+registry.getId())));
+                    TaskThread.BG().schedule(() -> {
+                        project.getProjectHandlers().add(registry.loadHandler(project, project.getConfiguration().getOrCreateMap("handlers."+registry.getId())));
                     });
                 }
             }
@@ -77,7 +77,7 @@ public class PluginManager {
         if (!projectHandlerRegistryList.contains(registry)) throw new IllegalArgumentException("not registered");
         projectHandlerRegistryList.remove(registry);
         TaskThread.UI().schedule(() -> {
-            for (Editor editor : NodeFlow.getInstance().getActiveEditors()) {
+            for (Editor editor : EditorManager.getActiveEditors()) {
                 Project project = editor.projectProperty().get();
                 if (project != null) {
                     project.getProjectHandlers().removeIf(x -> x.getRegistry() == registry);

@@ -1,0 +1,27 @@
+.dialog-root-pane {
+    -fx-padding: 15 25 20 25;
+    -fx-spacing: 5;
+}
+
+.dialog-content-pane {
+    -fx-spacing: 25;
+    -fx-alignment: center_left;
+}
+
+#button-pane {
+    -fx-hgap: 10;
+    -fx-vgap: 5;
+    -fx-padding: 0;
+}
+
+#icon {
+    -fx-max-height: 72;
+    -fx-height-mode: FIT;
+}
+
+#message {
+    -fx-font-family: "Roboto";
+    -fx-font-size: 14;
+    -fx-text-fill: rgb(255, 255, 255);
+    -fx-wrap-text: true;
+}

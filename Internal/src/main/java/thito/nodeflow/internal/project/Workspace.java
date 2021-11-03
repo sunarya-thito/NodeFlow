@@ -3,8 +3,8 @@ package thito.nodeflow.internal.project;
 import javafx.collections.*;
 import thito.nodeflow.config.*;
 import thito.nodeflow.internal.*;
+import thito.nodeflow.internal.annotation.IOThread;
 import thito.nodeflow.internal.resource.*;
-import thito.nodeflow.internal.task.*;
 
 import java.io.*;
 import java.util.*;
@@ -14,13 +14,16 @@ public class Workspace {
     private ResourceManager resourceManager;
     private ObservableList<ProjectProperties> projectPropertiesList = FXCollections.observableArrayList();
 
+    @IOThread
     public Workspace(File root) {
         resourceManager = new ResourceManager(root);
     }
+
     public Resource getRoot() {
         return resourceManager.getRoot();
     }
 
+    @IOThread
     public void scanProjects() {
         NodeFlow.getLogger().log(Level.INFO, "Scanning workspace "+resourceManager.getRoot());
         Resource resource = resourceManager.getRoot();
@@ -49,8 +52,8 @@ public class Workspace {
         projectPropertiesList.retainAll(added);
     }
 
+    @IOThread
     public ProjectProperties createProject(String name, String directoryName) throws IOException {
-        TaskThread.IO().checkThread();
         Resource directory = resourceManager.getRoot().getChild(directoryName);
         directory.toFile().mkdirs();
         Resource properties = directory.getChild("project.yml");
@@ -71,6 +74,10 @@ public class Workspace {
 
     public ResourceManager getResourceManager() {
         return resourceManager;
+    }
+
+    public void closeWorkspace() {
+
     }
 
 }

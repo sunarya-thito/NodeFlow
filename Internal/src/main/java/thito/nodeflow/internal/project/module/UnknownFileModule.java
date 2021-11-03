@@ -13,6 +13,11 @@ public class UnknownFileModule implements FileModule {
     }
 
     @Override
+    public String getExtension() {
+        return null;
+    }
+
+    @Override
     public String getIconURL(Theme theme) {
         return "rsrc:Themes/"+theme.getName()+"/Icons/UnknownFile.png";
     }

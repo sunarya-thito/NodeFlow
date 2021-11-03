@@ -1,17 +1,23 @@
 package thito.nodeflow.internal.util;
 
-import javafx.beans.binding.*;
-import javafx.geometry.*;
-import javafx.scene.paint.*;
-import javafx.scene.robot.*;
-import thito.nodeflow.internal.language.*;
+import com.sun.jna.platform.FileUtils;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.NumberExpression;
+import javafx.beans.binding.StringBinding;
+import javafx.geometry.Point2D;
+import javafx.scene.paint.Color;
+import javafx.scene.robot.Robot;
+import thito.nodeflow.internal.language.I18n;
 
-import java.net.*;
-import java.nio.charset.*;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.stream.*;
+import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.mapping;
 
 public class Toolkit {
     private static Robot robot;
@@ -89,6 +95,21 @@ public class Toolkit {
             }
             return String.format(I18n.$("file-size.B").get(), size / SIZE_BYTE);
         }, bytes, I18n.$("file-size.gB"), I18n.$("file-size.mB"), I18n.$("file-size.kB"), I18n.$("file-size.B"));
+    }
+
+    public static void moveToRecycleBin(File file) {
+        if (!file.exists()) return;
+        if (file.isDirectory()) {
+            File[] list = file.listFiles();
+            for (File f : list) {
+                moveToRecycleBin(f);
+            }
+        }
+        try {
+            FileUtils.getInstance().moveToTrash(new File[]{file});
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static int colorToRGBInt(Color color) {

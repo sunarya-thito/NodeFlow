@@ -1,5 +1,7 @@
 .standard-window {
     -fx-background-color: #0E121A;
+    -fx-border-width: 1;
+    -fx-border-color: #383f4d;
 }
 
 .standard-window-header {
@@ -7,6 +9,8 @@
     -fx-min-height: 30;
     -fx-max-height: 30;
     -fx-pref-height: 30;
+    -fx-border-width:  0 0 1 0;
+    -fx-border-color: #383f4d;
 }
 
 #caption {
@@ -20,7 +24,6 @@
 DialogWindowSkin {
     -fx-background-color: transparent;
     -fx-padding: 20;
-    -fx-effect: dropshadow(gaussian, rgb(0, 0, 0, 0.7), 20, 0, 0, 0);
 }
 
 DialogWindowSkin:maximized {
@@ -104,24 +107,24 @@ FormPane {
 
 .buttons {
     -fx-alignment: center_right;
-    -fx-padding: 15;
+    -fx-padding: 15 25 20 25;
     -fx-spacing: 10;
 }
 
 .buttons .button {
-    -fx-padding: 7 20;
+    -fx-padding: 4 24;
     -fx-background-color: transparent;
-    -fx-border-width: 1.5;
-    -fx-border-insets: -1.5;
+    -fx-border-width: 1;
+    -fx-border-insets: -1;
     -fx-border-radius: 5;
-    -fx-border-color: rgb(255, 255, 255, 0.3);
+    -fx-border-color: rgba(255, 255, 255, 0.3);
     -fx-font-family: Roboto;
     -fx-font-size: 14;
-    -fx-text-fill: rgb(255, 255, 255, 0.7);
+    -fx-text-fill: rgba(255, 255, 255, 0.7);
 }
 
 .buttons .button:hover {
-    -fx-background-color: rgb(255, 255, 255, 0.1);
+    -fx-background-color: rgba(255, 255, 255, 0.1);
 }
 
 .buttons .button:default {

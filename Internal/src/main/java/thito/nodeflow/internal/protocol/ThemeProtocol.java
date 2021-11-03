@@ -1,12 +1,12 @@
 package thito.nodeflow.internal.protocol;
 
 import thito.nodeflow.internal.NodeFlow;
+import thito.nodeflow.internal.plugin.Plugin;
+import thito.nodeflow.internal.plugin.PluginManager;
 import thito.nodeflow.internal.ui.ThemeManager;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
@@ -16,31 +16,23 @@ import java.nio.charset.StandardCharsets;
 public class ThemeProtocol extends URLStreamHandler {
     @Override
     protected URLConnection openConnection(URL u) throws IOException {
-        File file = new File(new File(NodeFlow.RESOURCES_ROOT, "Themes/" + ThemeManager.getInstance().getTheme().getName()), URLDecoder.decode(u.getFile(), StandardCharsets.UTF_8));
-        return new URLConnection(u) {
-
-            private InputStream inputStream;
-            @Override
-            public void connect() throws IOException {
-                if (!connected) {
-                    inputStream = new FileInputStream(file) {
-                        @Override
-                        public void close() throws IOException {
-                            super.close();
-                            connected = false;
-                            inputStream = null;
-                        }
-                    };
-                    connected = true;
+        String host = u.getHost();
+        if (host != null) {
+            Plugin plugin = PluginManager.getPluginManager().getPlugins().stream().filter(x -> x.getId().equals(host)).findAny().orElse(null);
+            if (plugin != null) {
+                String path = u.getPath();
+                if (path.startsWith("/")) {
+                    path = "Themes" + path;
+                } else {
+                    path = "Themes/" + path;
+                }
+                URL url = plugin.getClassLoader().getResource(path);
+                if (url != null) {
+                    return url.openConnection();
                 }
             }
-
-            @Override
-            public InputStream getInputStream() throws IOException {
-                connect();
-                return inputStream;
-            }
-
-        };
+        }
+        File file = new File(new File(NodeFlow.RESOURCES_ROOT, "Themes/" + ThemeManager.getInstance().getTheme().getName()), URLDecoder.decode(u.getFile(), StandardCharsets.UTF_8));
+        return file.toURI().toURL().openConnection();
     }
 }

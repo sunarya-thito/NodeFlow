@@ -18,7 +18,7 @@ public class MappedBinding<F,T> extends ObjectBinding<T> {
         MappedBinding<K, V> mappedBinding = new MappedBinding<>(source, value -> {
             ObservableValue<V> mapped = flatMapper.apply(value);
             listener.set(mapped);
-            return mapped.getValue();
+            return mapped == null ? null : mapped.getValue();
         });
         listener.addListener((obs, old, val) -> {
             if (old != null) {

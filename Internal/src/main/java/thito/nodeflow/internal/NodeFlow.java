@@ -1,25 +1,38 @@
 package thito.nodeflow.internal;
 
-import javafx.beans.*;
 import javafx.beans.property.*;
-import javafx.collections.*;
-import thito.nodeflow.config.*;
-import thito.nodeflow.internal.plugin.*;
-import thito.nodeflow.internal.project.*;
-import thito.nodeflow.internal.settings.*;
-import thito.nodeflow.internal.ui.editor.*;
-import thito.nodeflow.internal.application.*;
-import thito.nodeflow.internal.language.*;
-import thito.nodeflow.internal.resource.*;
-import thito.nodeflow.internal.task.*;
-import thito.nodeflow.internal.ui.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableMap;
+import thito.nodeflow.config.MapSection;
+import thito.nodeflow.config.Section;
+import thito.nodeflow.internal.annotation.BGThread;
+import thito.nodeflow.internal.language.Language;
+import thito.nodeflow.internal.plugin.Plugin;
+import thito.nodeflow.internal.plugin.PluginClassLoader;
+import thito.nodeflow.internal.project.ProjectProperties;
+import thito.nodeflow.internal.project.Tag;
+import thito.nodeflow.internal.project.Workspace;
+import thito.nodeflow.internal.resource.ResourceWatcher;
+import thito.nodeflow.internal.settings.Settings;
+import thito.nodeflow.internal.task.BatchTask;
+import thito.nodeflow.internal.task.ProgressedTask;
+import thito.nodeflow.internal.task.TaskManager;
+import thito.nodeflow.internal.task.TaskThread;
+import thito.nodeflow.internal.ui.Theme;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLStreamHandler;
 import java.util.*;
-import java.util.logging.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-public class NodeFlow extends ApplicationResources {
+public class NodeFlow {
 
+    private static NodeFlow instance;
     public static final File ROOT;
     public static final File RESOURCES_ROOT;
 
@@ -44,73 +57,72 @@ public class NodeFlow extends ApplicationResources {
 
 
     public static NodeFlow getInstance() {
-        return (NodeFlow) ApplicationResources.getInstance();
+        return instance;
     }
 
     private Language defaultLanguage;
-    protected LinkedList<ProgressedTask> progressedTasks = new LinkedList<>();
     private ObjectProperty<Workspace> workspace = new SimpleObjectProperty<>();
     private ObservableMap<String, Tag> tagMap = FXCollections.observableHashMap();
-    private ObservableList<Editor> activeEditors = FXCollections.observableArrayList();
 
+    @BGThread
     public NodeFlow() {
-        getAvailableLanguages();
-        Language.setLanguage(defaultLanguage = getLanguage("en_us"));
-        activeEditors.addListener((InvalidationListener) obs -> {
-            if (activeEditors.isEmpty()) {
-                shutdown();
+        if (instance != null) throw new IllegalStateException("already initiated");
+        instance = this;
+        URL.setURLStreamHandlerFactory(this::getProtocolHandler);
+
+        workspace.addListener((obs, old, val) -> {
+            if (old != null) {
+                TaskThread.BG().schedule(() -> {
+                    for (ProjectProperties properties : old.getProjectPropertiesList()) {
+//                        properties.closeProject();
+                    }
+                });
             }
+        });
+    }
+
+    protected BatchTask createInitializationTasks() {
+        BatchTask batchTask = new BatchTask();
+        batchTask.submitTask(progress -> {
+            progress.setStatus("Loading languages");
+            getAvailableLanguages();
+            Language.setLanguage(defaultLanguage = getLanguage("en_us"));
         });
         File pluginDirectory = new File(ROOT, "Plugins");
         pluginDirectory.mkdirs();
         File[] pluginFiles = pluginDirectory.listFiles();
         if (pluginFiles != null) {
-            List<Plugin> initialized = new ArrayList<>();
-            for (int i = 0; i < pluginFiles.length; i++) {
-                File f = pluginFiles[i];
-                if (!f.getName().endsWith(".jar")) continue;
-                double progressValue = i / (double) pluginFiles.length;
-                submitProgressedTask((progress, status) -> {
-                    status.set("Loading plugin "+f.getName());
+            ArrayList<Plugin> initialized = new ArrayList<>();
+            batchTask.submitTask(progress -> {
+                progress.setStatus("Loading plugins");
+                BatchTask task = new BatchTask();
+                for (File f : pluginFiles) {
+                    if (!f.getName().endsWith(".jar")) continue;
+                    getLogger().log(Level.INFO, "Loading " + f.getName());
                     try {
-                        Plugin plugin = PluginManager.getPluginManager().loadPlugin(f);
-                        getLogger().log(Level.INFO, "Loading "+plugin.getName()+" ("+f.getName()+")");
+                        PluginClassLoader pluginClassLoader = new PluginClassLoader(f, getClass().getClassLoader());
+                        pluginClassLoader.load();
+                        Plugin plugin = pluginClassLoader.getPlugin();
+                        task.submitTask(plugin.initialize());
                         initialized.add(plugin);
                     } catch (Throwable t) {
-                        getLogger().log(Level.SEVERE, "Failed to load "+f.getName(), t);
+                        getLogger().log(Level.SEVERE, "Failed to load plugin "+f.getName(), t);
                     }
-                    progress.set(progressValue);
-                });
-            }
-            submitProgressedTask((progress, status) -> {
-                status.set("Launching plugins...");
-                progress.set(0);
-                for (int i = 0; i < initialized.size(); i++) {
-                    Plugin plugin = initialized.get(i);
-                    double pg = i / (double) initialized.size();
-                    submitProgressedTask((p2, s2) -> {
-                        s2.set("Initializing "+plugin.getName());
-                        getLogger().log(Level.INFO, "Initializing "+plugin.getName());
-                        try {
-                            plugin.launch();
-                        } catch (Throwable t) {
-                            getLogger().log(Level.SEVERE, "Failed to launch "+plugin.getName(), t);
-                        }
-                        p2.set(pg);
-                    });
                 }
+                task.run(progress);
             });
         }
-        getAvailableLanguages();
-        workspace.addListener((obs, old, val) -> {
-            if (old != null) {
-                TaskThread.BACKGROUND().schedule(() -> {
-                    for (ProjectProperties properties : old.getProjectPropertiesList()) {
-                        properties.closeProject();
-                    }
-                });
-            }
-        });
+        return batchTask;
+    }
+
+    private Map<String, URLStreamHandler> protocolHandlerMap = new HashMap<>();
+
+    public void registerProtocol(String protocol, URLStreamHandler handler) {
+        protocolHandlerMap.put(protocol, handler);
+    }
+
+    private URLStreamHandler getProtocolHandler(String protocol) {
+        return protocolHandlerMap.get(protocol);
     }
 
     public Section readFromConfiguration() {
@@ -129,17 +141,6 @@ public class NodeFlow extends ApplicationResources {
         } catch (IOException t) {
             throw new RuntimeException(t);
         }
-    }
-
-    public Editor createNewEditor() {
-        TaskThread.UI().checkThread();
-        Editor editor = new Editor();
-        editor.getEditorWindow().show();
-        return editor;
-    }
-
-    public ObservableList<Editor> getActiveEditors() {
-        return activeEditors;
     }
 
     public void registerTag(String id, Tag tag) {
@@ -162,18 +163,12 @@ public class NodeFlow extends ApplicationResources {
         return workspace;
     }
 
-    public void submitProgressedTask(ProgressedTask task) {
-        if (progressedTasks == null) throw new IllegalStateException("nodeflow is already loaded");
-        progressedTasks.add(task);
-    }
-
     public void shutdown() {
         ResourceWatcher.getResourceWatcher().close();
         TaskManager.getInstance().shutdown();
         Settings.getSettings().saveGlobalConfiguration();
     }
 
-    @Override
     public Language getDefaultLanguage() {
         return defaultLanguage;
     }
@@ -186,7 +181,6 @@ public class NodeFlow extends ApplicationResources {
         });
     }
 
-    @Override
     public Collection<? extends Theme> getAvailableThemes() {
         List<Theme> themes = new ArrayList<>();
         File[] list = new File(RESOURCES_ROOT, "Themes").listFiles();
@@ -199,7 +193,6 @@ public class NodeFlow extends ApplicationResources {
     }
 
     private List<Language> cached;
-    @Override
     public Collection<Language> getAvailableLanguages() {
         if (cached != null) return cached;
         List<Language> languages = new ArrayList<>();

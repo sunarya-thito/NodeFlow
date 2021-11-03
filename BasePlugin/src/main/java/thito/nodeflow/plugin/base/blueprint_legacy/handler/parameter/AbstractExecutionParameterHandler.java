@@ -1,4 +1,4 @@
-package thito.nodeflow.plugin.base.blueprint.handler.parameter;
+package thito.nodeflow.plugin.base.blueprint_legacy.handler.parameter;
 
 import javafx.beans.property.*;
 import thito.nodeflow.engine.node.*;

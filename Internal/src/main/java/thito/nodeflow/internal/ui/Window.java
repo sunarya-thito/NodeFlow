@@ -1,18 +1,24 @@
 package thito.nodeflow.internal.ui;
 
-import javafx.application.*;
-import javafx.beans.*;
+import javafx.application.Platform;
+import javafx.beans.InvalidationListener;
 import javafx.beans.property.*;
-import javafx.css.*;
-import javafx.scene.*;
+import javafx.css.PseudoClass;
+import javafx.event.Event;
+import javafx.event.EventType;
+import javafx.scene.Scene;
+import javafx.scene.SceneAntialiasing;
 import javafx.scene.image.Image;
-import javafx.scene.input.*;
-import javafx.scene.layout.*;
-import javafx.scene.paint.*;
-import javafx.stage.*;
-import thito.nodeflow.internal.binding.*;
-import thito.nodeflow.internal.platform.*;
-import thito.nodeflow.internal.task.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
+import thito.nodeflow.internal.binding.ThreadBinding;
+import thito.nodeflow.internal.platform.NativeToolkit;
+import thito.nodeflow.internal.task.BatchTask;
+import thito.nodeflow.internal.task.TaskThread;
 
 public abstract class Window {
     public static final PseudoClass MAXIMIZED = PseudoClass.getPseudoClass("maximized");
@@ -22,6 +28,16 @@ public abstract class Window {
     private LayoutDebugger debugger;
     private StackPane root;
     private StringProperty title = new SimpleStringProperty();
+
+    private BorderPane backgroundOverlay = new BorderPane();
+
+    /**
+     * Run and hold any window activity
+     * @param batchTask
+     */
+    public void runBatchTask(BatchTask batchTask) {
+        // TODO
+    }
 
     public Window() {
         initializeWindow();
@@ -35,6 +51,8 @@ public abstract class Window {
     }
 
     protected void initializeWindow() {
+        backgroundOverlay.getStyleClass().add(".window-background-task-overlay");
+        backgroundOverlay.addEventHandler(EventType.ROOT, Event::consume);
         skin.addListener((obs, old, val) -> {
             if (old != null) root.getChildren().remove(old);
             if (val != null) {
@@ -43,7 +61,6 @@ public abstract class Window {
         });
 
         stage.getIcons().add(new Image("rsrc:Images/SplashedLogo.png"));
-
         stage.getProperties().put(Window.class, this);
 
         windowHitTest = createHitTest();
@@ -53,7 +70,7 @@ public abstract class Window {
         root = new StackPane();
         debugger = new LayoutDebugger(this);
         root.getChildren().add(debugger.getHighlightLayer());
-
+        root.getChildren().add(backgroundOverlay);
         root.setBackground(Background.EMPTY);
 
         stage.maximizedProperty().addListener((obs, old, val) -> {
@@ -69,9 +86,6 @@ public abstract class Window {
             if (old != null) val.layoutBoundsProperty().removeListener(update);
             if (val != null) val.layoutBoundsProperty().addListener(update);
         });
-
-        // Colors.json binding
-//        root.styleProperty().bind(ThemeManager.getInstance().getColorPalette().styleProperty());
 
         Scene scene = new Scene(root, -1, -1, false, SceneAntialiasing.BALANCED);
         scene.setFill(Color.TRANSPARENT);

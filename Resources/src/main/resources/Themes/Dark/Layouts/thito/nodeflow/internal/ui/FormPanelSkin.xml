@@ -1,0 +1,15 @@
+<NodeFlow>
+    <Layout>
+        <VBox class="form-panel-root">
+            <HBox class="form-panel-header">
+                <BorderPane HBox.grow="ALWAYS">
+                    <Center>
+                        <Label id="title" BorderPane.alignment="CENTER_LEFT"/>
+                    </Center>
+                </BorderPane>
+                <ToggleButton id="expand"/>
+            </HBox>
+            <BorderPane class="form-panel-content" id="content" VBox.grow="ALWAYS"/>
+        </VBox>
+    </Layout>
+</NodeFlow>

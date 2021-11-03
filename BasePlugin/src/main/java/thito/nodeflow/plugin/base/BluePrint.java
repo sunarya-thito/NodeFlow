@@ -1,38 +1,55 @@
 package thito.nodeflow.plugin.base;
 
-import thito.nodeflow.engine.node.*;
-import thito.nodeflow.internal.*;
-import thito.nodeflow.internal.plugin.*;
-import thito.nodeflow.internal.settings.*;
-import thito.nodeflow.plugin.base.module.*;
+import thito.nodeflow.engine.node.LinkStyle;
+import thito.nodeflow.internal.NodeFlow;
+import thito.nodeflow.internal.plugin.Plugin;
+import thito.nodeflow.internal.plugin.PluginInstance;
+import thito.nodeflow.internal.plugin.PluginManager;
+import thito.nodeflow.internal.settings.SettingsManager;
+import thito.nodeflow.internal.task.BatchTask;
+import thito.nodeflow.internal.task.ProgressedTask;
+import thito.nodeflow.plugin.base.blueprint.BlueprintModule;
 
-import java.io.*;
-import java.util.logging.*;
+import java.util.logging.Level;
 
 public class BluePrint implements PluginInstance {
 
     @Override
-    public void onLoad() {
-        try {
-            PluginManager manager = getManager();
-            Plugin plugin = getPlugin();
-            manager.loadPluginLocale(NodeFlow.getInstance().getLanguage("en_us"), plugin,
-                    plugin.getClassLoader().getResourceAsStream("en_us.yml"));
+    public BatchTask createLoaderTask() {
+        BatchTask batchTask = new BatchTask();
+        PluginManager manager = getManager();
+        Plugin plugin = getPlugin();
+        batchTask.submitTask(new ProgressedTask("Loading plugin locale", progress -> {
+            try {
+                manager.loadPluginLocale(NodeFlow.getInstance().getLanguage("en_us"), plugin,
+                        plugin.getClassLoader().getResourceAsStream("en_us.yml"));
+            } catch (Throwable t) {
+                getLogger().log(Level.SEVERE, "Failed to load plugin locale ", t);
+            }
+        }));
+        batchTask.submitTask(new ProgressedTask("Registering settings", progress -> {
             SettingsManager.getSettingsManager().registerParser(LinkStyle.class, new LinkStyleParser());
-        } catch (IOException e) {
-            getLogger().log(Level.SEVERE, "Failed to load plugin locale en_us", e);
-        }
+        }));
+        return batchTask;
     }
 
     @Override
-    public void onEnable() {
-        PluginManager pluginManager = PluginManager.getPluginManager();
-        pluginManager.registerFileModule(new BlueprintModule());
+    public BatchTask createInitializationTask() {
+        BatchTask task = new BatchTask();
+        task.submitTask(new ProgressedTask("Registering Blueprint Module", progress -> {
+            PluginManager pluginManager = PluginManager.getPluginManager();
+            pluginManager.registerFileModule(new BlueprintModule());
+        }));
+        return task;
     }
 
     @Override
-    public void onDisable() {
-        PluginManager.getPluginManager().unregisterFileModule(getPlugin());
+    public BatchTask createShutdownTask() {
+        BatchTask task = new BatchTask();
+        task.submitTask(new ProgressedTask("Unregistering Blueprint Module", progress -> {
+            PluginManager.getPluginManager().unregisterFileModule(getPlugin());
+        }));
+        return task;
     }
 
 }

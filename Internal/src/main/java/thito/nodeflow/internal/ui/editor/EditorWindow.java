@@ -1,15 +1,17 @@
 package thito.nodeflow.internal.ui.editor;
 
-import javafx.beans.binding.*;
-import javafx.geometry.*;
-import javafx.scene.*;
-import javafx.scene.input.*;
-import thito.nodeflow.internal.*;
-import thito.nodeflow.internal.project.*;
-import thito.nodeflow.internal.ui.dashboard.*;
-import thito.nodeflow.internal.binding.*;
-import thito.nodeflow.internal.language.*;
+import javafx.beans.binding.Bindings;
+import javafx.geometry.Point2D;
+import javafx.scene.Node;
+import javafx.scene.input.MouseButton;
+import thito.nodeflow.internal.NodeFlow;
+import thito.nodeflow.internal.binding.MappedBinding;
+import thito.nodeflow.internal.editor.Editor;
+import thito.nodeflow.internal.editor.EditorManager;
+import thito.nodeflow.internal.language.I18n;
+import thito.nodeflow.internal.task.TaskThread;
 import thito.nodeflow.internal.ui.*;
+import thito.nodeflow.internal.ui.dashboard.DashboardWindow;
 
 public class EditorWindow extends Window implements WindowHitTest {
     private Editor editor;
@@ -24,11 +26,13 @@ public class EditorWindow extends Window implements WindowHitTest {
     protected void initializeWindow() {
         super.initializeWindow();
         getStage().showingProperty().addListener((obs, old, val) -> {
-            if (val) {
-                NodeFlow.getInstance().getActiveEditors().add(editor);
-            } else {
-                NodeFlow.getInstance().getActiveEditors().remove(editor);
-            }
+            TaskThread.BG().schedule(() -> {
+                if (val) {
+                    EditorManager.getActiveEditors().add(editor);
+                } else {
+                    EditorManager.getActiveEditors().remove(editor);
+                }
+            });
         });
         getStage().focusedProperty().addListener((obs, old, val) -> {
             DashboardWindow.getWindow().getStage().toFront();

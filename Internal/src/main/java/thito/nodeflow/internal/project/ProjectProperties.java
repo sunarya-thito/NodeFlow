@@ -5,6 +5,8 @@ import javafx.beans.property.*;
 import javafx.collections.*;
 import thito.nodeflow.config.*;
 import thito.nodeflow.internal.*;
+import thito.nodeflow.internal.annotation.BGThread;
+import thito.nodeflow.internal.annotation.IOThread;
 import thito.nodeflow.internal.settings.*;
 import thito.nodeflow.internal.ui.editor.*;
 import thito.nodeflow.internal.resource.*;
@@ -20,14 +22,15 @@ public class ProjectProperties {
 
     private Workspace workspace;
     private Resource directory;
-    private StringProperty name = new SimpleStringProperty();
-    private LongProperty lastModified = new SimpleLongProperty(System.currentTimeMillis());
-    private StringProperty description = new SimpleStringProperty();
-    private ObservableList<String> tags = FXCollections.observableArrayList();
-    private ObjectProperty<Project> loadedProject = new SimpleObjectProperty<>();
+    private StringProperty name = TaskThread.IO().lock(new SimpleStringProperty());
+    private LongProperty lastModified = TaskThread.IO().lock(new SimpleLongProperty(System.currentTimeMillis()));
+    private StringProperty description = TaskThread.IO().lock(new SimpleStringProperty());
+    private ObservableList<String> tags = TaskThread.IO().lock(FXCollections.observableArrayList());
+    private ObjectProperty<Project> loadedProject = TaskThread.IO().lock(new SimpleObjectProperty<>());
 
     private Section config;
 
+    @IOThread
     public ProjectProperties(Workspace workspace, Resource directory, Section config) {
         this.workspace = workspace;
         this.config = config;
@@ -43,70 +46,75 @@ public class ProjectProperties {
         validate();
     }
 
-    public Project openProject() {
-        TaskThread.BACKGROUND().checkThread();
-        Project oldProject = loadedProject.get();
-        Editor oldEditor = null;
-        if (oldProject != null) {
-            oldEditor = oldProject.editorProperty().get();
-            if (oldEditor != null) {
-                if (oldEditor.projectProperty().get() == oldProject) {
-                    Editor finalOldEditor1 = oldEditor;
-                    TaskThread.UI().schedule(() -> {
-                        finalOldEditor1.projectProperty().set(null);
-                    });
-                }
-            }
-        }
-        Project project = new Project(getWorkspace(), this);
-        loadedProject.set(project);
-        if (oldEditor != null && oldEditor.projectProperty().get() == null) {
-            oldEditor.projectProperty().set(project);
-            Editor finalOldEditor = oldEditor;
-            TaskThread.UI().schedule(() -> {
-                finalOldEditor.getEditorWindow().getStage().toFront();
-            });
-        } else {
-            for (Editor editor : NodeFlow.getInstance().getActiveEditors()) {
-                if (editor.projectProperty().get() == null) {
-                    TaskThread.UI().schedule(() -> {
-                        editor.projectProperty().set(project);
-                    });
-                    return project;
-                }
-            }
-            TaskThread.UI().schedule(() -> {
-                Editor editor = NodeFlow.getInstance().createNewEditor();
-                editor.projectProperty().set(project);
-            });
-        }
-        return project;
-    }
+//    @BGThread
+//    public void openProject() {
+//        TaskThread.BACKGROUND().checkThread();
+////        Project oldProject = loadedProject.get();
+////        Editor oldEditor = null;
+////        if (oldProject != null) {
+////            oldEditor = oldProject.editorProperty().get();
+////            if (oldEditor != null) {
+////                if (oldEditor.projectProperty().get() == oldProject) {
+////                    Editor finalOldEditor1 = oldEditor;
+////                    TaskThread.UI().schedule(() -> {
+////                        finalOldEditor1.projectProperty().set(null);
+////                    });
+////                }
+////            }
+////        }
+//        closeProject();
+//        Project project = new Project(getWorkspace(), this);
+//        loadedProject.set(project);
+//        if (oldEditor != null && oldEditor.projectProperty().get() == null) {
+//            oldEditor.projectProperty().set(project);
+//            Editor finalOldEditor = oldEditor;
+//            TaskThread.UI().schedule(() -> {
+//                finalOldEditor.getEditorWindow().getStage().toFront();
+//            });
+//        } else {
+//            for (Editor editor : NodeFlow.getInstance().getActiveEditors()) {
+//                if (editor.projectProperty().get() == null) {
+//                    TaskThread.UI().schedule(() -> {
+//                        editor.projectProperty().set(project);
+//                    });
+//                    return project;
+//                }
+//            }
+//            TaskThread.UI().schedule(() -> {
+//                Editor editor = NodeFlow.getInstance().createNewEditor();
+//                editor.projectProperty().set(project);
+//            });
+//        }
+//        return project;
+//    }
 
-    public void closeProject() {
-        Project project = loadedProject.get();
-        if (project != null) {
-            ObservableList<Editor> activeEditors = NodeFlow.getInstance().getActiveEditors();
-            for (Editor editor : activeEditors) {
-                if (editor.projectProperty().get() == project) {
-                    if (activeEditors.size() == 1) {
-                        TaskThread.UI().schedule(() -> {
-                            editor.projectProperty().set(null);
-                        });
-                    } else {
-                        TaskThread.UI().schedule(() -> {
-                            editor.getEditorWindow().close();
-                        });
-                    }
-                    break;
-                }
-            }
-            setLastModified(System.currentTimeMillis()); // triggers to save
-            Settings.unloadProjectSettings(this);
-        }
-        loadedProject.set(null);
-    }
+//    @BGThread
+//    public void closeProject() {
+//        TaskThread.BACKGROUND().checkThread();
+//        Project project = loadedProject.get();
+//        if (project != null) {
+//            ObservableList<Editor> activeEditors = NodeFlow.getInstance().getActiveEditors();
+//            for (Editor editor : activeEditors) {
+//                if (editor.projectProperty().get() == project) {
+//                    if (activeEditors.size() == 1) {
+//                        TaskThread.UI().schedule(() -> {
+//                            editor.projectProperty().set(null);
+//                        });
+//                    } else {
+//                        TaskThread.UI().schedule(() -> {
+//                            editor.getEditorWindow().close();
+//                        });
+//                    }
+//                    break;
+//                }
+//            }
+//            setLastModified(System.currentTimeMillis()); // triggers to save
+//            Settings.unloadProjectSettings(this);
+//        }
+//        loadedProject.set(null);
+//    }
 
+    @IOThread
     public ObjectProperty<Project> loadedProjectProperty() {
         return loadedProject;
     }
@@ -115,14 +123,17 @@ public class ProjectProperties {
         return workspace;
     }
 
+    @IOThread
     public StringProperty nameProperty() {
         return name;
     }
 
+    @IOThread
     public LongProperty lastModifiedProperty() {
         return lastModified;
     }
 
+    @IOThread
     public StringProperty descriptionProperty() {
         return description;
     }
@@ -139,6 +150,7 @@ public class ProjectProperties {
         return lastModified.get();
     }
 
+    @IOThread
     public void setLastModified(long lastModified) {
         this.lastModified.set(lastModified);
     }
@@ -147,6 +159,7 @@ public class ProjectProperties {
         return name.get();
     }
 
+    @IOThread
     public void setName(String name) {
         this.name.set(name);
     }
@@ -155,10 +168,12 @@ public class ProjectProperties {
         return description.get();
     }
 
+    @IOThread
     public void setDescription(String description) {
         this.description.set(description);
     }
 
+    @IOThread
     public ObservableList<String> getTags() {
         return tags;
     }
@@ -180,6 +195,6 @@ public class ProjectProperties {
     }
 
     void validate() {
-        if (!config.getString("name").isPresent()) throw new IllegalArgumentException("invalid project properties");
+        if (config.getString("name").isEmpty()) throw new IllegalArgumentException("invalid project properties");
     }
 }

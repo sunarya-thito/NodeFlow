@@ -1,7 +1,7 @@
 package thito.nodeflow.internal.search;
 
-import javafx.collections.*;
-import thito.nodeflow.internal.ui.editor.*;
+import javafx.collections.ObservableList;
+import thito.nodeflow.internal.editor.Editor;
 
 public interface SearchableContentContext {
     SearchableContentProvider getProvider();

@@ -1,71 +1,81 @@
 <NodeFlow>
+    <Components>
+        <DockPane>org.dockfx.DockPane</DockPane>
+    </Components>
     <Layout>
         <BorderPane id="editor-root">
             <Center>
                 <HBox class="editor-viewport">
-                    <VBox class="editor-navigation-root">
-                        <ToggleButton id="expand-button"/>
-                        <VBox class="editor-navigation">
-                            <ToggleButton class="nav-button" id="file-nav" ToggleButton.group="navigation-editor" action="editor.navigation.file">
-                                <Label>${editor.navigation.project-files}</Label>
-                            </ToggleButton>
-                            <ToggleButton class="nav-button" id="structure-nav" ToggleButton.group="navigation-editor">
-                                <Label>${editor.navigation.module-structure}</Label>
-                            </ToggleButton>
-                            <ToggleButton class="nav-button" id="facets-nav" ToggleButton.group="navigation-editor">
-                                <Label>${editor.navigation.plugin-options}</Label>
-                            </ToggleButton>
-                        </VBox>
-                    </VBox>
+<!--                    <VBox class="editor-navigation-root">-->
+<!--                        -->
+<!--                        <VBox class="editor-navigation">-->
+<!--                            <ToggleButton class="nav-button" id="file-nav" ToggleButton.group="navigation-editor" action="editor.navigation.file">-->
+<!--                                <Label>${editor.navigation.project-files}</Label>-->
+<!--                            </ToggleButton>-->
+<!--                            <ToggleButton class="nav-button" id="structure-nav" ToggleButton.group="navigation-editor" action="editor.navigation.structure">-->
+<!--                                <Label>${editor.navigation.module-structure}</Label>-->
+<!--                            </ToggleButton>-->
+<!--                            <ToggleButton class="nav-button" id="facets-nav" ToggleButton.group="navigation-editor" action="editor.navigation.plugin">-->
+<!--                                <Label>${editor.navigation.plugin-options}</Label>-->
+<!--                            </ToggleButton>-->
+<!--                        </VBox>-->
+<!--                    </VBox>-->
                     <VBox id="viewport" HBox.grow="ALWAYS">
                         <BorderPane id="window-caption" >
                             <Left>
-                                <MenuBar id="menu-bar">
-                                    <Menu id="file-menu">
-                                        <Text>${editor.file}</Text>
-                                        <Items>
-                                            <Menu id="file-create">
-                                                <Text>${editor.menu-file.new}</Text>
-                                            </Menu>
-                                            <Item>
-                                                <Text>${editor.menu-file.import}</Text>
-                                            </Item>
-                                            <Item>
-                                                <Text>${editor.menu-file.export}</Text>
-                                            </Item>
-                                            <Separator/>
-                                            <Item action="window.openDashboard">
-                                                <Text>${editor.menu-file.dashboard}</Text>
-                                            </Item>
-                                            <Item action="window.openSettings">
-                                                <Text>${editor.menu-file.settings}</Text>
-                                            </Item>
-                                            <Separator/>
-                                            <Item>
-                                                <Text>${editor.menu-file.exit}</Text>
-                                            </Item>
-                                        </Items>
-                                    </Menu>
-                                    <!--                                To mark where the module menu should be placed-->
-                                    <Menu id="module-menu"></Menu>
-                                    <Menu>
-                                        <Text>${editor.help}</Text>
-                                        <Items>
-                                            <Item>
-                                                <Text>${editor.menu-help.discord}</Text>
-                                            </Item>
-                                            <Item>
-                                                <Text>${editor.menu-help.github}</Text>
-                                            </Item>
-                                            <Item>
-                                                <Text>${editor.menu-help.donate}</Text>
-                                            </Item>
-                                            <Item>
-                                                <Text>${editor.menu-help.report-issue}</Text>
-                                            </Item>
-                                        </Items>
-                                    </Menu>
-                                </MenuBar>
+                                <HBox id="left-caption">
+                                    <ImageView id="expand-button"/>
+                                    <MenuBar id="menu-bar">
+                                        <Menu id="file-menu">
+                                            <Text>${editor.file}</Text>
+                                            <Items>
+                                                <Menu id="file-create">
+                                                    <Text>${editor.menu-file.new}</Text>
+                                                </Menu>
+                                                <Item id="file-import" action="project.import">
+                                                    <Text>${editor.menu-file.import}</Text>
+                                                </Item>
+                                                <Item id="file-export" action="project.export">
+                                                    <Text>${editor.menu-file.export}</Text>
+                                                </Item>
+                                                <Separator/>
+                                                <Item action="window.openDashboard">
+                                                    <Text>${editor.menu-file.dashboard}</Text>
+                                                </Item>
+                                                <Item action="window.openSettings">
+                                                    <Text>${editor.menu-file.settings}</Text>
+                                                </Item>
+                                                <Separator/>
+                                                <Item id="file-close-project" action="project.close">
+                                                    <Text>${editor.menu-file.close-project}</Text>
+                                                </Item>
+                                                <Separator/>
+                                                <Item id="file-exit">
+                                                    <Text>${editor.menu-file.exit}</Text>
+                                                </Item>
+                                            </Items>
+                                        </Menu>
+                                        <!--                                To mark where the module menu should be placed-->
+                                        <Menu id="module-menu"></Menu>
+                                        <Menu>
+                                            <Text>${editor.help}</Text>
+                                            <Items>
+                                                <Item>
+                                                    <Text>${editor.menu-help.discord}</Text>
+                                                </Item>
+                                                <Item>
+                                                    <Text>${editor.menu-help.github}</Text>
+                                                </Item>
+                                                <Item>
+                                                    <Text>${editor.menu-help.donate}</Text>
+                                                </Item>
+                                                <Item>
+                                                    <Text>${editor.menu-help.report-issue}</Text>
+                                                </Item>
+                                            </Items>
+                                        </Menu>
+                                    </MenuBar>
+                                </HBox>
                             </Left>
                             <Center>
                                 <HBox BorderPane.margin="0 50 0 50" class="search-bar" id="search-bar" VBox.grow="ALWAYS">
@@ -85,17 +95,11 @@
                                 </HBox>
                             </Right>
                         </BorderPane>
-                        <SplitPane class="center-viewport" id="main-viewport" VBox.grow="ALWAYS">
-<!--                            This gets removed later-->
-                            <BorderPane class="nav-panel" id="nav-panel" SplitPane.dividerPosition="0.25" SplitPane.resizeWithParent="false">
-                            </BorderPane>
-                            <BorderPane>
-                                <Center>
-                                    <TabPane class="file-tabs" id="file-tabs" side="BOTTOM">
-                                    </TabPane>
-                                </Center>
-                            </BorderPane>
-                        </SplitPane>
+                        <BorderPane class="center-viewport" id="main-viewport" VBox.grow="ALWAYS">
+                            <Center>
+                                <DockPane id="editor-content"/>
+                            </Center>
+                        </BorderPane>
                     </VBox>
                 </HBox>
             </Center>

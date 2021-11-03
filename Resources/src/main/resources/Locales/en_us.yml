@@ -1,8 +1,31 @@
 cancel: Cancel
 dialogs:
+    delete-file-permanently:
+        title: Delete File Permanently
+        message: |-
+            Are you sure you want to delete:
+            %s
+            You cannot undo this operation!
+        buttons:
+            delete: _Delete Permanently
+            cancel: _Cancel
+    delete-file:
+        title: Move File to Recycle Bin
+        message: |-
+            Are you sure you want to delete:
+            %s
+            Your deleted files will be stored in your Recycle Bin.
+        buttons:
+            confirm: _Yes
+            cancel: _No
+    rename-file:
+        title: Rename File
+        fields:
+            name: New Name
     new-file:
         title: Create New File
         fields:
+            directory: Directory
             name: Name
             type: Type
 editor:
@@ -107,6 +130,9 @@ name: English (US)
 open-file: Select File
 credit: English Locale by Thito Yalasatria Sunarya
 ok: Ok
+# Uses mnemonics parsing
+ok-button: _Ok
+cancel-button: _Cancel
 dashboard:
     projects: PROJECTS
     changelogs: CHANGE LOGS
@@ -122,4 +148,5 @@ dashboard:
 forms:
     validate-not-empty: Field must not be empty
     validate-invalid-filename: Invalid file name
+    validate-path-not-exist: Path does not exist
 browse: Browse

@@ -1,19 +1,14 @@
 package thito.nodeflow.internal.project;
 
-import javafx.beans.property.*;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
-import thito.nodeflow.config.*;
-import thito.nodeflow.internal.plugin.PluginManager;
+import thito.nodeflow.config.MapSection;
+import thito.nodeflow.config.Section;
 import thito.nodeflow.internal.plugin.ProjectHandler;
 import thito.nodeflow.internal.plugin.ProjectHandlerRegistry;
-import thito.nodeflow.internal.project.module.FileModule;
-import thito.nodeflow.internal.settings.*;
-import thito.nodeflow.internal.ui.editor.*;
-import thito.nodeflow.internal.resource.*;
+import thito.nodeflow.internal.resource.Resource;
+import thito.nodeflow.internal.settings.Settings;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Project {
     private Resource directory;
@@ -21,10 +16,8 @@ public class Project {
     private Resource sourceFolder;
     private ProjectProperties properties;
     private Section configuration;
-    private ObjectProperty<Editor> editor = new SimpleObjectProperty<>();
 
     private List<ProjectHandler> projectHandlers = new ArrayList<>();
-    private List<ProjectExport.Handler> exportHandlerList = new ArrayList<>();
 
     public Project(Workspace workspace, ProjectProperties properties) {
         this.workspace = workspace;
@@ -32,7 +25,6 @@ public class Project {
         this.directory = properties.getDirectory();
         configuration = properties.getConfiguration().getMap("configuration").orElse(new MapSection());
         sourceFolder = properties.getDirectory().getChild("src");
-
         Settings.loadProjectSettings(properties);
     }
 
@@ -58,10 +50,6 @@ public class Project {
 
     public Resource getSourceFolder() {
         return sourceFolder;
-    }
-
-    public ObjectProperty<Editor> editorProperty() {
-        return editor;
     }
 
     public ProjectProperties getProperties() {

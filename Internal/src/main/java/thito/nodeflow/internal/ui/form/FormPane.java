@@ -1,9 +1,12 @@
 package thito.nodeflow.internal.ui.form;
 
 import javafx.beans.binding.*;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.*;
 import javafx.collections.*;
 import javafx.css.*;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import thito.nodeflow.internal.binding.*;
@@ -36,14 +39,9 @@ public class FormPane extends VBox {
     }
 
     public void validate() {
-        for (FormProperty<?> formProperty : formPropertyList) {
-            for (Validator validator : formProperty.getValidatorList()) {
-                I18n inv = validator.validate(formProperty.getValue());
-                if (inv != null) {
-                    invalidFormPropertyList.add(formProperty);
-                } else {
-                    invalidFormPropertyList.remove(formProperty);
-                }
+        for (Node n : getChildren()) {
+            if (n instanceof FormField) {
+                ((FormField) n).validateField();
             }
         }
     }
@@ -59,6 +57,7 @@ public class FormPane extends VBox {
     public class FormField extends VBox {
         private FormProperty<?> formProperty;
         private BorderPane content = new BorderPane();
+        private ObjectProperty<StringExpression> validation = new SimpleObjectProperty<>();
 
         public FormField(FormProperty<?> formProperty) {
             this.formProperty = formProperty;
@@ -73,8 +72,21 @@ public class FormPane extends VBox {
         public FormProperty<?> formProperty() {
             return formProperty;
         }
-
-        public class FormName extends HBox implements ChangeListener<Object> {
+        public void validateField() {
+            StringExpression invalid = null;
+            for (Validator validator : formProperty.getValidatorList()) {
+                I18n inv = validator.validate(formProperty.getValue());
+                if (inv != null) {
+                    if (invalid == null) {
+                        invalid = inv;
+                    } else {
+                        invalid = invalid.concat("\n").concat(inv);
+                    }
+                }
+            }
+            validation.set(invalid);
+        }
+        public class FormName extends HBox {
             private Label fieldName = new Label();
             private Label invalid = new Label();
 
@@ -86,35 +98,23 @@ public class FormPane extends VBox {
 
                 fieldName.textProperty().bind(formProperty.nameProperty());
 
-                formProperty.addListener(new WeakChangeListener<>(this));
+                formProperty.addListener(new WeakReferencedListener(obs -> validate(), this));
+                validation.addListener((obs, old, invalid) -> {
+                    if (invalid == null) {
+                        this.invalid.textProperty().unbind();
+                        this.invalid.textProperty().set(null);
+                        this.invalid.pseudoClassStateChanged(INVALID, false);
+                        formProperty.validProperty().set(true);
+                        invalidFormPropertyList.remove(formProperty);
+                    } else {
+                        this.invalid.textProperty().bind(invalid);
+                        this.invalid.pseudoClassStateChanged(INVALID, true);
+                        formProperty.validProperty().set(false);
+                        invalidFormPropertyList.add(formProperty);
+                    }
+                });
             }
 
-            @Override
-            public void changed(ObservableValue<?> observableValue, Object old, Object val) {
-                StringExpression invalid = null;
-                for (Validator validator : formProperty.getValidatorList()) {
-                    I18n inv = validator.validate(val);
-                    if (inv != null) {
-                        if (invalid == null) {
-                            invalid = inv;
-                        } else {
-                            invalid = invalid.concat("\n").concat(inv);
-                        }
-                    }
-                }
-                if (invalid == null) {
-                    this.invalid.textProperty().unbind();
-                    this.invalid.textProperty().set(null);
-                    this.invalid.pseudoClassStateChanged(INVALID, false);
-                    formProperty.validProperty().set(true);
-                    invalidFormPropertyList.remove(formProperty);
-                } else {
-                    this.invalid.textProperty().bind(invalid);
-                    this.invalid.pseudoClassStateChanged(INVALID, true);
-                    formProperty.validProperty().set(false);
-                    invalidFormPropertyList.add(formProperty);
-                }
-            }
         }
     }
 }

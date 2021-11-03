@@ -22,6 +22,11 @@ public class UnknownFileViewer implements FileViewer {
     }
 
     @Override
+    public FileStructure getStructure() {
+        return null;
+    }
+
+    @Override
     public void reload(byte[] data) {
     }
 

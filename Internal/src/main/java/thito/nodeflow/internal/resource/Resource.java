@@ -75,6 +75,26 @@ public class Resource {
         return toFile().getName();
     }
 
+    public String getPath() {
+        return getPath(getResourceManager().getRoot());
+    }
+
+    public String getPath(Resource root) {
+        StringBuilder builder = new StringBuilder();
+        Resource resource = this;
+        while (resource != null) {
+            if (resource.equals(root)) {
+                break;
+            }
+            if (builder.length() > 0) {
+                builder.insert(0, File.separator);
+            }
+            builder.insert(0, resource.getFileName());
+            resource = resource.getParent();
+        }
+        return builder.toString();
+    }
+
     public String getName() {
         String name = getFileName();
         int index = name.lastIndexOf('.');
