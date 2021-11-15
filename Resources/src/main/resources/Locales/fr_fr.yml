@@ -1,0 +1,124 @@
+cancel: Annuler
+dialogs:
+    new-file:
+        title: Nouveau Fichier
+        fields:
+            name: Nom
+            type: Type
+editor:
+    title-no-project: NodeFlow
+    edit: Édition
+    error:
+        unknown-file-info: Ce fichier ne peut être ouvert. Manque t-il un plugin pour le lire ?
+        unknown-file: FICHIER INCONNU
+        open-file: IMPOSSIBLE D'OUVRIR LE FICHIER
+    menu-view:
+        zoom-fit: Taille écran
+        zoom-selected: Zoom sur la sélection
+        zoom-out: Zoom arrière
+        zoom-in: Zoom avant
+    title: NodeFlow - %s
+    loading-file: Ouvrir un fichier
+    menu-edit:
+        undo: Annuler
+        cut: Couper
+        find: Rechercher
+        replace: Remplacer
+        select-all: Sélectionner tout
+        copy: Copier
+        paste: Coller
+        redo: Rétablir
+        delete: Supprimer
+    help: Aide
+    menu-file:
+        exit: Quitter
+        new: Nouveau
+        settings: Paramètres
+        import: Importation
+        close-project: Fermer
+        export: Exportation
+        dashboard: Tableau de bord
+    navigation:
+        plugin-options: Facettes
+        project-files: Projet
+        module-structure: Structure
+    view: Affichage
+    file: Fichier
+    menu-help:
+        github: Github
+        discord: Discord
+        report-issue: Signaler un problème
+        donate: Faire un don
+    copy-stacktrace: Copier le message d'erreur
+settings:
+    general:
+        name: Général
+        items:
+            workspace-directory: Répertoire de l'espace de travail
+            max-opened-tabs: Nombre d'onglets maximum
+            action-buffer: Tempon de script
+    appearance:
+        name: Apparence
+        items:
+            language: Langage
+            theme: Thème
+            show-dashboard-at-start: Afficher le tableau de bord au lancement
+    app-settings:
+        name: Paramètres de l'application
+    plugins:
+        enable: Activé
+    title: Paramètres
+file-already-exist: Le fichier existe déjà
+time-since:
+    yesterday: HIER
+    daily: 'IL Y A %s J'
+    monthly: 'IL Y A %s M'
+    hourly: 'IL Y A %s H'
+    minutely: 'IL Y A %s MINS'
+    secondly: 'IL Y A %s SECS'
+apply: Appliquer
+module:
+    unknown:
+        name: Fichier inconnu
+search-source: De %s
+open-directory: Sélectionner le répertoire
+loading: Chargement
+directory: Dossier
+search: Rechercher
+color-chooser:
+    red: 'Rouge :'
+    saturation: 'Saturation :'
+    web-color: 'Hexadécimal :'
+    brightness: 'Luminosité :'
+    green: 'Vert :'
+    blue: 'Bleu :'
+    web: Web
+    hsb: TSL
+    hue: 'Teinte :'
+    opacity: 'Opacité :'
+    rgb: RVB
+file-size:
+    B: '%s o'
+    mB: '%s Mo'
+    kB: '%s Ko'
+    gB: '%s Go'
+name: Français (FR)
+open-file: Ouvrir un fichier
+credit: Traduction Français par Kaesor
+ok: Ok
+dashboard:
+    projects: PROJETS
+    changelogs: PATCH NOTE
+    about: A PROPOS
+    changelogs-title: PATCH NOTE
+    title: Tableau de bord
+    forms:
+        create-project: Créer un nouveau projet
+        name: Nom du projet
+        description: Description du projet
+        validate-already-exist: Un projet avec ce nom existe déjà
+        folder-name: Nom du dossier
+forms:
+    validate-not-empty: Le champs ne doit pas être vide
+    validate-invalid-filename: Nom de fichier invalide
+browse: Parcourir
