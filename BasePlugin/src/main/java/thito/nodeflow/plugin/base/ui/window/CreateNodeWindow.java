@@ -1,6 +1,6 @@
 package thito.nodeflow.plugin.base.ui.window;
 
-import thito.nodeflow.internal.ui.StandardWindow;
+import thito.nodeflow.ui.StandardWindow;
 import thito.nodeflow.plugin.base.ui.CreateNodeSkin;
 
 public class CreateNodeWindow extends StandardWindow {

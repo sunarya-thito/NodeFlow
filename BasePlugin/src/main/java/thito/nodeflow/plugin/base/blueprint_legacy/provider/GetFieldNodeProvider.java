@@ -2,7 +2,7 @@ package thito.nodeflow.plugin.base.blueprint_legacy.provider;
 
 import thito.nodeflow.engine.node.*;
 import thito.nodeflow.engine.node.handler.*;
-import thito.nodeflow.internal.language.*;
+import thito.nodeflow.language.I18n;
 import thito.nodeflow.plugin.base.blueprint_legacy.*;
 import thito.nodeflow.plugin.base.blueprint_legacy.compiler.CompilerContext;
 import thito.nodeflow.plugin.base.blueprint_legacy.compiler.NodeCompiler;

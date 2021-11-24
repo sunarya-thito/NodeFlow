@@ -4,7 +4,7 @@ import javafx.beans.property.*;
 import thito.nodeflow.engine.node.*;
 import thito.nodeflow.engine.node.handler.*;
 import thito.nodeflow.engine.node.skin.*;
-import thito.nodeflow.internal.language.*;
+import thito.nodeflow.language.I18n;
 
 public abstract class AbstractExecutionParameterHandler implements NodeParameterHandler {
 

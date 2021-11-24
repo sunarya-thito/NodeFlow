@@ -7,6 +7,10 @@
     font-display: swap;
 }
 
+#force-download {
+    font-size: 0.8em;
+}
+
 html {
     scroll-behaviour: smooth;
 }

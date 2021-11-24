@@ -1,12 +1,13 @@
 package thito.nodeflow.plugin.base.blueprint;
 
-import thito.nodeflow.internal.language.I18n;
-import thito.nodeflow.internal.project.Project;
-import thito.nodeflow.internal.project.module.FileModule;
-import thito.nodeflow.internal.project.module.FileViewer;
-import thito.nodeflow.internal.resource.Resource;
-import thito.nodeflow.internal.ui.Theme;
-import thito.nodeflow.internal.ui.form.Validator;
+import javafx.scene.image.Image;
+import thito.nodeflow.language.I18n;
+import thito.nodeflow.project.Project;
+import thito.nodeflow.project.module.FileModule;
+import thito.nodeflow.project.module.FileViewer;
+import thito.nodeflow.resource.Resource;
+import thito.nodeflow.ui.Theme;
+import thito.nodeflow.ui.form.Validator;
 
 import java.io.IOException;
 
@@ -22,8 +23,8 @@ public class BlueprintModule implements FileModule {
     }
 
     @Override
-    public String getIconURL(Theme theme) {
-        return "theme://blueprint/Icons/BlueprintModuleIcon.png";
+    public Image getIcon() {
+        return new Image("theme://blueprint/Icons/BlueprintModuleIcon.png");
     }
 
     @Override

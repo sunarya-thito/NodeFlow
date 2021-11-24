@@ -1,6 +1,6 @@
 package thito.nodeflow.plugin.base.blueprint;
 
-import thito.nodeflow.internal.resource.Resource;
+import thito.nodeflow.resource.Resource;
 
 public class BlueprintFile {
 

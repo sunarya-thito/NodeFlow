@@ -2,8 +2,8 @@ package thito.nodeflow.plugin.base.settings;
 
 import javafx.beans.property.*;
 import thito.nodeflow.engine.node.*;
-import thito.nodeflow.internal.settings.*;
-import thito.nodeflow.internal.settings.canvas.*;
+import thito.nodeflow.settings.SettingsCanvas;
+import thito.nodeflow.settings.canvas.*;
 
 @Category(value = "${plugin.blueprint.settings.name}", context = SettingsContext.ALL)
 public class BlueprintSettings extends SettingsCanvas {

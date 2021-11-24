@@ -5,7 +5,7 @@ import javafx.scene.paint.*;
 import thito.nodeflow.engine.node.*;
 import thito.nodeflow.engine.node.skin.*;
 import thito.nodeflow.engine.node.state.*;
-import thito.nodeflow.internal.language.*;
+import thito.nodeflow.language.I18n;
 import thito.nodeflow.plugin.base.blueprint_legacy.*;
 import thito.nodeflow.plugin.base.blueprint_legacy.state.parameter.*;
 

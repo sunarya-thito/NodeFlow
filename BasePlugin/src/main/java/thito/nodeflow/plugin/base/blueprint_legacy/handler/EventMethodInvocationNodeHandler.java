@@ -5,7 +5,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.image.Image;
 import thito.nodeflow.engine.node.Node;
-import thito.nodeflow.internal.language.I18n;
+import thito.nodeflow.language.I18n;
 import thito.nodeflow.plugin.base.blueprint_legacy.NodeProvider;
 import thito.nodeflow.plugin.base.blueprint_legacy.state.BlueprintNodeState;
 import thito.nodeflow.plugin.base.blueprint_legacy.state.EventMethodInvocationNodeState;

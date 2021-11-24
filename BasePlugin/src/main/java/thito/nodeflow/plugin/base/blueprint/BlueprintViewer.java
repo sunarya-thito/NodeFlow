@@ -6,11 +6,11 @@ import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Menu;
 import javafx.scene.layout.BorderPane;
-import thito.nodeflow.internal.project.Project;
-import thito.nodeflow.internal.project.module.FileModule;
-import thito.nodeflow.internal.project.module.FileStructure;
-import thito.nodeflow.internal.project.module.FileViewer;
-import thito.nodeflow.internal.resource.Resource;
+import thito.nodeflow.project.Project;
+import thito.nodeflow.project.module.FileModule;
+import thito.nodeflow.project.module.FileStructure;
+import thito.nodeflow.project.module.FileViewer;
+import thito.nodeflow.resource.Resource;
 import thito.nodeflow.plugin.base.blueprint.element.BlueprintClass;
 
 import java.io.ByteArrayInputStream;

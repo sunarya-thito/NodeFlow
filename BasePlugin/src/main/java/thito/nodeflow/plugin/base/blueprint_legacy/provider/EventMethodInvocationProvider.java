@@ -4,7 +4,7 @@ import thito.nodeflow.engine.node.InsertFunction;
 import thito.nodeflow.engine.node.Node;
 import thito.nodeflow.engine.node.NodeParameter;
 import thito.nodeflow.engine.node.handler.NodeHandler;
-import thito.nodeflow.internal.language.I18n;
+import thito.nodeflow.language.I18n;
 import thito.nodeflow.java.IMethod;
 import thito.nodeflow.java.Java;
 import thito.nodeflow.java.Reference;

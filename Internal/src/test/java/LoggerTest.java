@@ -1,4 +1,4 @@
-import thito.nodeflow.internal.*;
+import thito.nodeflow.LoggerInjector;
 
 import java.io.*;
 import java.util.logging.*;

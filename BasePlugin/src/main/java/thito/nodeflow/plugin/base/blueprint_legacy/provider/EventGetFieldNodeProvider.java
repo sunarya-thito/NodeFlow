@@ -3,7 +3,7 @@ package thito.nodeflow.plugin.base.blueprint_legacy.provider;
 import thito.nodeflow.engine.node.Node;
 import thito.nodeflow.engine.node.NodeParameter;
 import thito.nodeflow.engine.node.handler.NodeHandler;
-import thito.nodeflow.internal.language.I18n;
+import thito.nodeflow.language.I18n;
 import thito.nodeflow.java.IField;
 import thito.nodeflow.java.generated.LField;
 import thito.nodeflow.java.known.KField;

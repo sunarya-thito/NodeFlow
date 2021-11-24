@@ -9,7 +9,7 @@ import thito.nodeflow.engine.node.NodeParameter;
 import thito.nodeflow.engine.node.handler.NodeParameterHandler;
 import thito.nodeflow.engine.node.skin.NodeSkin;
 import thito.nodeflow.engine.node.state.HandlerState;
-import thito.nodeflow.internal.language.I18n;
+import thito.nodeflow.language.I18n;
 import thito.nodeflow.plugin.base.blueprint_legacy.NodeProvider;
 import thito.nodeflow.plugin.base.blueprint_legacy.handler.parameter.FieldValueParameterHandler;
 import thito.nodeflow.plugin.base.blueprint_legacy.handler.parameter.InstanceParameterHandler;

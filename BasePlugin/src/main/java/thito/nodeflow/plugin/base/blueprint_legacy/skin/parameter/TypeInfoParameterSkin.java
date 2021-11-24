@@ -2,9 +2,9 @@ package thito.nodeflow.plugin.base.blueprint_legacy.skin.parameter;
 
 import javafx.scene.control.*;
 import org.apache.commons.lang3.reflect.*;
+import thito.nodeflow.binding.MappedBinding;
 import thito.nodeflow.engine.node.*;
 import thito.nodeflow.engine.node.skin.*;
-import thito.nodeflow.internal.binding.*;
 import thito.nodeflow.plugin.base.blueprint_legacy.*;
 
 public class TypeInfoParameterSkin extends NodeParameterSkin {

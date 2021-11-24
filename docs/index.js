@@ -1,4 +1,5 @@
 const MEDIA = [{"type":"youtube", "media":"ckwZN9jMQ5k"}];
+const downloadURL = 'https://github.com/sunarya-thito/NodeFlowDistribution/archive/refs/heads/master.zip';
 document.addEventListener('contextmenu', event => event.preventDefault());
 function download(url) {
     document.getElementById('dummy').src = url;
@@ -58,7 +59,7 @@ $(document).ready(() => {
     fetch('https://raw.githubusercontent.com/sunarya-thito/NodeFlow/master/Resources/src/main/resources/ChangeLogs.txt')
     .then(result => result.text())
     .then(text => {
-        $('#changelogs').html(marked(parseVersionHeader(text)));
+        $('#changelogs').html(marked.parse(parseVersionHeader(text)));
     });
     checkOS();
     MEDIA.forEach(m => {
@@ -69,14 +70,15 @@ $(document).ready(() => {
 function checkOS() {
     if (jscd.os == 'Windows') {
         $('#download-button').click(() => {
-            download('https://github.com/sunarya-thito/NodeFlowDistribution/archive/refs/heads/master.zip');
+            download(downloadURL);
         });
         $('#download-button > .inner-button').html('Download for '+jscd.os + ' ' + jscd.osVersion);
         $('#download-button').removeClass('disabled-button');
+        $('#force-download').remove();
     } else {
-        console.log('disabled');
         $('#download-button > .inner-button').html('Does not support '+jscd.os);
         $('#download-button').addClass('disabled-button');
+        $('#force-download').attr('href', downloadURL);
     }
 }
 

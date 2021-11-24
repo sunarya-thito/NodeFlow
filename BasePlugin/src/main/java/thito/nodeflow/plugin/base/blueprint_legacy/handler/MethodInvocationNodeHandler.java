@@ -3,7 +3,7 @@ package thito.nodeflow.plugin.base.blueprint_legacy.handler;
 import javafx.beans.property.*;
 import javafx.scene.image.*;
 import thito.nodeflow.engine.node.*;
-import thito.nodeflow.internal.language.*;
+import thito.nodeflow.language.I18n;
 import thito.nodeflow.plugin.base.blueprint_legacy.*;
 import thito.nodeflow.plugin.base.blueprint_legacy.state.*;
 

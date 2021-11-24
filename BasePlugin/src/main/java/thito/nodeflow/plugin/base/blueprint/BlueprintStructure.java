@@ -9,7 +9,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ContextMenu;
-import thito.nodeflow.internal.project.module.FileStructure;
+import thito.nodeflow.project.module.FileStructure;
 
 public class BlueprintStructure implements FileStructure {
 

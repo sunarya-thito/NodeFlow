@@ -6,7 +6,7 @@ import thito.nodeflow.engine.node.*;
 import thito.nodeflow.engine.node.handler.*;
 import thito.nodeflow.engine.node.skin.*;
 import thito.nodeflow.engine.node.state.*;
-import thito.nodeflow.internal.language.*;
+import thito.nodeflow.language.I18n;
 import thito.nodeflow.plugin.base.blueprint_legacy.handler.parameter.*;
 
 public class UnknownNodeHandler implements NodeHandler {

@@ -3,7 +3,7 @@ package thito.nodeflow.plugin.base.blueprint_legacy;
 import javafx.beans.binding.*;
 import javafx.collections.*;
 import javafx.scene.paint.*;
-import thito.nodeflow.internal.binding.CombinedListBinding;
+import thito.nodeflow.binding.CombinedListBinding;
 
 import java.lang.reflect.*;
 import java.util.*;

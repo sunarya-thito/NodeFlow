@@ -1,5 +1,3 @@
-import thito.nodeflow.internal.search.*;
-
 public class ThreadTest {
     static Object lock = new Object();
     public static void main(String[] args) throws Throwable {
