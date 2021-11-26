@@ -52,6 +52,7 @@ public abstract class Window {
 
     protected void initializeWindow() {
         backgroundOverlay.getStyleClass().add(".window-background-task-overlay");
+        backgroundOverlay.setPickOnBounds(false);
         backgroundOverlay.addEventHandler(EventType.ROOT, Event::consume);
         skin.addListener((obs, old, val) -> {
             if (old != null) root.getChildren().remove(old);
@@ -89,7 +90,7 @@ public abstract class Window {
 
         Scene scene = new Scene(root, -1, -1, false, SceneAntialiasing.BALANCED);
         scene.setFill(Color.TRANSPARENT);
-        scene.getStylesheets().add("theme:StyleSheets/thito/nodeflow/internal/ui/Skin.css");
+        scene.getStylesheets().add("theme:StyleSheets/thito/nodeflow/ui/Skin.css");
         scene.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.F5) {
                 System.out.println("RELOAD");

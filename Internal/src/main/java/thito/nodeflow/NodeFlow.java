@@ -71,11 +71,6 @@ public class NodeFlow {
 
     protected BatchTask createInitializationTasks() {
         BatchTask batchTask = new BatchTask();
-        batchTask.submitTask(progress -> {
-            progress.setStatus("Loading languages");
-            getAvailableLanguages();
-            Language.setLanguage(defaultLanguage = getLanguage("en_us"));
-        });
         File pluginDirectory = new File(ROOT, "Plugins");
         pluginDirectory.mkdirs();
         File[] pluginFiles = pluginDirectory.listFiles();
@@ -91,7 +86,7 @@ public class NodeFlow {
                         PluginClassLoader pluginClassLoader = new PluginClassLoader(f, getClass().getClassLoader());
                         pluginClassLoader.load();
                         Plugin plugin = pluginClassLoader.getPlugin();
-                        task.submitTask(plugin.initialize());
+                        task.submitTask(plugin.load());
                         initialized.add(plugin);
                     } catch (Throwable t) {
                         getLogger().log(Level.SEVERE, "Failed to load plugin "+f.getName(), t);
@@ -99,6 +94,10 @@ public class NodeFlow {
                 }
                 task.run(progress);
             });
+            for (Plugin p : initialized) {
+                getLogger().log(Level.INFO, "Initializing "+p.getName());
+                batchTask.submitTask(p.initialize());
+            }
         }
         return batchTask;
     }
@@ -107,6 +106,10 @@ public class NodeFlow {
 
     public void registerProtocol(String protocol, URLStreamHandler handler) {
         protocolHandlerMap.put(protocol, handler);
+    }
+
+    public void setDefaultLanguage(Language defaultLanguage) {
+        this.defaultLanguage = defaultLanguage;
     }
 
     private URLStreamHandler getProtocolHandler(String protocol) {

@@ -17,7 +17,7 @@ public class ApplicationClassLoader extends URLClassLoader {
     }
 
     public void initialize(String[] args) throws ClassNotFoundException, InvocationTargetException, InstantiationException, IllegalAccessException {
-        Class<?> clazz = Class.forName("thito.nodeflow.internal.Bootstrap", false, this);
+        Class<?> clazz = Class.forName("thito.nodeflow.Bootstrap", false, this);
         Constructor<?> constructor = clazz.getConstructors()[0];
         constructor.setAccessible(true);
         constructor.newInstance(new Object[]{args});
@@ -27,9 +27,9 @@ public class ApplicationClassLoader extends URLClassLoader {
 
     private int getThreadIdFromDescriptor(String descriptor) {
         return switch (descriptor) {
-            case "thito/nodeflow/internal/annotation/BGThread" -> 1;
-            case "thito/nodeflow/internal/annotation/IOThread" -> 2;
-            case "thito/nodeflow/internal/annotation/UIThread" -> 3;
+            case "thito/nodeflow/annotation/BGThread" -> 1;
+            case "thito/nodeflow/annotation/IOThread" -> 2;
+            case "thito/nodeflow/annotation/UIThread" -> 3;
             default -> 0;
         };
     }
@@ -88,14 +88,14 @@ public class ApplicationClassLoader extends URLClassLoader {
                             private void writeThreadCheckInvocation(int threadID) {
                                 switch (threadID) {
                                     case 1 -> // Background Thread
-                                            super.visitMethodInsn(Opcodes.INVOKESTATIC, "thito/nodeflow/internal/task/TaskThread", "BG", "()Lthito/nodeflow/internal/task/TaskThread", false);
+                                            super.visitMethodInsn(Opcodes.INVOKESTATIC, "thito/nodeflow/task/TaskThread", "BG", "()Lthito/nodeflow/task/TaskThread", false);
                                     case 2 -> // IO Thread
-                                            super.visitMethodInsn(Opcodes.INVOKESTATIC, "thito/nodeflow/internal/task/TaskThread", "IO", "()Lthito/nodeflow/internal/task/TaskThread", false);
+                                            super.visitMethodInsn(Opcodes.INVOKESTATIC, "thito/nodeflow/task/TaskThread", "IO", "()Lthito/nodeflow/task/TaskThread", false);
                                     case 3 -> // UI Thread
-                                            super.visitMethodInsn(Opcodes.INVOKESTATIC, "thito/nodeflow/internal/task/TaskThread", "UI", "()Lthito/nodeflow/internal/task/TaskThread", false);
+                                            super.visitMethodInsn(Opcodes.INVOKESTATIC, "thito/nodeflow/task/TaskThread", "UI", "()Lthito/nodeflow/task/TaskThread", false);
                                 }
                                 if (threadID != 0) {
-                                    super.visitMethodInsn(Opcodes.INVOKEINTERFACE, "thito/nodeflow/internal/task/TaskThread", "checkThread", "()V", true);
+                                    super.visitMethodInsn(Opcodes.INVOKEINTERFACE, "thito/nodeflow/task/TaskThread", "checkThread", "()V", true);
                                 }
                             }
 

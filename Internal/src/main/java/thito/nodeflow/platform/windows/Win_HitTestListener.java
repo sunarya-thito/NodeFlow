@@ -82,7 +82,6 @@ public class Win_HitTestListener implements WinUser.WindowProc {
         int mouseX = (short) (dword);
         int mouseY = (short) (dword >> 16);
         int result = window.getWindowHitTest().testHit(mouseX, mouseY, MOUSE_BUTTON).getValue();
-
         return new LRESULT(result);
     }
 }

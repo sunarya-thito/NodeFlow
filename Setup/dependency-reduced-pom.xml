@@ -166,6 +166,12 @@
   </build>
   <dependencies>
     <dependency>
+      <groupId>com.github.RobertBColton</groupId>
+      <artifactId>DockFX</artifactId>
+      <version>0.4b</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
       <groupId>org.jsoup</groupId>
       <artifactId>jsoup</artifactId>
       <version>1.11.3</version>
@@ -229,6 +235,12 @@
       <groupId>org.yaml</groupId>
       <artifactId>snakeyaml</artifactId>
       <version>1.29</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>2.11.0</version>
       <scope>compile</scope>
     </dependency>
   </dependencies>

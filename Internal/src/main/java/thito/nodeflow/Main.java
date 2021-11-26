@@ -4,6 +4,7 @@ import javafx.application.*;
 import javafx.beans.property.*;
 import javafx.stage.*;
 import thito.nodeflow.binding.ThreadBinding;
+import thito.nodeflow.language.Language;
 import thito.nodeflow.protocol.PluginResourceProtocol;
 import thito.nodeflow.protocol.ResourceProtocol;
 import thito.nodeflow.protocol.ThemeProtocol;
@@ -47,7 +48,6 @@ public class Main extends Application {
         logger.log(Level.INFO, "Loading application...");
         logger.log(Level.INFO, "Root directory at "+NodeFlow.ROOT);
         logger.log(Level.INFO, "Resources Root directory at "+NodeFlow.RESOURCES_ROOT);
-
         NodeFlow nodeFlow = new NodeFlow();
         nodeFlow.registerProtocol("rsrc", new ResourceProtocol());
         nodeFlow.registerProtocol("plugin", new PluginResourceProtocol());
@@ -82,12 +82,17 @@ public class Main extends Application {
             ResourceWatcher.getResourceWatcher().open();
 
             SettingsManager settingsManager = SettingsManager.getSettingsManager();
-
-            settingsManager.registerCanvas(General.class);
-            settingsManager.registerCanvas(Appearance.class);
-
+            batchTask.submitTask(progress -> {
+                progress.setStatus("Loading languages");
+                nodeFlow.getAvailableLanguages();
+                nodeFlow.setDefaultLanguage(nodeFlow.getLanguage("en_us"));
+                Language.setLanguage(nodeFlow.getDefaultLanguage());
+            });
             batchTask.submitTask(progress -> {
                 progress.setStatus("Loading settings");
+                settingsManager.registerCanvas(General.class);
+                settingsManager.registerCanvas(Appearance.class);
+
                 Settings.getSettings().loadGlobalConfiguration();
             });
 

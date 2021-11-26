@@ -98,8 +98,8 @@ time-since:
     daily: '%sD AGO'
     monthly: '%sM AGO'
     hourly: '%sH AGO'
-    minutely: '%sMINS AGO'
-    secondly: '%sSECS AGO'
+    minutely: '%sM AGO'
+    secondly: '%sS AGO'
 apply: Apply
 module:
     unknown:
