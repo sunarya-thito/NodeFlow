@@ -3,9 +3,16 @@ package thito.nodeflow.ui.dashboard;
 import javafx.geometry.*;
 import javafx.scene.input.*;
 import javafx.stage.*;
+import thito.nodeflow.NodeFlow;
 import thito.nodeflow.language.I18n;
+import thito.nodeflow.project.ProjectManager;
+import thito.nodeflow.project.ProjectProperties;
+import thito.nodeflow.task.TaskThread;
+import thito.nodeflow.task.batch.TaskQueue;
 import thito.nodeflow.ui.*;
 import thito.nodeflow.ui.Window;
+import thito.nodeflow.ui.dialog.Dialog;
+import thito.nodeflow.ui.dialog.Dialogs;
 
 public class DashboardWindow extends Window implements WindowHitTest {
 
@@ -15,6 +22,7 @@ public class DashboardWindow extends Window implements WindowHitTest {
         return window;
     }
 
+    private TaskQueue taskQueue;
     public DashboardWindow() {
         window = this;
     }
@@ -23,6 +31,24 @@ public class DashboardWindow extends Window implements WindowHitTest {
     protected void initializeWindow() {
         super.initializeWindow();
         titleProperty().bind(I18n.$("dashboard.title"));
+        taskQueue = new TaskQueue();
+        progressProperty().bind(taskQueue.progressProperty());
+    }
+
+    public TaskQueue getTaskQueue() {
+        return taskQueue;
+    }
+
+    public void openProject(ProjectProperties projectProperties) {
+        taskQueue.executeBatch(ProjectManager.getInstance().openProject(projectProperties).execute(TaskThread.UI(), progress -> {
+            getStage().close();
+        }));
+    }
+
+    @Override
+    public void close() {
+        super.close();
+        NodeFlow.getInstance().shutdown();
     }
 
     @Override
@@ -32,7 +58,7 @@ public class DashboardWindow extends Window implements WindowHitTest {
 
     @Override
     protected Skin createSkin() {
-        return new DashboardSkin();
+        return new DashboardSkin(this);
     }
 
     @Override

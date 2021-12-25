@@ -2,6 +2,8 @@ package thito.nodeflow.ui.form;
 
 import thito.nodeflow.language.I18n;
 import thito.nodeflow.resource.Resource;
+import thito.nodeflow.resource.ResourceType;
+import thito.nodeflow.task.TaskThread;
 
 import java.io.File;
 import java.util.function.Function;
@@ -22,10 +24,13 @@ public interface Validator<T> {
         };
     }
     static Validator<Resource> resourceMustNotExist() {
-        return value -> value.exists() ? I18n.$("file-already-exist") : null;
+        return value -> TaskThread.IO().process(value::exists) ? I18n.$("file-already-exist") : null;
+    }
+    static Validator<Resource> mustNotFile() {
+        return value -> TaskThread.IO().process(() -> value.getType() == ResourceType.FILE) ? I18n.$("file-already-exist") : null;
     }
     static Validator<Resource> pathNotExist() {
-        return value -> !value.exists() ? I18n.$("forms.validate-path-not-exist") : null;
+        return value -> TaskThread.IO().process(() -> !value.exists()) ? I18n.$("forms.validate-path-not-exist") : null;
     }
     static <T> Validator<T> combine(Validator<T> a, Validator<T> b) {
         return value -> {

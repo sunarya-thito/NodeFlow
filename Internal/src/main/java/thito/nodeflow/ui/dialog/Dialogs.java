@@ -9,9 +9,19 @@ import thito.nodeflow.util.Toolkit;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class Dialogs {
+
+    public static void ask(Dialog dialog, Consumer<Boolean> result) {
+        dialog.buttons(DialogButton.create(I18n.$("button-yes")).defaultButton().mnemonics().execution(() -> {
+            result.accept(true);
+        }), DialogButton.create(I18n.$("button-no")).cancelButton().mnemonics().execution(() -> {
+            result.accept(false);
+        })).show();
+    }
+
     public static void askDeleteFile(List<File> file) {
         FileUtils fileUtils = FileUtils.getInstance();
         if (fileUtils.hasTrash()) {

@@ -6,20 +6,19 @@ import thito.nodeflow.plugin.Plugin;
 import thito.nodeflow.plugin.PluginInstance;
 import thito.nodeflow.plugin.PluginManager;
 import thito.nodeflow.settings.SettingsManager;
-import thito.nodeflow.task.BatchTask;
-import thito.nodeflow.task.ProgressedTask;
 import thito.nodeflow.plugin.base.blueprint.BlueprintModule;
+import thito.nodeflow.task.TaskThread;
+import thito.nodeflow.task.batch.Batch;
 
 import java.util.logging.Level;
 
 public class BluePrint implements PluginInstance {
 
     @Override
-    public BatchTask createLoaderTask() {
-        BatchTask batchTask = new BatchTask();
+    public Batch.Task createLoaderTask() {
         PluginManager manager = getManager();
         Plugin plugin = getPlugin();
-        batchTask.submitTask(progress -> {
+        return Batch.execute(TaskThread.IO(), progress -> {
             progress.setStatus("Loading plugin locale");
             try {
                 manager.loadPluginLocale(NodeFlow.getInstance().getLanguage("en_us"), plugin,
@@ -27,33 +26,27 @@ public class BluePrint implements PluginInstance {
             } catch (Throwable t) {
                 getLogger().log(Level.SEVERE, "Failed to load plugin locale ", t);
             }
-        });
-        batchTask.submitTask(progress -> {
+        }).execute(TaskThread.BG(), progress -> {
             progress.setStatus("Registering settings objects");
             SettingsManager.getSettingsManager().registerParser(LinkStyle.class, new LinkStyleParser());
         });
-        return batchTask;
     }
 
     @Override
-    public BatchTask createInitializationTask() {
-        BatchTask task = new BatchTask();
-        task.submitTask(progress -> {
+    public Batch.Task createInitializationTask() {
+        return Batch.execute(TaskThread.BG(), progress -> {
             progress.setStatus("Registering Blueprint Module");
             PluginManager pluginManager = PluginManager.getPluginManager();
             pluginManager.registerFileModule(new BlueprintModule());
         });
-        return task;
     }
 
     @Override
-    public BatchTask createShutdownTask() {
-        BatchTask task = new BatchTask();
-        task.submitTask(progress -> {
+    public Batch.Task createShutdownTask() {
+        return Batch.execute(TaskThread.BG(), progress -> {
             progress.setStatus("Unregistering Blueprint Module");
             PluginManager.getPluginManager().unregisterFileModule(getPlugin());
         });
-        return task;
     }
 
 }

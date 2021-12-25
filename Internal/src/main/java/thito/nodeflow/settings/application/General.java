@@ -4,12 +4,14 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import thito.nodeflow.NodeFlow;
 import thito.nodeflow.binding.MappedBinding;
+import thito.nodeflow.binding.ThreadBinding;
 import thito.nodeflow.project.Workspace;
 import thito.nodeflow.settings.SettingsCanvas;
 import thito.nodeflow.settings.canvas.Category;
 import thito.nodeflow.settings.canvas.Item;
 import thito.nodeflow.settings.canvas.NumberItem;
 import thito.nodeflow.settings.canvas.SettingsContext;
+import thito.nodeflow.task.TaskThread;
 
 import java.io.File;
 
@@ -23,7 +25,14 @@ public class General extends SettingsCanvas {
     public final ObjectProperty<Integer> actionBuffer = new SimpleObjectProperty<>(100);
 
     {
-        NodeFlow.getInstance().workspaceProperty().bind(MappedBinding.map(workspaceDirectory, Workspace::new));
+        TaskThread.IO().schedule(() -> {
+            NodeFlow.getInstance().workspaceProperty().set(new Workspace(workspaceDirectory.get()));
+        });
+        workspaceDirectory.addListener((obs, old, val) -> {
+            TaskThread.IO().schedule(() -> {
+                NodeFlow.getInstance().workspaceProperty().set(new Workspace(val));
+            });
+        });
     }
 
 }

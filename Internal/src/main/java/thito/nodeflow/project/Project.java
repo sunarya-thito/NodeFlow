@@ -1,5 +1,6 @@
 package thito.nodeflow.project;
 
+import thito.nodeflow.annotation.IOThread;
 import thito.nodeflow.config.MapSection;
 import thito.nodeflow.config.Section;
 import thito.nodeflow.resource.Resource;
@@ -15,6 +16,7 @@ public class Project {
     private ProjectProperties properties;
     private Section configuration;
 
+    @IOThread
     public Project(Workspace workspace, ProjectProperties properties) {
         this.workspace = workspace;
         this.properties = properties;

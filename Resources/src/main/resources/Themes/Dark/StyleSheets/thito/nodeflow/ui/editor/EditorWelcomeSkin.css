@@ -1,0 +1,24 @@
+.welcome-inner {
+    -fx-padding: 70;
+    -fx-alignment: center_left;
+}
+
+EditorWelcomeSkin {
+    -fx-background-color: #1A202C;
+}
+
+.welcome-box {
+    -fx-fill-height: true;
+}
+
+.welcome-title {
+    -fx-text-fill: white;
+    -fx-font-family: 'Roboto Bk';
+    -fx-font-size: 40;
+}
+
+.welcome-paragraph {
+    -fx-text-fill: rgba(255, 255, 255, 0.7);
+    -fx-font-family: 'Roboto';
+    -fx-font-size: 16;
+}

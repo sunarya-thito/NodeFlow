@@ -5,8 +5,11 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.NumberExpression;
 import javafx.beans.binding.StringBinding;
 import javafx.geometry.Point2D;
+import javafx.scene.control.TreeItem;
 import javafx.scene.paint.Color;
 import javafx.scene.robot.Robot;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 import thito.nodeflow.language.I18n;
 
 import java.io.File;
@@ -38,6 +41,30 @@ public class Toolkit {
         } catch (Throwable t) {
             t.printStackTrace();
         }
+    }
+
+    public static List<Window> getAllChildrenStage(Stage stage) {
+        return Stage.getWindows().stream().filter(x -> isChildren(stage, x)).collect(Collectors.toList());
+    }
+
+    public static boolean isChildren(Window parent, Window child) {
+        while (child instanceof Stage) {
+            if (child == parent) return true;
+            child = ((Stage) child).getOwner();
+        }
+        return false;
+    }
+
+    public static <T> TreeItem<T> find(TreeItem<T> root, T value) {
+        if (root == null) return null;
+        if (Objects.equals(root.getValue(), value)) return root;
+        for (TreeItem<T> child : root.getChildren()) {
+            TreeItem<T> found = find(child, value);
+            if (found != null) {
+                return found;
+            }
+        }
+        return null;
     }
 
     public static Point2D mouse() {

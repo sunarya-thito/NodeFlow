@@ -26,6 +26,16 @@ public class DashboardSkin extends Skin {
     @Component("dashboard-viewport")
     Pane viewport;
 
+    private DashboardWindow dashboardWindow;
+
+    public DashboardSkin(DashboardWindow dashboardWindow) {
+        this.dashboardWindow = dashboardWindow;
+    }
+
+    public DashboardWindow getDashboardWindow() {
+        return dashboardWindow;
+    }
+
     @Override
     protected void onLayoutLoaded() {
         text.setText(Version.getCurrentVersion().getVersion());
@@ -38,7 +48,7 @@ public class DashboardSkin extends Skin {
             page.setCenter(new ChangeLogPage());
         });
         registerActionFilter("dashboard.projects", ActionEvent.ACTION, event -> {
-            page.setCenter(new ProjectsPage());
+            page.setCenter(new ProjectsPage(this));
         });
         registerActionHandler("dashboard.about", ActionEvent.ACTION, event -> {
             page.setCenter(new AboutPage());

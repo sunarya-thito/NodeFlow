@@ -8,15 +8,23 @@ import thito.nodeflow.config.MapSection;
 import thito.nodeflow.config.Section;
 import thito.nodeflow.annotation.BGThread;
 import thito.nodeflow.language.Language;
+import thito.nodeflow.plugin.DirectoryFileModule;
 import thito.nodeflow.plugin.Plugin;
 import thito.nodeflow.plugin.PluginClassLoader;
+import thito.nodeflow.plugin.PluginManager;
+import thito.nodeflow.project.ProjectManager;
 import thito.nodeflow.project.Tag;
 import thito.nodeflow.project.Workspace;
+import thito.nodeflow.project.module.UnknownFileModule;
 import thito.nodeflow.resource.ResourceWatcher;
 import thito.nodeflow.settings.Settings;
-import thito.nodeflow.task.BatchTask;
 import thito.nodeflow.task.TaskManager;
+import thito.nodeflow.task.TaskThread;
+import thito.nodeflow.task.batch.Batch;
 import thito.nodeflow.ui.Theme;
+import thito.nodeflow.ui.docker.DockerManager;
+import thito.nodeflow.ui.editor.docker.ProjectStructureComponent;
+import thito.nodeflow.ui.editor.docker.WelcomePageComponent;
 
 import java.io.File;
 import java.io.FileReader;
@@ -62,49 +70,61 @@ public class NodeFlow {
     private ObjectProperty<Workspace> workspace = new SimpleObjectProperty<>();
     private ObservableMap<String, Tag> tagMap = FXCollections.observableHashMap();
 
-    @BGThread
     public NodeFlow() {
         if (instance != null) throw new IllegalStateException("already initiated");
         instance = this;
         URL.setURLStreamHandlerFactory(this::getProtocolHandler);
     }
 
-    protected BatchTask createInitializationTasks() {
-        BatchTask batchTask = new BatchTask();
-        File pluginDirectory = new File(ROOT, "Plugins");
-        pluginDirectory.mkdirs();
-        File[] pluginFiles = pluginDirectory.listFiles();
-        if (pluginFiles != null) {
-            ArrayList<Plugin> initialized = new ArrayList<>();
-            batchTask.submitTask(progress -> {
-                progress.setStatus("Loading plugins");
-                BatchTask task = new BatchTask();
-                for (File f : pluginFiles) {
-                    if (!f.getName().endsWith(".jar")) continue;
-                    getLogger().log(Level.INFO, "Loading " + f.getName());
-                    try {
-                        PluginClassLoader pluginClassLoader = new PluginClassLoader(f, getClass().getClassLoader());
-                        pluginClassLoader.load();
-                        Plugin plugin = pluginClassLoader.getPlugin();
-                        task.submitTask(plugin.load());
-                        initialized.add(plugin);
-                    } catch (Throwable t) {
-                        getLogger().log(Level.SEVERE, "Failed to load plugin "+f.getName(), t);
+    protected Batch.Task createInitializationTasks() {
+        return Batch
+                .execute(TaskThread.BG(), progress -> {
+                    progress.setStatus("Registering editor components");
+                    DockerManager manager = DockerManager.getManager();
+                    manager.registerDockerComponent(new ProjectStructureComponent());
+                    manager.registerDockerComponent(new WelcomePageComponent());
+                    manager.registerDockerComponent(ProjectManager.getInstance().getFileViewerComponent());
+                })
+                .execute(TaskThread.BG(), progress -> {
+                    progress.setStatus("Registering modules");
+                    PluginManager pluginManager = PluginManager.getPluginManager();
+                    pluginManager.registerFileModule(new DirectoryFileModule());
+                    pluginManager.registerFileModule(new UnknownFileModule());
+                })
+                .execute(TaskThread.IO(), progress -> {
+                    progress.setStatus("Loading plugins");
+                    File pluginDirectory = new File(ROOT, "Plugins");
+                    pluginDirectory.mkdirs();
+                    File[] pluginFiles = pluginDirectory.listFiles();
+                    if (pluginFiles != null && pluginFiles.length > 0) {
+                        for (File f : pluginFiles) {
+                            progress.append(TaskThread.IO(), pr -> {
+                                if (f.getName().endsWith(".jar")) {
+                                    pr.setStatus("Loading " + f.getName());
+                                    try {
+                                        PluginClassLoader pluginClassLoader = new PluginClassLoader(f, getClass().getClassLoader());
+                                        pluginClassLoader.load();
+                                        Plugin plugin = pluginClassLoader.getPlugin();
+                                        pr.insert(plugin.load());
+                                        pr.append(TaskThread.BG(), prx -> {
+                                            PluginManager.getPluginManager().registerPlugin(plugin);
+                                            pr.setStatus("Initializing "+plugin.getName());
+                                            prx.append(plugin.initialize());
+                                        });
+                                    } catch (Throwable t) {
+                                        getLogger().log(Level.SEVERE, "Failed to load plugin "+f.getName(), t);
+                                    }
+                                }
+                            });
+                        }
                     }
-                }
-                task.run(progress);
-            });
-            for (Plugin p : initialized) {
-                getLogger().log(Level.INFO, "Initializing "+p.getName());
-                batchTask.submitTask(p.initialize());
-            }
-        }
-        return batchTask;
+                });
     }
 
     private Map<String, URLStreamHandler> protocolHandlerMap = new HashMap<>();
 
     public void registerProtocol(String protocol, URLStreamHandler handler) {
+        getLogger().log(Level.INFO, "Registering protocol "+protocol+" for "+handler);
         protocolHandlerMap.put(protocol, handler);
     }
 
@@ -155,9 +175,14 @@ public class NodeFlow {
     }
 
     public void shutdown() {
+        getLogger().log(Level.INFO, "Shutting down application...");
         ResourceWatcher.getResourceWatcher().close();
-        TaskManager.getInstance().shutdown();
-        Settings.getSettings().saveGlobalConfiguration();
+        Settings.getSettings().saveGlobalConfiguration().execute(TaskThread.BG(), pr -> {
+            getLogger().log(Level.INFO, "Terminating tasks...");
+            TaskManager.getInstance().shutdown();
+            getLogger().log(Level.INFO, "Good bye!");
+            System.exit(0);
+        }).start();
     }
 
     public Language getDefaultLanguage() {

@@ -44,8 +44,8 @@ public class PoolTaskThread implements TaskThread {
     public void shutdown() {
         service.shutdown();
         try {
-            service.awaitTermination(30, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
+            service.awaitTermination(5, TimeUnit.SECONDS);
+        } catch (InterruptedException ignored) {
         }
     }
 

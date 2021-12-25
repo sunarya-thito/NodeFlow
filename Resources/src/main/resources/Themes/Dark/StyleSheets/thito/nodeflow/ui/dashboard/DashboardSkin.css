@@ -15,7 +15,7 @@
 
 DashboardSkin {
     -fx-background-color: transparent;
-    -fx-padding: 20;
+    -fx-padding: 5;
     -fx-pref-height: 600;
     -fx-pref-width: 800;
     -fx-min-height: 400;

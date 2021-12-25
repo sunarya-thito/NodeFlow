@@ -6,19 +6,19 @@ import javafx.beans.property.*;
 import javafx.css.PseudoClass;
 import javafx.event.Event;
 import javafx.event.EventType;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import thito.nodeflow.binding.ThreadBinding;
 import thito.nodeflow.platform.NativeToolkit;
-import thito.nodeflow.task.BatchTask;
 import thito.nodeflow.task.TaskThread;
+import thito.nodeflow.task.batch.Progress;
+import thito.nodeflow.ui.task.ProgressSkin;
 
 public abstract class Window {
     public static final PseudoClass MAXIMIZED = PseudoClass.getPseudoClass("maximized");
@@ -29,14 +29,11 @@ public abstract class Window {
     private StackPane root;
     private StringProperty title = new SimpleStringProperty();
 
+    private ObjectProperty<Progress> progress = new SimpleObjectProperty<>();
     private BorderPane backgroundOverlay = new BorderPane();
 
-    /**
-     * Run and hold any window activity
-     * @param batchTask
-     */
-    public void runBatchTask(BatchTask batchTask) {
-        // TODO
+    public ObjectProperty<Progress> progressProperty() {
+        return progress;
     }
 
     public Window() {
@@ -51,12 +48,27 @@ public abstract class Window {
     }
 
     protected void initializeWindow() {
-        backgroundOverlay.getStyleClass().add(".window-background-task-overlay");
-        backgroundOverlay.setPickOnBounds(false);
-        backgroundOverlay.addEventHandler(EventType.ROOT, Event::consume);
-        skin.addListener((obs, old, val) -> {
-            if (old != null) root.getChildren().remove(old);
+        backgroundOverlay.getStyleClass().add("window-background-task-overlay");
+        backgroundOverlay.addEventFilter(EventType.ROOT, Event::consume);
+        backgroundOverlay.visibleProperty().bind(progressProperty().isNotNull());
+        backgroundOverlay.mouseTransparentProperty().bind(progressProperty().isNull());
+        progressProperty().addListener((obs, old, val) -> {
+            backgroundOverlay.setCenter(null);
             if (val != null) {
+                ProgressSkin progressSkin = new ProgressSkin();
+                ThreadBinding.bind(progressSkin.getStatus().textProperty(), val.statusProperty(), TaskThread.BG(), TaskThread.UI());
+                ThreadBinding.bind(progressSkin.getProgressBar().progressProperty(), val.progressProperty(), TaskThread.BG(), TaskThread.UI());
+                backgroundOverlay.setCenter(progressSkin);
+            }
+        });
+
+        skin.addListener((obs, old, val) -> {
+            if (old != null) {
+                old.getChildren().remove(backgroundOverlay);
+                root.getChildren().remove(old);
+            }
+            if (val != null) {
+                val.getChildren().add(backgroundOverlay);
                 root.getChildren().add(0, val);
             }
         });
@@ -71,7 +83,6 @@ public abstract class Window {
         root = new StackPane();
         debugger = new LayoutDebugger(this);
         root.getChildren().add(debugger.getHighlightLayer());
-        root.getChildren().add(backgroundOverlay);
         root.setBackground(Background.EMPTY);
 
         stage.maximizedProperty().addListener((obs, old, val) -> {
@@ -107,7 +118,12 @@ public abstract class Window {
         stage.setScene(scene);
         skin.set(createSkin());
 
-        ThreadBinding.bind(stage.titleProperty(), titleProperty(), TaskThread.UI());
+        ThreadBinding.bind(stage.titleProperty(), titleProperty(), TaskThread.BG(), TaskThread.UI());
+
+        stage.setOnCloseRequest(event -> {
+            event.consume();
+            close();
+        });
     }
 
     public StackPane getRoot() {

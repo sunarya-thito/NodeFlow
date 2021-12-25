@@ -1,18 +1,19 @@
 package thito.nodeflow.ui.editor;
 
 import javafx.application.Platform;
+import javafx.collections.ObservableSet;
 import javafx.event.ActionEvent;
 import javafx.geometry.Bounds;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import org.dockfx.DockPane;
+import thito.nodeflow.binding.MappedListBinding;
 import thito.nodeflow.binding.ThreadBinding;
-import thito.nodeflow.editor.Editor;
 import thito.nodeflow.language.I18n;
 import thito.nodeflow.plugin.PluginManager;
 import thito.nodeflow.project.Project;
+import thito.nodeflow.project.ProjectManager;
 import thito.nodeflow.project.module.FileModule;
 import thito.nodeflow.resource.Resource;
 import thito.nodeflow.resource.ResourceType;
@@ -21,6 +22,10 @@ import thito.nodeflow.ui.Component;
 import thito.nodeflow.ui.FormDialog;
 import thito.nodeflow.ui.Skin;
 import thito.nodeflow.ui.dashboard.DashboardWindow;
+import thito.nodeflow.ui.docker.DockerComponent;
+import thito.nodeflow.ui.docker.DockerManager;
+import thito.nodeflow.ui.docker.DockerPane;
+import thito.nodeflow.ui.docker.DockerTab;
 import thito.nodeflow.ui.form.Validator;
 import thito.nodeflow.ui.form.internal.CreateFileForm;
 import thito.nodeflow.ui.form.internal.RenameResourceForm;
@@ -63,21 +68,23 @@ public class EditorSkin extends Skin {
     TextField searchField;
 
     @Component("main-viewport")
-    SplitPane mainViewport;
+    BorderPane mainViewport;
 
     @Component("file-create")
     Menu newFile;
 
-    @Component("editor-content")
-    DockPane editorContent;
+    @Component("tool-window")
+    Menu toolWindow;
 
-    EditorFilePanelSkin filePanel = new EditorFilePanelSkin(this);
-    EditorStructurePanelSkin structurePanel = new EditorStructurePanelSkin(this);
-    EditorPluginPanelSkin pluginPanel = new EditorPluginPanelSkin(this);
+//    EditorFilePanelSkin filePanel = new EditorFilePanelSkin(this);
+//    EditorStructurePanelSkin structurePanel = new EditorStructurePanelSkin(this);
+//    EditorPluginPanelSkin pluginPanel = new EditorPluginPanelSkin(this);
 
     private SearchPopup searchPopup;
     private int menuIndex;
     private EditorWindow editorWindow;
+
+    private DockerPane dockerPane;
 
     public EditorSkin(EditorWindow editorWindow) {
         this.editorWindow = editorWindow;
@@ -92,34 +99,28 @@ public class EditorSkin extends Skin {
         });
         registerActionHandler("window.openDashboard", ActionEvent.ACTION, event -> DashboardWindow.getWindow().show());
         registerActionHandler("project.close", ActionEvent.ACTION, event -> {
-            editorWindow.getEditor().closeProject();
+            editorWindow.getContext().getTaskQueue().executeBatch(ProjectManager.getInstance().closeProject(editorWindow.getContext()));
         });
         registerActionHandler("project.import", ActionEvent.ACTION, event -> {
         });
         registerActionHandler("project.export", ActionEvent.ACTION, event -> {
-
         });
-    }
-
-    public DockPane getEditorContent() {
-        return editorContent;
+        registerActionHandler("editor.resetLayout", ActionEvent.ACTION, event -> {});
     }
 
     @Override
     protected void onLayoutLoaded() {
-        newFile.disableProperty().bind(editorWindow.getEditor().projectProperty().isNull());
-        fileImport.disableProperty().bind(editorWindow.getEditor().projectProperty().isNull());
-        fileExport.disableProperty().bind(editorWindow.getEditor().projectProperty().isNull());
-        closeProject.disableProperty().bind(editorWindow.getEditor().projectProperty().isNull());
         for (FileModule module : PluginManager.getPluginManager().getModuleList()) {
             MenuItem menuItem = new MenuItem();
-            menuItem.setGraphic(new ImageView(module.getIcon()));
+            ImageView node = new ImageView();
+            node.imageProperty().bind(module.iconProperty());
+            menuItem.setGraphic(node);
             menuItem.textProperty().bind(module.getDisplayName());
             menuItem.addEventHandler(ActionEvent.ACTION, event -> {
-                TreeItem<Resource> selected = filePanel.getExplorerView().getSelectionModel().getSelectedItem();
-                Resource root = selected != null ? selected.getValue() : null;
-                if (root == null) root = getEditorWindow().getEditor().projectProperty().get().getSourceFolder();
-                showCreateFileForm(editorWindow.getEditor().projectProperty().get(), module, root);
+                ObservableSet<Resource> selected = editorWindow.getContext().getSelectedFiles();
+                Resource root = selected.isEmpty() ? getEditorWindow().getContext().getProject().getSourceFolder() :
+                        selected.stream().findFirst().orElse(null);
+                showCreateFileForm(getEditorWindow().getContext().getProject(), module, root);
             });
             newFile.getItems().add(menuItem);
         }
@@ -133,6 +134,28 @@ public class EditorSkin extends Skin {
             menuBar.getMenus().remove(menuIndex);
         }
 
+        MappedListBinding.bind(toolWindow.getItems(), DockerManager.getManager().getDockerComponentList().filtered(DockerComponent::isMenuAccessible), component -> {
+            MenuItem menuItem = new MenuItem();
+            menuItem.textProperty().bind(component.displayName());
+            menuItem.setOnAction(event -> {
+                if (!component.allowMultipleView()) {
+                    editorWindow.getContext().contains(component, result -> {
+                        if (!result) {
+                            TaskThread.UI().schedule(() -> {
+                                editorWindow.getDockerPane().getTabs(component.getDefaultPosition()).getTabList()
+                                        .add(new DockerTab(editorWindow.getContext().getDockerContext(), component.createDockNode(editorWindow.getContext(), null)));
+                            });
+                        }
+                    });
+                } else {
+                    TaskThread.UI().schedule(() -> {
+                        editorWindow.getDockerPane().getTabs(component.getDefaultPosition()).getTabList()
+                                .add(new DockerTab(editorWindow.getContext().getDockerContext(), component.createDockNode(editorWindow.getContext(), null)));
+                    });
+                }
+            });
+            return menuItem;
+        });
 
         searchField.textProperty().addListener((obs, old, val) -> {
             updateSearch(val);
@@ -145,20 +168,10 @@ public class EditorSkin extends Skin {
         getScene().getWindow().heightProperty().addListener(obs -> updateSearchPopupPosition());
         updateSearchPopupPosition();
 
-        editorWindow.getEditor().projectProperty().addListener((obs, old, val) -> {
-            if (val == null) {
-                ThreadBinding.bind(fileMenu.textProperty(), I18n.$("editor.file"), TaskThread.UI());
-            } else {
-                ThreadBinding.bind(fileMenu.textProperty(), val.getProperties().nameProperty(), TaskThread.UI());
-            }
-        });
+        ThreadBinding.bind(fileMenu.textProperty(), editorWindow.getContext().getProject().getProperties().nameProperty(), TaskThread.IO(), TaskThread.UI());
 
-        Project project = editorWindow.getEditor().projectProperty().get();
-        if (project == null) {
-            ThreadBinding.bind(fileMenu.textProperty(), I18n.$("editor.file"), TaskThread.UI());
-        } else {
-            ThreadBinding.bind(fileMenu.textProperty(), project.getProperties().nameProperty(), TaskThread.UI());
-        }
+        dockerPane = editorWindow.getDockerPane();
+        mainViewport.setCenter(dockerPane);
 
         searchField.focusedProperty().addListener((obs, old, val) -> {
             if (val) {
@@ -185,7 +198,8 @@ public class EditorSkin extends Skin {
                             path += "." + extension;
                         }
                     }
-                    return resource.getParent().getChild(path);
+                    String finalPath = path;
+                    return TaskThread.IO().process(() ->  resource.getParent().getChild(finalPath));
                 })));
         FormDialog.create(I18n.$("dialogs.rename-file.title"), form).show(result -> {
             if (result != null) {
@@ -196,7 +210,8 @@ public class EditorSkin extends Skin {
                         path += "." + extension;
                     }
                 }
-                resource.toFile().renameTo(resource.getParent().getChild(path).toFile());
+                String finalPath = path;
+                resource.toFile().renameTo(TaskThread.IO().process(() -> resource.getParent().getChild(finalPath)).toFile());
             }
         });
     }
@@ -221,11 +236,12 @@ public class EditorSkin extends Skin {
             if (dir != null && !(dir = dir.trim()).isEmpty()) {
                 path = new File(dir, path).getPath();
             }
-            return resourceValidator.validate(project.getSourceFolder().getChild(path));
+            String finalPath = path;
+            return resourceValidator.validate(TaskThread.IO().process(() -> project.getSourceFolder().getChild(finalPath)));
         };
         form.directory.set(root.getPath(project.getSourceFolder()));
         form.directory.validate(Validator.validFilename()
-                .combine(Validator.pathNotExist().map(x -> project.getSourceFolder().getChild(x))));
+                .combine(Validator.mustNotFile().map(x -> x.isEmpty() ? project.getSourceFolder() : TaskThread.IO().process(() -> project.getSourceFolder().getChild(x)))));
         form.name.validate(
                 Validator.combine(
                         Validator.combine(
@@ -245,8 +261,11 @@ public class EditorSkin extends Skin {
                 if (dir != null && !(dir = dir.trim()).isEmpty()) {
                     path = new File(dir, path).getPath();
                 }
-                Resource newFile = project.getSourceFolder().getChild(path);
-                result.type.get().createFile(newFile);
+                String finalPath = path;
+                TaskThread.IO().schedule(() -> {
+                    Resource newFile = project.getSourceFolder().getChild(finalPath);
+                    result.type.get().createFile(newFile);
+                });
             }
         });
     }
@@ -268,7 +287,6 @@ public class EditorSkin extends Skin {
     private void updateSearch(String string) {
         updateSearchPopupPosition();
         searchPopup.getSearchResultItems().clear();
-        Editor editor = editorWindow.getEditor();
 //        SearchQuery query = new SearchQuery(string);
 //        SearchThread.submit(() -> {
 //            for (SearchableContentContext context : editor.getSearchableContentContexts()) {

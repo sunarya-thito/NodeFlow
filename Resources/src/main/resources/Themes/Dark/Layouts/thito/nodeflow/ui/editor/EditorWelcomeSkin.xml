@@ -1,0 +1,10 @@
+<NodeFlow>
+    <Layout>
+        <HBox class="welcome-box">
+            <VBox class="welcome-inner">
+                <Label class="welcome-title">${editor.welcome.title}</Label>
+                <Label class="welcome-paragraph">${editor.welcome.message}</Label>
+            </VBox>
+        </HBox>
+    </Layout>
+</NodeFlow>

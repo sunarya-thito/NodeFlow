@@ -1,5 +1,7 @@
 package thito.nodeflow.plugin;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.image.Image;
 import thito.nodeflow.language.I18n;
 import thito.nodeflow.project.Project;
@@ -10,14 +12,16 @@ import thito.nodeflow.ui.Theme;
 import thito.nodeflow.ui.form.*;
 
 public class DirectoryFileModule implements FileModule {
+
+    private ObjectProperty<Image> icon = new SimpleObjectProperty<>(new Image("theme:Icons/Folder.png"));
     @Override
     public I18n getDisplayName() {
         return I18n.$("directory");
     }
 
     @Override
-    public Image getIcon() {
-        return new Image("theme:Icons/Folder.png");
+    public ObjectProperty<Image> iconProperty() {
+        return icon;
     }
 
     @Override

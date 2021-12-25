@@ -9,18 +9,30 @@ import java.lang.ref.*;
 import java.util.*;
 
 public class ThreadBinding {
-    public static <T> void bind(WritableValue<T> property, ObservableValue<T> source, TaskThread thread) {
+    public static <T> void bind(WritableValue<T> property, ObservableValue<T> source, TaskThread sourceThread, TaskThread thread) {
         if (property instanceof Property) {
             ((Property<T>) property).unbind();
         }
-        thread.schedule(() -> {
-            property.setValue(source.getValue());
-            source.addListener(new WeakReferencedListener(obs -> {
-                thread.schedule(() -> {
-                    property.setValue(source.getValue());
-                });
-            }, property));
+        sourceThread.schedule(() -> {
+            T value = source.getValue();
+            thread.schedule(() -> {
+                property.setValue(value);
+                source.addListener(new WeakReferencedListener(obs -> {
+                    sourceThread.schedule(() -> {
+                        T value1 = source.getValue();
+                        thread.schedule(() -> {
+                            property.setValue(value1);
+                        });
+                    });
+                }, property));
+            });
         });
+    }
+
+    public static <T> ObservableValue<T> threadProperty(ObservableValue<T> source, TaskThread sourceThread, TaskThread thread) {
+        ObjectProperty<T> property = new SimpleObjectProperty<>();
+        bind(property, source, sourceThread, thread);
+        return property;
     }
 
     public static <T> void bindContent(List<T> list, ObservableList<T> observableList, TaskThread thread) {

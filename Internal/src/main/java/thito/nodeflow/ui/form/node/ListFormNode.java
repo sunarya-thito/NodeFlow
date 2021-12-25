@@ -15,6 +15,10 @@ import java.util.function.Function;
 public class ListFormNode<T> implements FormNode<T> {
     private ComboBox<T> comboBox = new ComboBox<>();
 
+    {
+        comboBox.setFocusTraversable(true);
+    }
+
     public ListFormNode(List<T> list, Function<T, String> stringConverter) {
         this(list, new StringConverter<T>() {
             @Override

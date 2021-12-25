@@ -16,8 +16,12 @@ public class ProjectListSkin extends Skin {
         this.page = page;
     }
 
+    public ProjectsPage getPage() {
+        return page;
+    }
+
     @Override
     protected void onLayoutLoaded() {
-        MappedListBinding.bind(content.getChildren(), page.getSortedProject(), ProjectListItemSkin::new);
+        MappedListBinding.bind(content.getChildren(), page.getSortedProject(), x -> new ProjectListItemSkin(this, x));
     }
 }

@@ -25,6 +25,9 @@
 
 package thito.nodeflow.ui;
 
+import com.sun.javafx.scene.NodeHelper;
+import com.sun.javafx.scene.ParentHelper;
+import com.sun.javafx.scene.SceneHelper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -34,13 +37,14 @@ import javafx.geometry.HPos;
 import javafx.geometry.NodeOrientation;
 import javafx.geometry.Orientation;
 import javafx.geometry.VPos;
-import javafx.scene.Cursor;
-import javafx.scene.Node;
+import javafx.scene.*;
 import javafx.scene.control.SkinBase;
 import javafx.scene.control.SplitPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
+
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -68,7 +72,6 @@ public class SplitPaneSkin extends SkinBase<SplitPane> {
     private ObservableList<Content> contentRegions;
     private ObservableList<ContentDivider> contentDividers;
     private boolean horizontal;
-
 
 
     /***************************************************************************

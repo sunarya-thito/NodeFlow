@@ -1,5 +1,13 @@
+button-yes: _Yes
+button-no: _No
 cancel: Cancel
+batch-task:
+    title: Processing
 dialogs:
+    close-project:
+        title: Close Project
+        message: |-
+            Are you sure you want to close this project?
     delete-file-permanently:
         title: Delete File Permanently
         message: |-
@@ -37,13 +45,19 @@ editor:
         unknown-file: UNKNOWN FILE
         open-file: UNABLE TO OPEN THE FILE
     menu-view:
-        zoom-fit: Zoom Fit
-        zoom-selected: Zoom to Fit Selection
-        zoom-out: Zoom Out
-        zoom-in: Zoom In
+        reset-layout: Reset Layout
+        tool-window: Tool Window
     title: NodeFlow - %s
     loading-file: Loading File
+    welcome:
+        tab-title: Welcome
+        title: Welcome To NodeFlow!
+        message: |-
+            Thank you for using NodeFlow.
+            To begin, open the Project Files Tab and
+            Create a File or Double Click a File to open it.
     menu-edit:
+        rename: Rename
         undo: Undo
         cut: Cut
         find: Find
@@ -64,7 +78,7 @@ editor:
         dashboard: Dashboard
     navigation:
         plugin-options: Facets
-        project-files: Project
+        project-files: Project Files
         module-structure: Structure
     view: View
     file: File

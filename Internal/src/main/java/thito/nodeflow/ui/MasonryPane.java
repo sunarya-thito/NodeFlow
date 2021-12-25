@@ -122,8 +122,80 @@ public class MasonryPane extends Pane {
             animation.setOnFinished(e -> recalculatePosition());
             return;
         }
-        Set<KeyValue> values = new LinkedHashSet<>();
         double gap = this.gap.get();
+        if (repositionSpeed.get().toMillis() == 0) {
+            if (orientation.get() == Orientation.VERTICAL) {
+                double preferredOrientationSize = this.preferredOrientationSize.get();
+                if (preferredOrientationSize < 0) {
+                    for (Node node : getChildren()) {
+                        preferredOrientationSize = Math.max(preferredOrientationSize, getPreferredWidth(node));
+                    }
+                }
+                Iterator<Node> iterator = getChildren().iterator();
+                double paneWidth = getWidth();
+                int columns = 0;
+                double targetWidth = 0;
+                double gapTargetWidth = preferredOrientationSize + gap;
+                while (targetWidth + (columns == 0 ? preferredOrientationSize : gapTargetWidth) < paneWidth &&
+                        gapTargetWidth < paneWidth && gapTargetWidth > 0) {
+                    targetWidth += columns == 0 ? preferredOrientationSize : gapTargetWidth;
+                    columns++;
+                }
+                double[] heightMap = new double[Math.max(1, columns)];
+                double difference = paneWidth - targetWidth;
+                preferredOrientationSize += difference / heightMap.length;
+                gapTargetWidth = preferredOrientationSize + gap;
+                while (iterator.hasNext()) {
+                    double width = 0;
+                    for (int i = 0; i < heightMap.length && iterator.hasNext(); i++) {
+                        Node node = iterator.next();
+                        if (node instanceof Region) {
+                            ((Region) node).setPrefWidth(preferredOrientationSize);
+                        }
+                        node.setLayoutX(width);
+                        node.setLayoutY(heightMap[i]);
+                        Bounds bounds = node.getLayoutBounds();
+                        heightMap[i] += bounds.getHeight() + gap;
+                        width += gapTargetWidth;
+                    }
+                }
+            } else if (orientation.get() == Orientation.HORIZONTAL) {
+                double preferredOrientationSize = this.preferredOrientationSize.get();
+                if (preferredOrientationSize < 0) {
+                    for (Node node : getChildren()) {
+                        preferredOrientationSize = Math.max(preferredOrientationSize, getPreferredHeight(node));
+                    }
+                }
+                Iterator<Node> iterator = getChildren().iterator();
+                double paneHeight = getHeight();
+                int rows = 0;
+                double targetHeight = 0;
+                double gapTargetHeight = preferredOrientationSize + gap;
+                while (targetHeight < paneHeight && gapTargetHeight < paneHeight && gapTargetHeight > 0) {
+                    targetHeight += rows == 0 ? preferredOrientationSize : gapTargetHeight;
+                    rows++;
+                }
+                double[] widthMap = new double[Math.max(1, rows-1)];
+                preferredOrientationSize = Math.max(paneHeight / widthMap.length, preferredOrientationSize);
+                gapTargetHeight = preferredOrientationSize + gap;
+                while (iterator.hasNext()) {
+                    double height = 0;
+                    for (int i = 0; i < widthMap.length & iterator.hasNext(); i++) {
+                        Node node = iterator.next();
+                        if (node instanceof Region) {
+                            ((Region) node).setPrefHeight(preferredOrientationSize);
+                        }
+                        node.setLayoutX(widthMap[i]);
+                        node.setLayoutY(height);
+                        Bounds bounds = node.getLayoutBounds();
+                        widthMap[i] += bounds.getWidth() + gap;
+                        height += gapTargetHeight;
+                    }
+                }
+            }
+            return;
+        }
+        Set<KeyValue> values = new LinkedHashSet<>();
         Interpolator interpolator = this.interpolator.get();
         if (orientation.get() == Orientation.VERTICAL) {
             double preferredOrientationSize = this.preferredOrientationSize.get();

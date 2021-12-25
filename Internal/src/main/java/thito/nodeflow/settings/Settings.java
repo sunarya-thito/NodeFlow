@@ -1,11 +1,17 @@
 package thito.nodeflow.settings;
 
 import thito.nodeflow.NodeFlow;
-import thito.nodeflow.config.*;
+import thito.nodeflow.config.Section;
 import thito.nodeflow.plugin.PluginManager;
-import thito.nodeflow.plugin.event.application.*;
+import thito.nodeflow.plugin.event.application.SettingsLoadEvent;
+import thito.nodeflow.plugin.event.application.SettingsPreLoadEvent;
+import thito.nodeflow.plugin.event.application.SettingsSaveEvent;
 import thito.nodeflow.project.ProjectProperties;
-import thito.nodeflow.settings.canvas.*;
+import thito.nodeflow.settings.canvas.Category;
+import thito.nodeflow.settings.canvas.ReflectedSettingsCategory;
+import thito.nodeflow.settings.canvas.SettingsContext;
+import thito.nodeflow.task.TaskThread;
+import thito.nodeflow.task.batch.Batch;
 
 import java.util.*;
 
@@ -52,8 +58,7 @@ public class Settings {
 
     private Map<ProjectProperties, List<SettingsCategory>> categoryMap = new LinkedHashMap<>();
 
-    public void loadGlobalConfiguration() {
-        Section globalConfiguration = NodeFlow.getInstance().readFromConfiguration();
+    public void loadGlobalConfiguration(Section globalConfiguration) {
         for (Map.Entry<ProjectProperties, List<SettingsCategory>> entry : categoryMap.entrySet()) {
             ProjectProperties properties = entry.getKey();
             if (properties == null) {
@@ -80,19 +85,21 @@ public class Settings {
         }
     }
 
-    public void saveGlobalConfiguration() {
-        Section globalConfiguration = NodeFlow.getInstance().readFromConfiguration();
-        for (Map.Entry<ProjectProperties, List<SettingsCategory>> entry : categoryMap.entrySet()) {
-            ProjectProperties properties = entry.getKey();
-            if (properties == null) {
-                for (SettingsCategory c : entry.getValue()) {
-                    for (SettingsItem<?> item : c.getItems()) {
-                        SettingsProperty<?> property = item.createProperty();
-                        if (!PluginManager.getPluginManager().fireEvent(new SettingsSaveEvent(property)).isCancelled()) {
-                            property.save(globalConfiguration, c.getKey() + "." + item.getKey());
+    public Batch.Task saveGlobalConfiguration() {
+        return Batch.execute(TaskThread.IO(), progress -> {
+            Section globalConfiguration = NodeFlow.getInstance().readFromConfiguration();
+            progress.append(TaskThread.BG(), px -> {
+                for (Map.Entry<ProjectProperties, List<SettingsCategory>> entry : categoryMap.entrySet()) {
+                    ProjectProperties properties = entry.getKey();
+                    if (properties == null) {
+                        for (SettingsCategory c : entry.getValue()) {
+                            for (SettingsItem<?> item : c.getItems()) {
+                                SettingsProperty<?> property = item.createProperty();
+                                if (!PluginManager.getPluginManager().fireEvent(new SettingsSaveEvent(property)).isCancelled()) {
+                                    property.save(globalConfiguration, c.getKey() + "." + item.getKey());
+                                }
+                            }
                         }
-                    }
-                }
 //            } else {
 //                for (SettingsCategory c : entry.getValue()) {
 //                    for (SettingsItem<?> item : c.getItems()) {
@@ -102,9 +109,13 @@ public class Settings {
 //                        }
 //                    }
 //                }
-            }
-        }
-        NodeFlow.getInstance().saveToConfiguration(globalConfiguration);
+                    }
+                }
+                px.append(TaskThread.IO(), p2 -> {
+                    NodeFlow.getInstance().saveToConfiguration(globalConfiguration);
+                });
+            });
+        });
     }
 
     void putCategory(ProjectProperties project, SettingsCategory category) {

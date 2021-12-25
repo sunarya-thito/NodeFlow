@@ -4,6 +4,10 @@ import javafx.beans.Observable;
 import javafx.beans.property.*;
 import javafx.util.*;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.function.Supplier;
+
 public interface TaskThread {
     static TaskThread IO() {
         return TaskManager.getInstance().getIOThread();
@@ -24,8 +28,21 @@ public interface TaskThread {
     default void checkThread() {
         if (!isInThread()) throw new IllegalStateException("not in "+getThreadName()+" thread");
     }
-    default <T extends Observable> T lock(T observable) {
+    default <T extends Observable> T watch(T observable) {
         observable.addListener(obs -> checkThread());
         return observable;
+    }
+    default <T> T process(Supplier<T> supplier) {
+        CompletableFuture<T> future = new CompletableFuture<>();
+        schedule(() -> {
+            future.complete(supplier.get());
+        });
+        try {
+            return future.get();
+        } catch (InterruptedException ignored) {
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

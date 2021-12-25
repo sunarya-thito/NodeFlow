@@ -1,6 +1,7 @@
 package thito.nodeflow.binding;
 
 import javafx.beans.*;
+import javafx.beans.binding.Bindings;
 import javafx.collections.*;
 
 import java.lang.ref.*;

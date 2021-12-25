@@ -12,6 +12,9 @@
                     <Item id="file-import">
                         <Text>${editor.menu-file.import}</Text>
                     </Item>
+                    <Item id="file-rename">
+                        <Text>${editor.menu-edit.rename}</Text>
+                    </Item>
                     <Separator/>
                     <Item id="file-cut">
                         <Text>${editor.menu-edit.cut}</Text>

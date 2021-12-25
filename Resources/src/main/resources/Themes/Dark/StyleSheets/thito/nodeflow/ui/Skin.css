@@ -18,6 +18,137 @@
     src: url("rsrc:Fonts/Roboto-Medium.ttf");
 }
 
+.window-background-task-overlay {
+    -fx-background-color: rgba(0, 0, 0, 0.5);
+}
+
+.docker-tab-header-highlighter-view {
+    -fx-background-color: #537ac9;
+}
+
+.docker-tab-pane {
+    -fx-border-width: 1;
+    -fx-border-insets: -1;
+    -fx-border-color: #383f4d;
+}
+
+/*.docker-tab-pane:left .docker-tab-pane-header, .docker-tab-pane:right .docker-tab-pane-header {*/
+/*    -fx-max-width: 30;*/
+/*    -fx-min-width: 30;*/
+/*}*/
+
+/*.docker-tab-pane:top .docker-tab-pane-header, .docker-tab-pane:bottom .docker-tab-pane-header {*/
+/*    -fx-max-height: 30;*/
+/*    -fx-min-height: 30;*/
+/*}*/
+
+DockerPane SplitPane {
+    -fx-padding: 0;
+    /*-fx-skin: "thito.nodeflow.ui.SplitPaneSkin";*/
+}
+
+DockerPane SplitPane {
+    -fx-border-insets: -1;
+    -fx-border-color: #383f4d;
+    -fx-border-width: 1;
+    -fx-background-color: black;
+}
+
+.docker-tab-header-close-button {
+    -fx-graphic: url("Theme:Icons/TabCloseButton.png");
+}
+
+.docker-tab-header-close-button:hover {
+    -fx-graphic: url("Theme:Icons/TabCloseButtonHovered.png");
+}
+
+.split-pane-divider {
+    -fx-background-color: #383f4d;
+    -fx-padding: 0.5 0.5 0 0;
+}
+
+.docker-tab-pane-header {
+    -fx-background-color: #1A202C;
+    -fx-min-width: 20;
+    -fx-min-height: 20;
+    -fx-border-insets: -1;
+    -fx-border-color: #383f4d;
+}
+
+.docker-tab-pane:top .docker-tab-pane-header {
+    -fx-border-width: 0 0 1 0;
+}
+
+.docker-tab-pane:bottom .docker-tab-pane-header {
+    -fx-border-width: 1 0 0 0;
+}
+
+.docker-tab-pane:left .docker-tab-pane-header {
+    -fx-border-width: 0 1 0 0;
+}
+
+.docker-tab-pane:right .docker-tab-pane-header {
+    -fx-border-width: 0 0 0 1;
+}
+
+.docker-tab-header {
+    -fx-min-width: 10px;
+    -fx-min-height: 10px;
+    -fx-background-color: #1A202C;
+}
+
+.docker-tab-header-title {
+    -fx-text-fill: #C3CDDB;
+    -fx-font-family: 'Roboto';
+}
+
+.docker-tab-pane:highlighted .docker-tab-pane-node-container-highlighter {
+    -fx-background-color: rgba(255, 255, 255, 0.5);
+}
+
+.docker-tab-header-wrapper {
+    -fx-alignment: center;
+    -fx-spacing: 10;
+}
+
+.docker-tab-header:top .docker-tab-header-wrapper {
+    -fx-border-color: #383f4d;
+    -fx-border-width: 0 1 0 1;
+    -fx-padding: 2 4 2 10;
+    -fx-border-insets: -1;
+}
+
+.docker-tab-header:bottom .docker-tab-header-wrapper {
+    -fx-border-color: #383f4d;
+    -fx-border-width: 0 1 0 1;
+    -fx-padding: 2 4 2 10;
+    -fx-border-insets: -1;
+}
+
+.docker-tab-header:left .docker-tab-header-wrapper {
+    -fx-border-color: #383f4d;
+    -fx-border-width: 1 0 1 0;
+    -fx-padding: 4 2 10 2;
+    -fx-border-insets: -1;
+}
+
+.docker-tab-header:right .docker-tab-header-wrapper {
+    -fx-border-color: #383f4d;
+    -fx-border-width: 1 0 1 0;
+    -fx-padding: 10 2 4 2;
+    -fx-border-insets: -1;
+}
+
+.docker-tab-header-close-button {
+    -fx-max-height: Infinity;
+    -fx-max-width: Infinity;
+    -fx-background-color: transparent;
+}
+
+.docker-tab-header:selected {
+    -fx-background-color: #0E121A;
+}
+
 .scroll-pane {
     -fx-background-color: transparent;
 }

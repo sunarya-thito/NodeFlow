@@ -51,10 +51,7 @@ public class ProjectBoxSkin extends Skin {
         super.initializeSkin();
         registerActionHandler("project.open", MouseEvent.MOUSE_CLICKED, event -> {
             event.consume();
-            DashboardWindow.getWindow().close();
-            TaskThread.BG().schedule(() -> {
-                // TODO open project
-            });
+            DashboardWindow.getWindow().openProject(projectProperties);
         });
     }
 
@@ -62,8 +59,8 @@ public class ProjectBoxSkin extends Skin {
     protected void onLayoutLoaded() {
         icon.setImage(ProjectHelper.create(projectProperties.getName(), 150, 100));
         ThreadBinding.bind(size.textProperty(), Toolkit.formatFileSize(projectProperties.getDirectory().sizeProperty()),
-                TaskThread.UI());
-        name.textProperty().bind(projectProperties.nameProperty());
+                TaskThread.IO(), TaskThread.UI());
+        ThreadBinding.bind(name.textProperty(), projectProperties.nameProperty(), TaskThread.IO(), TaskThread.UI());
         description.textProperty().bind(projectProperties.descriptionProperty());
 
         /*

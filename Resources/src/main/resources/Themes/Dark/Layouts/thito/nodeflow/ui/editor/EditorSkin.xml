@@ -58,6 +58,17 @@
                                         <!--                                To mark where the module menu should be placed-->
                                         <Menu id="module-menu"></Menu>
                                         <Menu>
+                                            <Text>${editor.view}</Text>
+                                            <Items>
+                                                <Item action="editor.resetLayout">
+                                                    <Text>${editor.menu-view.reset-layout}</Text>
+                                                </Item>
+                                                <Menu id="tool-window">
+                                                    <Text>${editor.menu-view.tool-window}</Text>
+                                                </Menu>
+                                            </Items>
+                                        </Menu>
+                                        <Menu>
                                             <Text>${editor.help}</Text>
                                             <Items>
                                                 <Item>
@@ -96,9 +107,6 @@
                             </Right>
                         </BorderPane>
                         <BorderPane class="center-viewport" id="main-viewport" VBox.grow="ALWAYS">
-                            <Center>
-                                <DockPane id="editor-content"/>
-                            </Center>
                         </BorderPane>
                     </VBox>
                 </HBox>

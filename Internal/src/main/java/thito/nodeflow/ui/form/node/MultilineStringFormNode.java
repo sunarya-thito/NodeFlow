@@ -7,6 +7,10 @@ import thito.nodeflow.ui.form.*;
 public class MultilineStringFormNode implements FormNode<String> {
     private TextArea textArea = new TextArea();
 
+    {
+        textArea.setFocusTraversable(true);
+    }
+
     public MultilineStringFormNode() {
         textArea.getStyleClass().add("multiline-string-form-node");
     }

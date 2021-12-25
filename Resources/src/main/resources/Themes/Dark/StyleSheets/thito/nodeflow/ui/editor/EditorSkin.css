@@ -138,11 +138,6 @@
     -fx-padding: 0;
 }
 
-.center-viewport .split-pane-divider {
-    -fx-background-color: transparent;
-    -fx-padding: 0 5;
-}
-
 .file-tabs {
     -fx-min-height: 100;
     -fx-min-width: 100;
@@ -212,4 +207,8 @@ EditorSkin {
 EditorSkin:maximized {
     -fx-padding: 8;
     -fx-effect: none;
+}
+
+DockerTab {
+    -fx-background-color: #1A202C;
 }

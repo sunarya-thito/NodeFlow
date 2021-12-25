@@ -6,6 +6,7 @@ import thito.nodeflow.NodeFlow;
 import thito.nodeflow.language.I18n;
 import thito.nodeflow.project.Workspace;
 import thito.nodeflow.resource.Resource;
+import thito.nodeflow.task.TaskThread;
 import thito.nodeflow.ui.form.Form;
 import thito.nodeflow.ui.form.FormProperty;
 import thito.nodeflow.ui.form.node.*;
@@ -28,8 +29,8 @@ public class CreateProjectForm implements Form {
         folderName.validate(name -> {
             if (name == null || name.trim().isEmpty()) return I18n.$("forms.validate-not-empty");
             Workspace workspace = NodeFlow.getInstance().workspaceProperty().get();
-            Resource resource = workspace.getRoot().getChild(name);
-            if (resource.exists()) {
+            Resource resource = TaskThread.IO().process(() -> workspace.getRoot().getChild(name));
+            if (TaskThread.IO().process(resource::exists)) {
                 return I18n.$("dashboard.forms.validate-already-exist");
             }
             return null;

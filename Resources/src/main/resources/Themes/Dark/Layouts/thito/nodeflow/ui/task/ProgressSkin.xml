@@ -1,0 +1,23 @@
+<NodeFlow>
+    <Layout>
+        <VBox class="progress-box">
+            <HBox class="progress-box">
+                <BorderPane class="progress-root">
+                    <Top>
+                        <BorderPane class="progress-title-bar">
+                            <Center>
+                                <Label>${batch-task.title}</Label>
+                            </Center>
+                        </BorderPane>
+                    </Top>
+                    <Center>
+                        <VBox class="progress-inner">
+                            <Label id="status"/>
+                            <ProgressBar id="progress"/>
+                        </VBox>
+                    </Center>
+                </BorderPane>
+            </HBox>
+        </VBox>
+    </Layout>
+</NodeFlow>

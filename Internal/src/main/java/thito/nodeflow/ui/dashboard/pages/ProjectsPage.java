@@ -43,6 +43,16 @@ public class ProjectsPage extends DashboardPage {
     private FilteredList<ProjectProperties> shownProjects;
     private SortedList<ProjectProperties> sortedProject;
 
+    private DashboardSkin dashboardSkin;
+
+    public ProjectsPage(DashboardSkin dashboardSkin) {
+        this.dashboardSkin = dashboardSkin;
+    }
+
+    public DashboardSkin getDashboardSkin() {
+        return dashboardSkin;
+    }
+
     @Override
     protected void initializeSkin() {
         super.initializeSkin();

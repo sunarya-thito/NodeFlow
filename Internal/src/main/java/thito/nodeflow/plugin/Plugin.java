@@ -1,14 +1,16 @@
 package thito.nodeflow.plugin;
 
-import thito.nodeflow.language.*;
-import thito.nodeflow.settings.*;
-import thito.nodeflow.settings.canvas.*;
-import thito.nodeflow.task.BatchTask;
+import thito.nodeflow.language.I18n;
+import thito.nodeflow.settings.PluginSettings;
+import thito.nodeflow.settings.Settings;
+import thito.nodeflow.settings.canvas.SettingsContext;
+import thito.nodeflow.task.TaskThread;
+import thito.nodeflow.task.batch.Batch;
 
-import java.io.*;
-import java.lang.reflect.*;
-import java.util.*;
-import java.util.logging.*;
+import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
+import java.util.logging.Logger;
 
 public class Plugin {
 
@@ -86,26 +88,19 @@ public class Plugin {
         return name;
     }
 
-    public BatchTask load() throws NoSuchMethodException, InvocationTargetException,
+    public Batch.Task load() throws NoSuchMethodException, InvocationTargetException,
             InstantiationException, IllegalAccessException {
-        instance = (PluginInstance) mainClass.getConstructor().newInstance();
-        return instance.createLoaderTask();
+        return Batch.execute(TaskThread.BG(), progress -> {
+            progress.setStatus("Creating main class instance");
+            instance = (PluginInstance) mainClass.getConstructor().newInstance();
+        }).execute(TaskThread.BG(), pr -> pr.append(instance.createLoaderTask()));
     }
 
-    public BatchTask initialize() {
-        BatchTask initializationTask = null;
-        if (getPluginSettings().getEnable().getValue()) {
-            initializationTask = instance.createInitializationTask();
-        }
-        pluginSettings.getEnable().valueProperty().addListener((obs, old, val) -> {
-            BatchTask batchTask;
-            if (val) {
-                batchTask = instance.createInitializationTask();
-            } else {
-                batchTask = instance.createShutdownTask();
-            }
-            // TODO process the batch task
-        });
-        return initializationTask;
+    public Batch.Task shutdown() {
+        return instance.createShutdownTask();
+    }
+
+    public Batch.Task initialize() {
+        return instance.createInitializationTask();
     }
 }

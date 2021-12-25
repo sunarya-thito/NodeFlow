@@ -13,6 +13,7 @@ import thito.nodeflow.binding.ActiveMappedListBinding;
 import thito.nodeflow.binding.CombinedListBinding;
 import thito.nodeflow.binding.MappedListBinding;
 import thito.nodeflow.binding.ThreadBinding;
+import thito.nodeflow.project.ProjectManager;
 import thito.nodeflow.project.ProjectProperties;
 import thito.nodeflow.project.Tag;
 import thito.nodeflow.task.TaskThread;
@@ -31,10 +32,16 @@ public class ProjectListItemSkin extends Skin {
     @Component("tags")
     FlowPane tags;
 
+    private ProjectListSkin projectListSkin;
     private ProjectProperties projectProperties;
 
-    public ProjectListItemSkin(ProjectProperties projectProperties) {
+    public ProjectListItemSkin(ProjectListSkin projectListSkin, ProjectProperties projectProperties) {
+        this.projectListSkin = projectListSkin;
         this.projectProperties = projectProperties;
+    }
+
+    public ProjectListSkin getProjectListSkin() {
+        return projectListSkin;
     }
 
     @Override
@@ -42,10 +49,7 @@ public class ProjectListItemSkin extends Skin {
         super.initializeSkin();
         registerActionHandler("project.open", MouseEvent.MOUSE_CLICKED, event -> {
             event.consume();
-            DashboardWindow.getWindow().close();
-            TaskThread.BG().schedule(() -> {
-                // TODO open project
-            });
+            DashboardWindow.getWindow().openProject(projectProperties);
         });
     }
 
@@ -54,6 +58,7 @@ public class ProjectListItemSkin extends Skin {
         name.textProperty().bind(projectProperties.nameProperty());
         StringProperty sizeProp = new SimpleStringProperty();
         ThreadBinding.bind(sizeProp, Toolkit.formatFileSize(projectProperties.getDirectory().sizeProperty()),
+                TaskThread.IO(),
                 TaskThread.UI());
         description.textProperty().bind(projectProperties.descriptionProperty().concat(" (").concat(sizeProp).concat(")"));
 

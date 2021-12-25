@@ -2,14 +2,14 @@ package thito.nodeflow.plugin.event.project;
 
 import thito.nodeflow.plugin.event.*;
 import thito.nodeflow.project.Project;
-import thito.nodeflow.task.BatchTask;
+import thito.nodeflow.task.batch.Batch;
 
 public class ProjectLoadEvent implements CancellableEvent {
     private boolean cancelled;
     private Project project;
-    private BatchTask batchTask;
+    private Batch batchTask;
 
-    public ProjectLoadEvent(Project project, BatchTask batchTask) {
+    public ProjectLoadEvent(Project project, Batch batchTask) {
         this.project = project;
         this.batchTask = batchTask;
     }

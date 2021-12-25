@@ -23,7 +23,7 @@
 
 DialogWindowSkin {
     -fx-background-color: transparent;
-    -fx-padding: 20;
+    -fx-padding: 5;
 }
 
 DialogWindowSkin:maximized {

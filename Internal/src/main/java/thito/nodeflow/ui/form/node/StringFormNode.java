@@ -8,6 +8,10 @@ public class StringFormNode implements FormNode<String> {
 
     private TextField textField = new TextField();
 
+    {
+        textField.setFocusTraversable(true);
+    }
+
     public StringFormNode() {
         textField.getStyleClass().add("string-form-node");
     }

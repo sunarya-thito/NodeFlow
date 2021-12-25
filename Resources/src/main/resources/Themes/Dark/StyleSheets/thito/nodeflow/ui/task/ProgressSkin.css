@@ -1,0 +1,54 @@
+.progress-root {
+    -fx-background-color: #131921;
+    -fx-border-width: 1;
+    -fx-border-insets: -1;
+    -fx-border-color: #383f4d;
+}
+
+.progress-title-bar {
+    -fx-background-color: #1A202C;
+    -fx-border-width: 1;
+    -fx-border-insets: -1;
+    -fx-border-color: #383f4d;
+    -fx-padding: 5 20;
+}
+
+.progress-title-bar .label {
+    -fx-text-fill: rgba(255, 255, 255, 0.8);
+}
+
+.progress-inner {
+    -fx-padding: 10 20;
+    -fx-spacing: 5;
+}
+
+.progress-inner #status {
+    -fx-text-fill: rgba(255, 255, 255, 0.6);
+}
+
+.progress-inner #progress {
+    -fx-min-width: 400;
+    -fx-min-height: 20;
+}
+
+.progress-inner #progress .bar {
+    -fx-padding: 0px;
+    -fx-background-insets: 0px;
+    -fx-background-color: #ED8936;
+    -fx-background-radius: 0;
+    -fx-border-width: 1;
+    -fx-border-insets: -1;
+    -fx-border-color: #eea16c;
+}
+
+.progress-inner #progress .track {
+    -fx-background-color: #343e54;
+    -fx-background-radius: 0;
+    -fx-border-width: 1;
+    -fx-border-insets: -1;
+    -fx-border-color: #677185;
+}
+
+.progress-box {
+    -fx-alignment: center;
+}

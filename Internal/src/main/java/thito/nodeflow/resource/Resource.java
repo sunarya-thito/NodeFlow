@@ -8,6 +8,7 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import thito.nodeflow.annotation.IOThread;
+import thito.nodeflow.task.TaskThread;
 
 import java.io.*;
 import java.net.MalformedURLException;
@@ -19,10 +20,10 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Resource {
-    protected LongProperty size = new SimpleLongProperty();
-    protected ObjectProperty<ResourceType> type = new SimpleObjectProperty<>();
-    protected ObservableList<Resource> children = FXCollections.observableArrayList();
-    protected LongProperty modifiedDate = new SimpleLongProperty();
+    protected LongProperty size = TaskThread.IO().watch(new SimpleLongProperty());
+    protected ObjectProperty<ResourceType> type = TaskThread.IO().watch(new SimpleObjectProperty<>());
+    protected ObservableList<Resource> children = TaskThread.IO().watch(FXCollections.observableArrayList());
+    protected LongProperty modifiedDate = TaskThread.IO().watch(new SimpleLongProperty());
     protected File file;
     protected ResourceManager resourceManager;
     protected WatchKey watchKey;
@@ -184,7 +185,6 @@ public class Resource {
         return getResourceManager().getResource(new File(toFile(), path));
     }
 
-    @IOThread
     public ObservableList<Resource> getChildren() {
         return FXCollections.unmodifiableObservableList(children);
     }
@@ -251,10 +251,12 @@ public class Resource {
         }
     }
 
+    @IOThread
     public <T extends Event> void addEventHandler(EventType<T> type, EventHandler<T> handler) {
         listener.computeIfAbsent(type, x -> new LinkedList<>()).add(handler);
     }
 
+    @IOThread
     public <T extends Event> void removeEventHandler(EventType<T> type, EventHandler<T> handler) {
         LinkedList<?> list = listener.get(type);
         if (list != null) {

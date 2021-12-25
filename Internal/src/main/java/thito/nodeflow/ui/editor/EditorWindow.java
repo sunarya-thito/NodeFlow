@@ -1,24 +1,48 @@
 package thito.nodeflow.ui.editor;
 
-import javafx.beans.binding.Bindings;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.input.MouseButton;
-import thito.nodeflow.binding.MappedBinding;
-import thito.nodeflow.editor.Editor;
-import thito.nodeflow.editor.EditorManager;
 import thito.nodeflow.language.I18n;
+import thito.nodeflow.project.ProjectContext;
+import thito.nodeflow.project.ProjectManager;
 import thito.nodeflow.task.TaskThread;
 import thito.nodeflow.ui.*;
 import thito.nodeflow.ui.dashboard.DashboardWindow;
+import thito.nodeflow.ui.dialog.Dialog;
+import thito.nodeflow.ui.dialog.Dialogs;
+import thito.nodeflow.ui.docker.DockerPane;
+import thito.nodeflow.ui.docker.DockerWindow;
 
-public class EditorWindow extends Window implements WindowHitTest {
-    private Editor editor;
+public class EditorWindow extends Window implements WindowHitTest, DockerWindow {
 
-    public EditorWindow(Editor editor) {
-        this.editor = editor;
-        titleProperty().bind(Bindings.when(editor.projectProperty().isNull()).then(I18n.$("editor.title-no-project"))
-                .otherwise(I18n.$("editor.title").format(MappedBinding.map(editor.projectProperty(), project -> project == null ? null : project.getProperties().getName()))));
+    private DockerPane dockerPane;
+    private ProjectContext context;
+    public EditorWindow(ProjectContext context, DockerPane dockerPane) {
+        this.context = context;
+        this.dockerPane = dockerPane;
+        dockerPane.checkAutoCloseProperty().set(() -> {
+            if (dockerPane.getCenterTabs().getTabList().isEmpty() &&
+                    dockerPane.getLeftTabs().getTabList().isEmpty() &&
+                    dockerPane.getRightTabs().getTabList().isEmpty() &&
+                    dockerPane.getBottomTabs().getTabList().isEmpty()) {
+                super.close();
+            }
+        });
+    }
+
+    @Override
+    public void setPosition(double screenX, double screenY) {
+        getStage().setX(screenX);
+        getStage().setY(screenY);
+    }
+
+    public DockerPane getDockerPane() {
+        return dockerPane;
+    }
+
+    public ProjectContext getContext() {
+        return context;
     }
 
     @Override
@@ -27,19 +51,32 @@ public class EditorWindow extends Window implements WindowHitTest {
         getStage().showingProperty().addListener((obs, old, val) -> {
             TaskThread.BG().schedule(() -> {
                 if (val) {
-                    EditorManager.getActiveEditors().add(editor);
+                    context.getActiveWindows().add(this);
                 } else {
-                    EditorManager.getActiveEditors().remove(editor);
+                    context.getActiveWindows().remove(this);
                 }
             });
         });
-        getStage().focusedProperty().addListener((obs, old, val) -> {
-            DashboardWindow.getWindow().getStage().toFront();
-        });
     }
 
-    public Editor getEditor() {
-        return editor;
+    @Override
+    public void close() {
+        if (context.getActiveWindows().size() <= 1) {
+            Dialogs.ask(Dialog.create().title(I18n.$("dialogs.close-project.title"))
+                    .message(I18n.$("dialogs.close-project.message")).question(), result -> {
+                if (result) {
+                    context.getTaskQueue().executeBatch(
+                            ProjectManager.getInstance().closeProject(context)
+                    );
+                }
+            });
+        } else {
+            super.close();
+        }
+    }
+
+    public void forceClose() {
+        super.close();
     }
 
     @Override

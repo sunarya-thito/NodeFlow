@@ -8,6 +8,8 @@ import javafx.css.*;
 import javafx.geometry.*;
 import javafx.scene.*;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.*;
@@ -128,6 +130,17 @@ public class LayoutDebugger {
                     list.add("Pref Width: "+((Region) val).getPrefWidth());
                     list.add("Pref Height: "+((Region) val).getPrefHeight());
                 }
+                if (val instanceof ImageView) {
+                    Image image = ((ImageView) val).getImage();
+                    if (image != null) {
+                        list.add("Image: "+image.getUrl());
+                        if (image.getException() != null) {
+                            list.add(image.getException().toString());
+                        }
+                    } else {
+                        list.add("Image: NONE");
+                    }
+                }
                 addMetaData(val, val.getCssMetaData());
                 list.add("CSS:");
                 if (val instanceof Parent) {
@@ -200,14 +213,6 @@ public class LayoutDebugger {
                 };
             }
         });
-//        hierarchy.getSelectionModel().selectedItemProperty().addListener((obs, old, val) -> {
-//            if (val != null) {
-//                lockObject.set(true);
-//                selection.set(val.getValue());
-//            } else {
-//                lockObject.set(false);
-//            }
-//        });
         window.skinProperty().addListener((obs, old, val) -> {
             if (old != null) {
                 old.getChildrenUnmodifiable().addListener(updateHierarchy);
@@ -217,10 +222,18 @@ public class LayoutDebugger {
             }
             updateHierarchy();
         });
+        stage.showingProperty().addListener((obs, old, val) -> {
+            if (val) {
+                updateHierarchy();
+            } else {
+                hierarchy.setRoot(null);
+            }
+        });
         updateHierarchy();
     }
 
     protected void updateHierarchy() {
+        if (!window.stage.isShowing()) return;
         hierarchy.setRoot(new NodeItem(window.getSkin()));
     }
 
@@ -375,13 +388,6 @@ public class LayoutDebugger {
             this.node = node;
             if (node instanceof SplitPane) {
                 MappedListBinding.bind(getChildren(), ((SplitPane) node).getItems(), NodeItem::new);
-//            } else if (node instanceof ScrollPane) {
-//                ObservableList<Node> singleton = FXCollections.observableArrayList();
-//                ((ScrollPane) node).contentProperty().addListener((obs, old, val) -> {
-//                    singleton.remove(old);
-//                    singleton.add(val);
-//                });
-//                MappedListBinding.bind(getChildren(), singleton, NodeItem::new);
             } else if (node instanceof Parent) {
                 MappedListBinding.bind(getChildren(), ((Parent) node).getChildrenUnmodifiable(), NodeItem::new);
             }

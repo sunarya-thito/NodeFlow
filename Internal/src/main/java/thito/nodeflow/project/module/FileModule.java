@@ -1,5 +1,6 @@
 package thito.nodeflow.project.module;
 
+import javafx.beans.property.ObjectProperty;
 import javafx.scene.image.Image;
 import thito.nodeflow.annotation.IOThread;
 import thito.nodeflow.annotation.UIThread;
@@ -11,7 +12,8 @@ import thito.nodeflow.ui.form.Validator;
 
 public interface FileModule {
     I18n getDisplayName();
-    Image getIcon();
+    ObjectProperty<Image> iconProperty();
+//    Image getIcon();
     String getExtension();
     boolean acceptResource(Resource resource);
     @UIThread // must be done in UI Thread!
