@@ -1,0 +1,36 @@
+<plugin>
+    <identity>
+        <group>thito.nodeflow</group>
+        <id>blueprint</id>
+        <name>BluePrint</name>
+        <version>1.0</version>
+    </identity>
+    <integrations>
+        <nodeflow>
+            <fileModules>
+                <fileModule>
+                    <id>java-blueprint</id>
+                    <icon>
+                        theme://blueprint/Icons/BlueprintModuleIcon.png
+                    </icon>
+                    <extension>
+                        jbp
+                    </extension>
+                    <displayName>
+                        ${plugin.blueprint.module-name}
+                    </displayName>
+                </fileModule>
+            </fileModules>
+            <settingsParsers>
+                <settingParser>
+                    <type>
+                        thito.nodeflow.engine.node.LinkStyle
+                    </type>
+                    <parser>
+                        thito.nodeflow.plugin.base.LinkStyleParser
+                    </parser>
+                </settingParser>
+            </settingsParsers>
+        </nodeflow>
+    </integrations>
+</plugin>

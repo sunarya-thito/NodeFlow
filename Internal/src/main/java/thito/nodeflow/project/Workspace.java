@@ -3,6 +3,7 @@ package thito.nodeflow.project;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import thito.nodeflow.config.MapSection;
+import thito.nodeflow.config.Path;
 import thito.nodeflow.config.Section;
 import thito.nodeflow.NodeFlow;
 import thito.nodeflow.annotation.IOThread;
@@ -66,8 +67,8 @@ public class Workspace {
         directory.toFile().mkdirs();
         Resource properties = directory.getChild("project.yml");
         Section section = new MapSection();
-        section.set("name", name);
-        section.set("last-modified", System.currentTimeMillis());
+        section.set(new Path("name"), name);
+        section.set(new Path("last-modified"), System.currentTimeMillis());
         try (Writer writer = properties.openWriter()) {
             writer.write(Section.toString(section));
         }

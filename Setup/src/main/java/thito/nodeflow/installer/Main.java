@@ -1,25 +1,31 @@
 package thito.nodeflow.installer;
 
-import javafx.application.*;
-import javafx.beans.property.*;
+import javafx.application.Application;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Insets;
-import javafx.scene.*;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.image.*;
-import javafx.scene.layout.*;
-import javafx.scene.media.*;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.stage.*;
-import jfxtras.styles.jmetro.*;
+import javafx.stage.Stage;
+import jfxtras.styles.jmetro.JMetro;
+import jfxtras.styles.jmetro.Style;
 import thito.nodeflow.installer.wizard.*;
 
 import java.awt.*;
-import java.io.*;
-import java.util.concurrent.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class Main extends Application {
 
@@ -78,10 +84,10 @@ public class Main extends Application {
         primaryStage.setTitle("NodeFlow Setup");
         primaryStage.getIcons().add(new Image(getClass().getClassLoader().getResource("favicon.png").toURI().toString()));
         BorderPane borderPane = new BorderPane();
-        MediaPlayer player = new MediaPlayer(new Media(getClass().getClassLoader().getResource("banner.mp4").toURI().toString()));
-        player.setCycleCount(-1);
-        player.play();
-        borderPane.setLeft(new MediaView(player));
+//        MediaPlayer player = new MediaPlayer(new Media(getClass().getClassLoader().getResource("banner.mp4").toURI().toString()));
+//        player.setCycleCount(-1);
+//        player.play();
+//        borderPane.setLeft(new MediaView(player));
         borderPane.setMinWidth(500);
         borderPane.setMinHeight(350);
 

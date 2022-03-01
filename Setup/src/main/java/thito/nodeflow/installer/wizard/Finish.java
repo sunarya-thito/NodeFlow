@@ -1,6 +1,6 @@
 package thito.nodeflow.installer.wizard;
 
-import javafx.geometry.*;
+import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import thito.nodeflow.installer.*;

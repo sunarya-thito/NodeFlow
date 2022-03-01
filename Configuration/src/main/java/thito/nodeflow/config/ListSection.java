@@ -1,7 +1,8 @@
 package thito.nodeflow.config;
 
 import java.util.*;
-import java.util.stream.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class ListSection extends ArrayList<Object> implements Section {
     private Section parent;
@@ -53,7 +54,7 @@ public class ListSection extends ArrayList<Object> implements Section {
     public Optional<?> getInScope(String key) {
         try {
             return Optional.ofNullable(get(Integer.parseInt(key)));
-        } catch (Throwable t) {
+        } catch (NumberFormatException ignored) {
         }
         return Optional.empty();
     }
@@ -62,7 +63,7 @@ public class ListSection extends ArrayList<Object> implements Section {
     public void setInScope(String key, Object value) {
         try {
             set(Integer.parseInt(key), value);
-        } catch (Throwable t) {
+        } catch (NumberFormatException ignored) {
         }
     }
 
@@ -113,7 +114,7 @@ public class ListSection extends ArrayList<Object> implements Section {
         return getObject(index).map(o -> {
             try {
                 return Enum.valueOf(clz, String.valueOf(o));
-            } catch (Throwable t) {
+            } catch (IllegalArgumentException ignored) {
                 return null;
             }
         });
@@ -127,7 +128,7 @@ public class ListSection extends ArrayList<Object> implements Section {
         return getObject(index).map(o -> {
             try {
                 return Integer.valueOf(String.valueOf(o));
-            } catch (Throwable t) {
+            } catch (NumberFormatException t) {
                 return null;
             }
         });
@@ -137,7 +138,7 @@ public class ListSection extends ArrayList<Object> implements Section {
         return getObject(index).map(o -> {
             try {
                 return Double.valueOf(String.valueOf(o));
-            } catch (Throwable t) {
+            } catch (NumberFormatException t) {
                 return null;
             }
         });
@@ -147,7 +148,7 @@ public class ListSection extends ArrayList<Object> implements Section {
         return getObject(index).map(o -> {
             try {
                 return Long.valueOf(String.valueOf(o));
-            } catch (Throwable t) {
+            } catch (NumberFormatException t) {
                 return null;
             }
         });
@@ -157,7 +158,7 @@ public class ListSection extends ArrayList<Object> implements Section {
         return getObject(index).map(o -> {
             try {
                 return Float.valueOf(String.valueOf(o));
-            } catch (Throwable t) {
+            } catch (NumberFormatException t) {
                 return null;
             }
         });
@@ -167,7 +168,7 @@ public class ListSection extends ArrayList<Object> implements Section {
         return getObject(index).map(o -> {
             try {
                 return Short.valueOf(String.valueOf(o));
-            } catch (Throwable t) {
+            } catch (NumberFormatException t) {
                 return null;
             }
         });
@@ -177,7 +178,7 @@ public class ListSection extends ArrayList<Object> implements Section {
         return getObject(index).map(o -> {
             try {
                 return Byte.valueOf(String.valueOf(o));
-            } catch (Throwable t) {
+            } catch (NumberFormatException t) {
                 return null;
             }
         });

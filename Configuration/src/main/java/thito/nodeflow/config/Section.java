@@ -7,7 +7,6 @@ import java.util.*;
 import java.util.regex.*;
 
 public interface Section {
-    String SEPARATOR = ".";
     static Object wrap(Object o) {
         if (o instanceof Section) return o;
         if (o instanceof List) {
@@ -18,9 +17,9 @@ public interface Section {
         }
         return o;
     }
-    static String getName(String path) {
-        String[] split = path.split(Pattern.quote(SEPARATOR));
-        return split[split.length - 1];
+    static String getName(Path path) {
+        String[] keys = path.getKeys();
+        return keys[keys.length - 1];
     }
     static Section wrapParent(Section parent, String name, Section current) {
         if (current.getParent() != null && current.getParent() != parent) {
@@ -58,32 +57,33 @@ public interface Section {
         return new MapSection(yaml.loadAs(reader, Map.class));
     }
     Set<String> getKeys();
-    default Set<String> getPaths() {
-        Set<String> paths = new HashSet<>();
+
+    default Set<Path> getPaths() {
+        Set<Path> paths = new HashSet<>();
         for (String k : getKeys()) {
             Object lookup = getInScope(k).orElse(null);
             if (lookup instanceof Section) {
-                for (String p : ((Section) lookup).getPaths()) {
-                    paths.add(k + "." + p);
+                Path parent = new Path(k);
+                for (Path p : ((Section) lookup).getPaths()) {
+                    paths.add(new Path(parent, p.getKeys()));
                 }
             }
         }
         return paths;
     }
-    String getName();
-    default String getPath() {
-        StringBuilder path = new StringBuilder(getName());
+
+    default Path getPath() {
+        ArrayList<String> parentPath = new ArrayList<>();
+        parentPath.add(getName());
         Section parent;
         while ((parent = getParent()) != null) {
-            path.insert(0, parent.getName() + SEPARATOR);
+            parentPath.add(0, parent.getName());
         }
-        return path.toString();
+        return new Path(parentPath.toArray(new String[0]));
     }
-    Section getParent();
-    Optional<?> getInScope(String key);
-    void setInScope(String key, Object value);
-    default void set(String path, Object value) {
-        String[] paths = path.split(Pattern.quote(SEPARATOR));
+
+    default void set(Path path, Object value) {
+        String[] paths = path.getKeys();
         Object lookup = this;
         for (int i = 0; i < paths.length - 1; i++) {
             Section oldLookup = (Section) lookup;
@@ -96,8 +96,8 @@ public interface Section {
             ((Section) lookup).setInScope(paths[paths.length - 1], value);
         }
     }
-    default Optional<?> getObject(String path) {
-        String[] paths = path.split(Pattern.quote(SEPARATOR));
+    default Optional<?> getObject(Path path) {
+        String[] paths = path.getKeys();
         Object lookup = this;
         for (String s : paths) {
             if (lookup instanceof Section) {
@@ -108,7 +108,7 @@ public interface Section {
         }
         return Optional.ofNullable(lookup);
     }
-    default <T extends Enum<T>> Optional<T> getEnum(String path, Class<T> clz) {
+    default <T extends Enum<T>> Optional<T> getEnum(Path path, Class<T> clz) {
         return getObject(path).map(o -> {
             try {
                 return Enum.valueOf(clz, String.valueOf(o));
@@ -117,10 +117,10 @@ public interface Section {
             }
         });
     }
-    default Optional<String> getString(String path) {
+    default Optional<String> getString(Path path) {
         return getObject(path).map(String::valueOf);
     }
-    default Optional<Integer> getInteger(String path) {
+    default Optional<Integer> getInteger(Path path) {
         return getObject(path).map(o -> {
             try {
                 return Integer.valueOf(String.valueOf(o));
@@ -129,7 +129,7 @@ public interface Section {
             }
         });
     }
-    default Optional<Double> getDouble(String path) {
+    default Optional<Double> getDouble(Path path) {
         return getObject(path).map(o -> {
             try {
                 return Double.valueOf(String.valueOf(o));
@@ -138,7 +138,7 @@ public interface Section {
             }
         });
     }
-    default Optional<Long> getLong(String path) {
+    default Optional<Long> getLong(Path path) {
         return getObject(path).map(o -> {
             try {
                 return Long.valueOf(String.valueOf(o));
@@ -147,7 +147,7 @@ public interface Section {
             }
         });
     }
-    default Optional<Float> getFloat(String path) {
+    default Optional<Float> getFloat(Path path) {
         return getObject(path).map(o -> {
             try {
                 return Float.valueOf(String.valueOf(o));
@@ -156,7 +156,7 @@ public interface Section {
             }
         });
     }
-    default Optional<Short> getShort(String path) {
+    default Optional<Short> getShort(Path path) {
         return getObject(path).map(o -> {
             try {
                 return Short.valueOf(String.valueOf(o));
@@ -165,7 +165,7 @@ public interface Section {
             }
         });
     }
-    default Optional<Byte> getByte(String path) {
+    default Optional<Byte> getByte(Path path) {
         return getObject(path).map(o -> {
             try {
                 return Byte.valueOf(String.valueOf(o));
@@ -174,19 +174,19 @@ public interface Section {
             }
         });
     }
-    default Optional<Character> getCharacter(String path) {
+    default Optional<Character> getCharacter(Path path) {
         return getObject(path).map(o -> {
             String text = String.valueOf(o);
             return text.isEmpty() ? null : text.charAt(0);
         });
     }
-    default Optional<Boolean> getBoolean(String path) {
+    default Optional<Boolean> getBoolean(Path path) {
         return getObject(path).map(o -> {
             String text = String.valueOf(o);
             return text.equals("true") ? Boolean.TRUE : text.equals("false") ? Boolean.FALSE : null;
         });
     }
-    default Optional<MapSection> getMap(String path) {
+    default Optional<MapSection> getMap(Path path) {
         return getObject(path).map(o -> {
             if (o instanceof Map) {
                 if (o instanceof MapSection) return (MapSection) o;
@@ -197,7 +197,7 @@ public interface Section {
             return null;
         });
     }
-    default Optional<ListSection> getList(String path) {
+    default Optional<ListSection> getList(Path path) {
         return getObject(path).map(o -> {
             if (o instanceof List) {
                 if (o instanceof ListSection) {
@@ -212,18 +212,35 @@ public interface Section {
             return list;
         });
     }
-    default ListSection getOrCreateList(String path) {
+    default Optional<ListSection> getOrCreateList(Path path) {
         ListSection listSection = getList(path).orElse(null);
         if (listSection == null) {
             set(path, listSection = new ListSection());
         }
-        return listSection;
+        return Optional.of(listSection);
     }
-    default MapSection getOrCreateMap(String path) {
+    default Optional<MapSection> getOrCreateMap(Path path) {
         MapSection mapSection = getMap(path).orElse(null);
         if (mapSection == null) {
             set(path, mapSection = new MapSection());
         }
-        return mapSection;
+        return Optional.of(mapSection);
+    }
+    String getName();
+    default Section getRoot() {
+        Section current = this;
+        while (current.getParent() != null) {
+            current = current.getParent();
+        }
+        return current;
+    }
+    Section getParent();
+    Optional<?> getInScope(String key);
+    void setInScope(String key, Object value);
+    default Optional<MapSection> asMap() {
+        return this instanceof MapSection ? Optional.of((MapSection) this) : Optional.empty();
+    }
+    default Optional<ListSection> asList() {
+        return this instanceof ListSection ? Optional.of((ListSection) this) : Optional.empty();
     }
 }

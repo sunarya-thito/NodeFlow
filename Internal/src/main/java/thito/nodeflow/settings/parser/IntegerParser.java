@@ -8,11 +8,11 @@ import java.util.*;
 public class IntegerParser implements SettingsParser<Integer> {
     @Override
     public Optional<Integer> fromConfig(Section source, String key) {
-        return source.getInteger(key);
+        return source.getInteger(new Path(key));
     }
 
     @Override
     public void toConfig(Section source, String key, Integer value) {
-        source.set(key, value);
+        source.set(new Path(key), value);
     }
 }

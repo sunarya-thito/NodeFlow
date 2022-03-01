@@ -8,11 +8,11 @@ import java.util.*;
 public class BooleanParser implements SettingsParser<Boolean> {
     @Override
     public Optional<Boolean> fromConfig(Section source, String key) {
-        return source.getBoolean(key);
+        return source.getBoolean(new Path(key));
     }
 
     @Override
     public void toConfig(Section source, String key, Boolean value) {
-        source.set(key, value);
+        source.set(new Path(key), value);
     }
 }

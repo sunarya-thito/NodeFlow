@@ -9,11 +9,11 @@ import java.util.*;
 public class FileParser implements SettingsParser<File> {
     @Override
     public Optional<File> fromConfig(Section source, String key) {
-        return source.getString(key).map(File::new);
+        return source.getString(new Path(key)).map(File::new);
     }
 
     @Override
     public void toConfig(Section source, String key, File value) {
-        source.set(key, value.getAbsolutePath());
+        source.set(new Path(key), value.getAbsolutePath());
     }
 }

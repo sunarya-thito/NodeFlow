@@ -1,6 +1,0 @@
-id: blueprint
-name: BluePrint
-version: 1.0
-main: thito.nodeflow.plugin.base.BluePrint
-authors:
-  - Thito Yalasatria Sunarya

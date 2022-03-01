@@ -13,10 +13,13 @@ import javafx.stage.Window;
 import thito.nodeflow.language.I18n;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -34,12 +37,23 @@ public class Toolkit {
     public static final long TIME_HOURS = TIME_MINUTES * 60;
     public static final long TIME_DAYS = TIME_HOURS * 24;
     public static final long TIME_MONTHS = TIME_DAYS * 30;
+    public static final MessageDigest MD5, SHA256;
 
     static {
+        MD5 = getOrNullMessageDigest("MD5");
+        SHA256 = getOrNullMessageDigest("SHA-256");
         try {
             robot = new Robot();
         } catch (Throwable t) {
             t.printStackTrace();
+        }
+    }
+
+    private static MessageDigest getOrNullMessageDigest(String name) {
+        try {
+            return MessageDigest.getInstance(name);
+        } catch (NoSuchAlgorithmException e) {
+            return null;
         }
     }
 
@@ -53,6 +67,22 @@ public class Toolkit {
             child = ((Stage) child).getOwner();
         }
         return false;
+    }
+
+    public static String getFileChecksum(MessageDigest digest, File file) throws IOException {
+        try (FileInputStream fis = new FileInputStream(file)) {
+            byte[] byteArray = new byte[1024];
+            int bytesCount = 0;
+            while ((bytesCount = fis.read(byteArray)) != -1) {
+                digest.update(byteArray, 0, bytesCount);
+            }
+        }
+        byte[] bytes = digest.digest();
+        StringBuilder sb = new StringBuilder();
+        for (byte aByte : bytes) {
+            sb.append(Integer.toString((aByte & 0xff) + 0x100, 16).substring(1));
+        }
+        return sb.toString();
     }
 
     public static <T> TreeItem<T> find(TreeItem<T> root, T value) {

@@ -12,7 +12,7 @@ import java.util.*;
 public class Updater extends Stage {
 
     public static final String BASE_URL =
-            "https://api.github.com/repos/sunarya-thito/NodeFlow/git/trees/%s?recursive=1";
+            "https://api.github.com/repos/sunarya-thito/NodeFlowDistribution/git/trees/%s?recursive=1";
 
     public static final Gson GSON = new Gson();
 

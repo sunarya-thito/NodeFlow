@@ -4,17 +4,11 @@ import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
-import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.*;
-import thito.nodeflow.plugin.PluginManager;
-import thito.nodeflow.project.module.FileModule;
-import thito.nodeflow.project.module.UnknownFileModule;
 import thito.nodeflow.resource.Resource;
-import thito.nodeflow.resource.ResourceType;
 import thito.nodeflow.task.TaskThread;
 import thito.nodeflow.task.batch.Batch;
-import thito.nodeflow.task.batch.Progress;
 import thito.nodeflow.task.batch.TaskQueue;
 
 import java.io.*;
@@ -145,12 +139,12 @@ public class ResourceCell extends TreeCell<Resource> {
         super.updateItem(resource, b);
         if (!b) {
             TaskThread.BG().schedule(() -> {
-                FileModule module = PluginManager.getPluginManager().getModule(resource);
-                TaskThread.UI().schedule(() -> {
-                    ImageView node = new ImageView();
-                    node.imageProperty().bind(module.iconProperty());
-                    setGraphic(node);
-                });
+//                FileModule module = PluginManager.getPluginManager().getModule(resource);
+//                TaskThread.UI().schedule(() -> {
+//                    ImageView node = new ImageView();
+//                    node.imageProperty().bind(module.iconProperty());
+//                    setGraphic(node);
+//                });
             });
             setText(resource.getFileName());
         } else {

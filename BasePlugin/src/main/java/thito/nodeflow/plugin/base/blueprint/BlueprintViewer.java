@@ -11,7 +11,6 @@ import thito.nodeflow.project.module.FileModule;
 import thito.nodeflow.project.module.FileStructure;
 import thito.nodeflow.project.module.FileViewer;
 import thito.nodeflow.resource.Resource;
-import thito.nodeflow.plugin.base.blueprint.element.BlueprintClass;
 
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
@@ -24,12 +23,16 @@ public class BlueprintViewer implements FileViewer {
     private BlueprintStructure structure = new BlueprintStructure();
     private ObjectProperty<BlueprintStructure.AbstractItem> focusedItem = new SimpleObjectProperty<>();
 
-    private BlueprintClass blueprintClass;
-
     public BlueprintViewer(Project project, Resource resource, FileModule module) {
         this.project = project;
         this.resource = resource;
         this.module = module;
+        BlueprintManager.getInstance().getActiveBlueprintViewerList().add(this);
+    }
+
+    @Override
+    public void close() {
+        BlueprintManager.getInstance().getActiveBlueprintViewerList().remove(this);
     }
 
     @Override
@@ -66,13 +69,11 @@ public class BlueprintViewer implements FileViewer {
     public void reload(byte[] data) {
         if (data != null && data.length > 0) {
             try (ObjectInputStream objectInputStream = new ObjectInputStream(new ByteArrayInputStream(data))) {
-                blueprintClass = new BlueprintClass();
 
             } catch (Throwable t) {
                 throw new RuntimeException(t);
             }
             return;
         }
-        blueprintClass = new BlueprintClass();
     }
 }

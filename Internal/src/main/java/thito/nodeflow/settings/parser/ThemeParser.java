@@ -9,11 +9,11 @@ import java.util.*;
 public class ThemeParser implements SettingsParser<Theme> {
     @Override
     public Optional<Theme> fromConfig(Section source, String key) {
-        return source.getString(key).map(Theme::new);
+        return source.getString(new Path(key)).map(Theme::new);
     }
 
     @Override
     public void toConfig(Section source, String key, Theme value) {
-        source.set(key, value.getName());
+        source.set(new Path(key), value.getName());
     }
 }

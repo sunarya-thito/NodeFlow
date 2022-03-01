@@ -2,6 +2,7 @@ package thito.nodeflow.engine.node;
 
 import javafx.beans.property.*;
 import thito.nodeflow.engine.node.handler.*;
+import thito.nodeflow.engine.node.parameter.ParameterContent;
 import thito.nodeflow.engine.node.skin.*;
 import thito.nodeflow.engine.node.state.*;
 
@@ -13,10 +14,15 @@ public class NodeParameter {
     private NodeParameterHandler handler;
     private final ObjectProperty<InsertFunction> nextInsert = new SimpleObjectProperty<>();
     private final ObjectProperty<InsertFunction> previousInsert = new SimpleObjectProperty<>();
+    private final ObjectProperty<ParameterContent> content = new SimpleObjectProperty<>();
     private final BooleanProperty removable = new SimpleBooleanProperty();
     private NodeParameterSkin skin;
 
     public NodeParameter() {
+    }
+
+    public ObjectProperty<ParameterContent> contentProperty() {
+        return content;
     }
 
     public void setHandler(NodeParameterHandler handler) {

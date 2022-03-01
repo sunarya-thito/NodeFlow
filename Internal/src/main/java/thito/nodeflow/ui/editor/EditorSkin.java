@@ -1,17 +1,14 @@
 package thito.nodeflow.ui.editor;
 
 import javafx.application.Platform;
-import javafx.collections.ObservableSet;
 import javafx.event.ActionEvent;
 import javafx.geometry.Bounds;
 import javafx.scene.control.*;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import thito.nodeflow.binding.MappedListBinding;
 import thito.nodeflow.binding.ThreadBinding;
 import thito.nodeflow.language.I18n;
-import thito.nodeflow.plugin.PluginManager;
 import thito.nodeflow.project.Project;
 import thito.nodeflow.project.ProjectManager;
 import thito.nodeflow.project.module.FileModule;
@@ -110,20 +107,20 @@ public class EditorSkin extends Skin {
 
     @Override
     protected void onLayoutLoaded() {
-        for (FileModule module : PluginManager.getPluginManager().getModuleList()) {
-            MenuItem menuItem = new MenuItem();
-            ImageView node = new ImageView();
-            node.imageProperty().bind(module.iconProperty());
-            menuItem.setGraphic(node);
-            menuItem.textProperty().bind(module.getDisplayName());
-            menuItem.addEventHandler(ActionEvent.ACTION, event -> {
-                ObservableSet<Resource> selected = editorWindow.getContext().getSelectedFiles();
-                Resource root = selected.isEmpty() ? getEditorWindow().getContext().getProject().getSourceFolder() :
-                        selected.stream().findFirst().orElse(null);
-                showCreateFileForm(getEditorWindow().getContext().getProject(), module, root);
-            });
-            newFile.getItems().add(menuItem);
-        }
+//        for (FileModule module : PluginManager.getPluginManager().getModuleList()) {
+//            MenuItem menuItem = new MenuItem();
+//            ImageView node = new ImageView();
+//            node.imageProperty().bind(module.iconProperty());
+//            menuItem.setGraphic(node);
+//            menuItem.textProperty().bind(module.getDisplayName());
+//            menuItem.addEventHandler(ActionEvent.ACTION, event -> {
+//                ObservableSet<Resource> selected = editorWindow.getContext().getSelectedFiles();
+//                Resource root = selected.isEmpty() ? getEditorWindow().getContext().getProject().getSourceFolder() :
+//                        selected.stream().findFirst().orElse(null);
+//                showCreateFileForm(getEditorWindow().getContext().getProject(), module, root);
+//            });
+//            newFile.getItems().add(menuItem);
+//        }
         searchPopup = new SearchPopup();
         Menu parent = moduleMenu.getParentMenu();
         if (parent != null) {

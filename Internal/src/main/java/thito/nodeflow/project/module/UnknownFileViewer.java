@@ -27,6 +27,11 @@ public class UnknownFileViewer implements FileViewer {
     }
 
     @Override
+    public void close() {
+
+    }
+
+    @Override
     public void reload(byte[] data) {
     }
 

@@ -2,7 +2,7 @@ package thito.nodeflow.project;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
-import thito.nodeflow.plugin.PluginManager;
+import thito.nodeflow.project.module.FileModule;
 import thito.nodeflow.resource.Resource;
 import thito.nodeflow.task.TaskThread;
 import thito.nodeflow.task.batch.Batch;
@@ -22,6 +22,11 @@ public class ProjectManager {
 
     private FileViewerComponent fileViewerComponent = new FileViewerComponent();
     private ObservableSet<ProjectContext> activeProjects = TaskThread.BG().watch(FXCollections.observableSet());
+    private List<FileModule> moduleList = new ArrayList<>();
+
+    public List<FileModule> getModuleList() {
+        return moduleList;
+    }
 
     public ObservableSet<ProjectContext> getActiveProjects() {
         return activeProjects;
@@ -75,13 +80,13 @@ public class ProjectManager {
                     ProjectContext projectContext = new ProjectContext(project);
                     pr.append(TaskThread.BG(), progress -> {
                         progress.setStatus("Initializing project handlers");
-                        for (List<ProjectHandlerFactory> factory : PluginManager.getPluginManager().getProjectHandlerMap().values()) {
-                            for (ProjectHandlerFactory f : factory) {
-                                progress.insert(TaskThread.BG(), handler -> {
-                                    projectContext.getProjectHandlers().add(f.createHandler(projectContext));
-                                });
-                            }
-                        }
+//                        for (List<ProjectHandlerFactory> factory : PluginManager.getPluginManager().getProjectHandlerMap().values()) {
+//                            for (ProjectHandlerFactory f : factory) {
+//                                progress.insert(TaskThread.BG(), handler -> {
+//                                    projectContext.getProjectHandlers().add(f.createHandler(projectContext));
+//                                });
+//                            }
+//                        }
                     });
                     pr2.append(TaskThread.IO(), px -> {
                         Resource editorBin = projectContext.getProject().getDirectory().getChild("editor.bin");

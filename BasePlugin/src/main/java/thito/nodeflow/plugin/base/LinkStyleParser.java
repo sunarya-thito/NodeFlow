@@ -18,23 +18,23 @@ public class LinkStyleParser implements SettingsParser<LinkStyle> {
 
     @Override
     public Optional<LinkStyle> fromConfig(Section source, String key) {
-        return source.getString(key).map(x -> linkStyleMap.getOrDefault(x, LinkStyle.CABLE));
+        return source.getString(new Path(key)).map(x -> linkStyleMap.getOrDefault(x, LinkStyle.CABLE));
     }
 
     @Override
     public void toConfig(Section source, String key, LinkStyle value) {
         if (value == LinkStyle.LINE) {
-            source.set(key, "LINE");
+            source.set(new Path(key), "LINE");
             return;
         }
         if (value == LinkStyle.PIPE) {
-            source.set(key, "PIPE");
+            source.set(new Path(key), "PIPE");
             return;
         }
         if (value == LinkStyle.PATH) {
-            source.set(key, "PATH");
+            source.set(new Path(key), "PATH");
             return;
         }
-        source.set(key, "CABLE");
+        source.set(new Path(key), "CABLE");
     }
 }

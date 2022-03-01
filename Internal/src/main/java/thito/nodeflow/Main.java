@@ -10,8 +10,6 @@ import javafx.stage.Stage;
 import thito.nodeflow.binding.ThreadBinding;
 import thito.nodeflow.config.Section;
 import thito.nodeflow.language.Language;
-import thito.nodeflow.plugin.PluginManager;
-import thito.nodeflow.protocol.PluginResourceProtocol;
 import thito.nodeflow.protocol.ResourceProtocol;
 import thito.nodeflow.protocol.ThemeProtocol;
 import thito.nodeflow.resource.ResourceWatcher;
@@ -66,7 +64,7 @@ public class Main extends Application {
         TaskManager.init();
         NodeFlow nodeFlow = new NodeFlow();
         nodeFlow.registerProtocol("rsrc", new ResourceProtocol());
-        nodeFlow.registerProtocol("plugin", new PluginResourceProtocol());
+//        nodeFlow.registerProtocol("plugin", new PluginResourceProtocol());
         nodeFlow.registerProtocol("theme", new ThemeProtocol());
 
         try (InputStreamReader reader = new InputStreamReader(new URL("rsrc:ChangeLogs.txt").openStream())) {

@@ -6,19 +6,16 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.image.Image;
 import thito.nodeflow.language.I18n;
-import thito.nodeflow.plugin.PluginManager;
 import thito.nodeflow.project.ProjectContext;
 import thito.nodeflow.project.module.FileModule;
-import thito.nodeflow.project.module.FileViewer;
-import thito.nodeflow.project.module.UnknownFileModule;
 import thito.nodeflow.resource.Resource;
 import thito.nodeflow.resource.ResourceType;
 import thito.nodeflow.task.TaskThread;
 import thito.nodeflow.ui.docker.*;
 import thito.nodeflow.ui.editor.FileViewerSkin;
-import thito.nodeflow.ui.editor.UnknownTabSkin;
 
 import java.io.File;
+import java.util.function.Consumer;
 
 public class FileViewerComponent implements DockerComponent {
 
@@ -95,8 +92,14 @@ public class FileViewerComponent implements DockerComponent {
             });
         }
 
+        @Override
+        public void onCloseAttempt(Consumer<Boolean> resultConsumer) {
+            fileViewerSkin.close();
+            super.onCloseAttempt(resultConsumer);
+        }
+
         void initialize() {
-            resource.typeProperty().addListener(new ChangeListener<ResourceType>() {
+            resource.typeProperty().addListener(new ChangeListener<>() {
                 @Override
                 public void changed(ObservableValue<? extends ResourceType> observableValue, ResourceType resourceType, ResourceType val) {
                     if (val != ResourceType.FILE) {
@@ -114,12 +117,12 @@ public class FileViewerComponent implements DockerComponent {
                 }
             });
             TaskThread.BG().schedule(() -> {
-                FileModule fileModule = PluginManager.getPluginManager().getModule(resource);
-                TaskThread.UI().schedule(() -> {
-                    icon.bind(fileModule.iconProperty());
-                    this.fileViewerSkin = new FileViewerSkin(resource, fileModule, context);
-                    setCenter(fileViewerSkin);
-                });
+//                FileModule fileModule = PluginManager.getPluginManager().getModule(resource);
+//                TaskThread.UI().schedule(() -> {
+//                    icon.bind(fileModule.iconProperty());
+//                    this.fileViewerSkin = new FileViewerSkin(resource, fileModule, context);
+//                    setCenter(fileViewerSkin);
+//                });
             });
         }
 

@@ -44,10 +44,12 @@ public class TaskProgress {
             progress.setStatus(mainProgress.getStatus());
             mainProgress.statusProperty().bind(progress.statusProperty());
             mainProgress.progressProperty().bind(progress.progressProperty());
-            try {
-                progressedTask.run(this);
-            } catch (Throwable t) {
-                NodeFlow.getLogger().log(Level.SEVERE, "Failed to do batch task", t);
+            if (progressedTask != null) {
+                try {
+                    progressedTask.run(this);
+                } catch (Throwable t) {
+                    NodeFlow.getLogger().log(Level.SEVERE, "Failed to do batch task", t);
+                }
             }
             mainProgress.statusProperty().unbind();
             mainProgress.progressProperty().unbind();

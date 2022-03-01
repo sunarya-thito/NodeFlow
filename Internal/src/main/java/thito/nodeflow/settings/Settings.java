@@ -2,10 +2,6 @@ package thito.nodeflow.settings;
 
 import thito.nodeflow.NodeFlow;
 import thito.nodeflow.config.Section;
-import thito.nodeflow.plugin.PluginManager;
-import thito.nodeflow.plugin.event.application.SettingsLoadEvent;
-import thito.nodeflow.plugin.event.application.SettingsPreLoadEvent;
-import thito.nodeflow.plugin.event.application.SettingsSaveEvent;
 import thito.nodeflow.project.ProjectProperties;
 import thito.nodeflow.settings.canvas.Category;
 import thito.nodeflow.settings.canvas.ReflectedSettingsCategory;
@@ -16,7 +12,7 @@ import thito.nodeflow.task.batch.Batch;
 import java.util.*;
 
 public class Settings {
-    private static Settings settings = new Settings();
+    private static final Settings settings = new Settings();
 
     public static Settings getSettings() {
         return settings;
@@ -65,22 +61,9 @@ public class Settings {
                 for (SettingsCategory c : entry.getValue()) {
                     for (SettingsItem<?> item : c.getItems()) {
                         SettingsProperty<?> property = item.createProperty();
-                        if (!PluginManager.getPluginManager().fireEvent(new SettingsPreLoadEvent(property)).isCancelled()) {
-                            property.load(globalConfiguration, c.getKey() + "." + item.getKey());
-                            PluginManager.getPluginManager().fireEvent(new SettingsLoadEvent(property));
-                        }
+                        property.load(globalConfiguration, c.getKey() + "." + item.getKey());
                     }
                 }
-//            } else {
-//                for (SettingsCategory c : entry.getValue()) {
-//                    for (SettingsItem<?> item : c.getItems()) {
-//                        SettingsProperty<?> property = item.createProperty();
-//                        if (!PluginManager.getPluginManager().fireEvent(new SettingsPreLoadEvent(property)).isCancelled()) {
-//                            property.load(properties.getConfiguration(), "settings." + c.getKey() + "." + item.getKey());
-//                            PluginManager.getPluginManager().fireEvent(new SettingsLoadEvent(property));
-//                        }
-//                    }
-//                }
             }
         }
     }
@@ -95,9 +78,7 @@ public class Settings {
                         for (SettingsCategory c : entry.getValue()) {
                             for (SettingsItem<?> item : c.getItems()) {
                                 SettingsProperty<?> property = item.createProperty();
-                                if (!PluginManager.getPluginManager().fireEvent(new SettingsSaveEvent(property)).isCancelled()) {
-                                    property.save(globalConfiguration, c.getKey() + "." + item.getKey());
-                                }
+                                property.save(globalConfiguration, c.getKey() + "." + item.getKey());
                             }
                         }
 //            } else {

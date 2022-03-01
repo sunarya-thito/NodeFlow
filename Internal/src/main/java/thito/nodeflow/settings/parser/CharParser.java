@@ -8,11 +8,11 @@ import java.util.*;
 public class CharParser implements SettingsParser<Character> {
     @Override
     public Optional<Character> fromConfig(Section source, String key) {
-        return source.getCharacter(key);
+        return source.getCharacter(new Path(key));
     }
 
     @Override
     public void toConfig(Section source, String key, Character value) {
-        source.set(key, value);
+        source.set(new Path(key), value);
     }
 }

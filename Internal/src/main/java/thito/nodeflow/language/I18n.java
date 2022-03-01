@@ -1,29 +1,17 @@
 package thito.nodeflow.language;
 
 import javafx.beans.Observable;
-import javafx.beans.binding.*;
-import javafx.beans.property.*;
-import javafx.beans.value.*;
-import thito.nodeflow.plugin.Plugin;
-import thito.nodeflow.plugin.PluginManager;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 
-import java.util.*;
-import java.util.function.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Function;
 
 public class I18n extends SimpleStringProperty {
 
     public static I18n $(String key) {
-        if (key.startsWith("plugin.")) {
-            String className = Thread.currentThread().getStackTrace()[2].getClassName();
-            for (Plugin plugin : PluginManager.getPluginManager().getPlugins()) {
-                try {
-                    Class.forName(className, false, plugin.getClassLoader());
-                    key = plugin.getId() + key.substring(6);
-                    break;
-                } catch (Throwable ignored) {
-                }
-            }
-        }
         return Language.getLanguage().getItem(key);
     }
 

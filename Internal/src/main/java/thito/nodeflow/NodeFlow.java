@@ -6,12 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 import thito.nodeflow.config.MapSection;
 import thito.nodeflow.config.Section;
-import thito.nodeflow.annotation.BGThread;
 import thito.nodeflow.language.Language;
-import thito.nodeflow.plugin.DirectoryFileModule;
-import thito.nodeflow.plugin.Plugin;
-import thito.nodeflow.plugin.PluginClassLoader;
-import thito.nodeflow.plugin.PluginManager;
 import thito.nodeflow.project.ProjectManager;
 import thito.nodeflow.project.Tag;
 import thito.nodeflow.project.Workspace;
@@ -87,9 +82,10 @@ public class NodeFlow {
                 })
                 .execute(TaskThread.BG(), progress -> {
                     progress.setStatus("Registering modules");
-                    PluginManager pluginManager = PluginManager.getPluginManager();
-                    pluginManager.registerFileModule(new DirectoryFileModule());
-                    pluginManager.registerFileModule(new UnknownFileModule());
+                    ProjectManager.getInstance().getModuleList().add(new UnknownFileModule());
+//                    PluginManager pluginManager = PluginManager.getPluginManager();
+//                    pluginManager.registerFileModule(new DirectoryFileModule());
+//                    pluginManager.registerFileModule(new UnknownFileModule());
                 })
                 .execute(TaskThread.IO(), progress -> {
                     progress.setStatus("Loading plugins");
@@ -101,19 +97,19 @@ public class NodeFlow {
                             progress.append(TaskThread.IO(), pr -> {
                                 if (f.getName().endsWith(".jar")) {
                                     pr.setStatus("Loading " + f.getName());
-                                    try {
-                                        PluginClassLoader pluginClassLoader = new PluginClassLoader(f, getClass().getClassLoader());
-                                        pluginClassLoader.load();
-                                        Plugin plugin = pluginClassLoader.getPlugin();
-                                        pr.insert(plugin.load());
-                                        pr.append(TaskThread.BG(), prx -> {
-                                            PluginManager.getPluginManager().registerPlugin(plugin);
-                                            pr.setStatus("Initializing "+plugin.getName());
-                                            prx.append(plugin.initialize());
-                                        });
-                                    } catch (Throwable t) {
-                                        getLogger().log(Level.SEVERE, "Failed to load plugin "+f.getName(), t);
-                                    }
+//                                    try {
+//                                        PluginClassLoader pluginClassLoader = new PluginClassLoader(f, getClass().getClassLoader());
+//                                        pluginClassLoader.load();
+//                                        Plugin plugin = pluginClassLoader.getPlugin();
+//                                        pr.insert(plugin.load());
+//                                        pr.append(TaskThread.BG(), prx -> {
+//                                            PluginManager.getPluginManager().registerPlugin(plugin);
+//                                            pr.setStatus("Initializing "+plugin.getName());
+//                                            prx.append(plugin.initialize());
+//                                        });
+//                                    } catch (Throwable t) {
+//                                        getLogger().log(Level.SEVERE, "Failed to load plugin "+f.getName(), t);
+//                                    }
                                 }
                             });
                         }

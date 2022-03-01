@@ -1,5 +1,6 @@
 package thito.nodeflow.engine.node;
 
+import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.*;
 import thito.nodeflow.engine.node.handler.*;
@@ -7,6 +8,7 @@ import thito.nodeflow.engine.node.skin.*;
 import thito.nodeflow.engine.node.state.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Node extends CanvasElement {
     private NodeCanvas canvas;
@@ -109,17 +111,32 @@ public class Node extends CanvasElement {
 
     public class NodeParameterListListener implements ListChangeListener<NodeParameter> {
         @Override
-        public void onChanged(Change<? extends NodeParameter> c) {
-            while (c.next()) {
-                if (c.wasAdded()) {
-                    for (NodeParameter a : c.getAddedSubList()) {
-                        a.initialize(Node.this);
-                        skin.onParameterAdded(a);
+        public void onChanged(Change<? extends NodeParameter> change) {
+            List<javafx.scene.Node> list = skin.getNodeParameterBox().getChildren();
+            while (change.next()) {
+                if (change.wasPermutated()) {
+                    List<NodeParameterSkin> collect = change.getList().subList(change.getFrom(), change.getTo()).stream().map(x -> {
+                        x.initialize(Node.this);
+                        return x.getSkin();
+                    }).collect(Collectors.toList());
+                    Platform.runLater(() -> {
+                        list.subList(change.getFrom(), change.getTo()).clear();
+                        list.addAll(change.getFrom(), collect);
+                    });
+                } else {
+                    if (change.wasRemoved()) {
+                        Platform.runLater(() -> {
+                            list.subList(change.getFrom(), change.getFrom() + change.getRemovedSize()).clear();
+                        });
                     }
-                }
-                if (c.wasRemoved()) {
-                    for (NodeParameter r : c.getRemoved()) {
-                        skin.onParameterRemoved(r);
+                    if (change.wasAdded()) {
+                        List<NodeParameterSkin> collect = change.getAddedSubList().stream().map(x -> {
+                            x.initialize(Node.this);
+                            return x.getSkin();
+                        }).collect(Collectors.toList());
+                        Platform.runLater(() -> {
+                            list.addAll(change.getFrom(), collect);
+                        });
                     }
                 }
             }

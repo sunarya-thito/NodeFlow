@@ -1,13 +1,18 @@
 package thito.nodeflow.ui;
 
-import javafx.beans.property.*;
-import thito.nodeflow.plugin.Plugin;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import thito.nodeflow.task.TaskThread;
 
-import java.io.*;
-import java.net.*;
-import java.nio.charset.*;
-import java.util.*;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ThemeManager {
 
@@ -61,17 +66,6 @@ public class ThemeManager {
             byte[] localLayout = read(new URL("rsrc:Themes/" + URLEncoder.encode(theme.getName(), StandardCharsets.UTF_8) + "/Layouts/" + name.getName().replace('.', '/') + ".xml"));
             if (localLayout != null) {
                 sheet.layoutProperty().set(new String(localLayout, StandardCharsets.UTF_8));
-            } else {
-                Plugin plugin = Plugin.getPlugin(name);
-                if (plugin != null) {
-                    URL resource = plugin.getClassLoader().getResource("Themes/" + name.getName().replace('.', '/') + ".xml");
-                    if (resource != null) {
-                        localLayout = read(resource);
-                        if (localLayout != null) {
-                            sheet.layoutProperty().set(new String(localLayout, StandardCharsets.UTF_8));
-                        }
-                    }
-                }
             }
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -80,13 +74,6 @@ public class ThemeManager {
         sheet.getCssFiles().clear();
         while (Skin.class.isAssignableFrom(clazz)) {
             sheet.getCssFiles().add(0, "rsrc:Themes/"+URLEncoder.encode(theme.getName(), StandardCharsets.UTF_8)+"/StyleSheets/"+clazz.getName().replace('.', '/')+".css");
-            Plugin plugin = Plugin.getPlugin(clazz);
-            if (plugin != null) {
-                URL resource = plugin.getClassLoader().getResource("Themes/" + clazz.getName().replace('.', '/') + ".css");
-                if (resource != null) {
-                    sheet.getCssFiles().add(0, resource.toExternalForm());
-                }
-            }
             clazz = clazz.getSuperclass();
         }
         return sheet;

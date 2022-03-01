@@ -29,6 +29,15 @@ public class FileViewerSkin extends Skin {
         this.projectContext = projectContext;
     }
 
+    private boolean close;
+    public void close() {
+        close = true;
+        FileViewer fileViewer = this.fileViewer.get();
+        if (fileViewer != null) {
+            fileViewer.close();
+        }
+    }
+
     @Override
     protected void onLayoutLoaded() {
         content.setCenter(new LoadingTabSkin());
@@ -46,6 +55,10 @@ public class FileViewerSkin extends Skin {
                 TaskThread.UI().schedule(() -> {
                     FileViewer viewer = module.createViewer(projectContext.getProject(), resource);
                     viewer.reload(buffer);
+                    if (close) {
+                        viewer.close();
+                        return;
+                    }
                     fileViewer.set(viewer);
                 });
             } catch (Throwable e) {

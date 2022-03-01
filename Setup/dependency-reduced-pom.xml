@@ -44,14 +44,6 @@
             <goals>
               <goal>shade</goal>
             </goals>
-            <configuration>
-              <artifactSet>
-                <includes>
-                  <include>com.google.code.gson:gson</include>
-                  <include>org.jfxtras:jmetro</include>
-                </includes>
-              </artifactSet>
-            </configuration>
           </execution>
         </executions>
       </plugin>
@@ -67,7 +59,7 @@
               <goal>launch4j</goal>
             </goals>
             <configuration>
-              <headerType>console</headerType>
+              <headerType>gui</headerType>
               <outfile>../target/NodeFlow-Github.exe</outfile>
               <icon>Setup.ico</icon>
               <classPath>
@@ -164,86 +156,6 @@
       </plugin>
     </plugins>
   </build>
-  <dependencies>
-    <dependency>
-      <groupId>com.github.RobertBColton</groupId>
-      <artifactId>DockFX</artifactId>
-      <version>0.4b</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.jsoup</groupId>
-      <artifactId>jsoup</artifactId>
-      <version>1.11.3</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>net.java.dev.jna</groupId>
-      <artifactId>jna-platform</artifactId>
-      <version>5.3.1</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>it.unimi.dsi</groupId>
-      <artifactId>fastutil</artifactId>
-      <version>8.5.4</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.openjfx</groupId>
-      <artifactId>javafx-base</artifactId>
-      <version>17.0.1</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.openjfx</groupId>
-      <artifactId>javafx-graphics</artifactId>
-      <version>17.0.1</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.openjfx</groupId>
-      <artifactId>javafx-controls</artifactId>
-      <version>17.0.1</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.openjfx</groupId>
-      <artifactId>javafx-web</artifactId>
-      <version>17.0.1</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.openjfx</groupId>
-      <artifactId>javafx-media</artifactId>
-      <version>17.0.1</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.openjfx</groupId>
-      <artifactId>javafx-swing</artifactId>
-      <version>17.0.1</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>javax.xml.bind</groupId>
-      <artifactId>jaxb-api</artifactId>
-      <version>2.3.1</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.yaml</groupId>
-      <artifactId>snakeyaml</artifactId>
-      <version>1.29</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>commons-io</groupId>
-      <artifactId>commons-io</artifactId>
-      <version>2.11.0</version>
-      <scope>compile</scope>
-    </dependency>
-  </dependencies>
   <properties>
     <nodeflow.version>2.0.0.0</nodeflow.version>
     <maven.compiler.target>16</maven.compiler.target>

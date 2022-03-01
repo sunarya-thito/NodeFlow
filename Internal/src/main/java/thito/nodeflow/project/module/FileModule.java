@@ -13,7 +13,6 @@ import thito.nodeflow.ui.form.Validator;
 public interface FileModule {
     I18n getDisplayName();
     ObjectProperty<Image> iconProperty();
-//    Image getIcon();
     String getExtension();
     boolean acceptResource(Resource resource);
     @UIThread // must be done in UI Thread!

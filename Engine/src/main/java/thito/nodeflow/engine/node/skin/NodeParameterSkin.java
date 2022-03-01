@@ -1,5 +1,6 @@
 package thito.nodeflow.engine.node.skin;
 
+import javafx.beans.property.ObjectProperty;
 import javafx.event.*;
 import javafx.geometry.*;
 import javafx.scene.Node;
@@ -7,10 +8,11 @@ import javafx.scene.control.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import thito.nodeflow.engine.node.*;
+import thito.nodeflow.engine.node.parameter.ParameterContent;
 
 public class NodeParameterSkin extends Skin {
     private final NodeParameter parameter;
-    protected final BorderPane editorPane = new BorderPane();
+    private final BorderPane editorPane = new BorderPane();
     private final Label title = new Label();
     private final HBox box = new HBox();
     private Node inputNode, outputNode;
@@ -120,6 +122,15 @@ public class NodeParameterSkin extends Skin {
             portPane.getChildren().add(outputNode);
         }
         getChildren().addAll(box, portPane);
+        ParameterContent parameterContent = parameter.contentProperty().get();
+        editorPane.centerProperty().set(parameterContent == null ? null : parameterContent.getNode());
+        parameter.contentProperty().addListener((obs, old, val) -> {
+            editorPane.centerProperty().set(val == null ? null : val.getNode());
+        });
+    }
+
+    public ObjectProperty<Node> contentProperty() {
+        return editorPane.centerProperty();
     }
 
     public Node getInputNode() {

@@ -1,5 +1,6 @@
 package thito.nodeflow.engine.node.skin;
 
+import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -239,35 +240,47 @@ public class NodeCanvasSkin extends Skin {
     }
 
     public void onNodeAdded(Node node) {
-        nodeLayer.getChildren().add(node.getSkin());
+        Platform.runLater(() -> {
+            nodeLayer.getChildren().add(node.getSkin());
+        });
     }
 
     public void onNodeRemoved(Node node) {
-        nodeLayer.getChildren().remove(node.getSkin());
+        Platform.runLater(() -> {
+            nodeLayer.getChildren().remove(node.getSkin());
+        });
     }
 
     public void onGroupAdded(NodeGroup group) {
-        groupLayer.getChildren().add(group.getSkin());
-        groupBackgroundLayer.getChildren().add(group.getSkin().getBackdropSkin());
+        Platform.runLater(() -> {
+            groupLayer.getChildren().add(group.getSkin());
+            groupBackgroundLayer.getChildren().add(group.getSkin().getBackdropSkin());
+        });
     }
 
     public void onGroupRemoved(NodeGroup group) {
-        groupLayer.getChildren().remove(group.getSkin());
-        groupBackgroundLayer.getChildren().remove(group.getSkin().getBackdropSkin());
+        Platform.runLater(() -> {
+            groupLayer.getChildren().remove(group.getSkin());
+            groupBackgroundLayer.getChildren().remove(group.getSkin().getBackdropSkin());
+        });
     }
 
     private final DynamicNodeLink nodeLinkListener = new DynamicNodeLink(this);
 
     public void onLinkAdded(NodeLinked link) {
-        link.styleHandlerProperty().get().getActiveLink().stopImmediately();
-        nodeLinkListener.changed(link.styleHandlerProperty(), null, link.styleHandlerProperty().get());
-        link.styleHandlerProperty().addListener(nodeLinkListener);
+        Platform.runLater(() -> {
+            link.styleHandlerProperty().get().getActiveLink().stopImmediately();
+            nodeLinkListener.changed(link.styleHandlerProperty(), null, link.styleHandlerProperty().get());
+            link.styleHandlerProperty().addListener(nodeLinkListener);
+        });
     }
 
     public void onLinkRemoved(NodeLinked link) {
-        link.styleHandlerProperty().get().getActiveLink().stopImmediately();
-        link.styleHandlerProperty().removeListener(nodeLinkListener);
-        nodeLinkListener.changed(link.styleHandlerProperty(), link.styleHandlerProperty().get(), null);
+        Platform.runLater(() -> {
+            link.styleHandlerProperty().get().getActiveLink().stopImmediately();
+            link.styleHandlerProperty().removeListener(nodeLinkListener);
+            nodeLinkListener.changed(link.styleHandlerProperty(), link.styleHandlerProperty().get(), null);
+        });
     }
 
     public class NodeLinkListListener implements ListChangeListener<NodeLink> {
@@ -276,12 +289,16 @@ public class NodeCanvasSkin extends Skin {
             while (c.next()) {
                 if (c.wasAdded()) {
                     for (NodeLink a : c.getAddedSubList()) {
-                        linkLayer.getChildren().add(a.styleHandlerProperty().get().impl_getPeer());
+                        Platform.runLater(() -> {
+                            linkLayer.getChildren().add(a.styleHandlerProperty().get().impl_getPeer());
+                        });
                     }
                 }
                 if (c.wasRemoved()) {
                     for (NodeLink a : c.getRemoved()) {
-                        linkLayer.getChildren().remove(a.styleHandlerProperty().get().impl_getPeer());
+                        Platform.runLater(() -> {
+                            linkLayer.getChildren().remove(a.styleHandlerProperty().get().impl_getPeer());
+                        });
                     }
                 }
             }
@@ -299,10 +316,14 @@ public class NodeCanvasSkin extends Skin {
         @Override
         public void changed(ObservableValue<? extends LinkStyle.Handler> observable, LinkStyle.Handler oldValue, LinkStyle.Handler newValue) {
             if (oldValue != null) {
-                skin.linkLayer.getChildren().remove(oldValue.impl_getPeer());
+                Platform.runLater(() -> {
+                    skin.linkLayer.getChildren().remove(oldValue.impl_getPeer());
+                });
             }
             if (newValue != null) {
-                skin.linkLayer.getChildren().add(newValue.impl_getPeer());
+                Platform.runLater(() -> {
+                    skin.linkLayer.getChildren().add(newValue.impl_getPeer());
+                });
             }
         }
     }

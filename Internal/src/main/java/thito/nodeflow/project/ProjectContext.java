@@ -29,7 +29,6 @@ public class ProjectContext {
     private ObservableList<EditorWindow> activeWindows = TaskThread.BG().watch(FXCollections.observableArrayList());
     private ObservableSet<Resource> selectedFiles = TaskThread.UI().watch(FXCollections.observableSet(new LinkedHashSet<>()));
     private ObjectProperty<FileViewer> focusedFileViewer = new SimpleObjectProperty<>();
-    private ObservableList<ProjectHandler> projectHandlers = FXCollections.observableArrayList();
     private List<EditorWindow> tempClosedWindows;
     private TaskQueue taskQueue = new TaskQueue();
 
@@ -48,10 +47,6 @@ public class ProjectContext {
         return activeWindows.isEmpty() ? null : activeWindows.get(0);
     }
 
-    public ObservableList<ProjectHandler> getProjectHandlers() {
-        return projectHandlers;
-    }
-
     public ObjectProperty<FileViewer> focusedFileViewerProperty() {
         return focusedFileViewer;
     }
@@ -65,6 +60,7 @@ public class ProjectContext {
         }
         return false;
     }
+
     public void contains(DockerComponent dockerComponent, Consumer<Boolean> result) {
         Batch.execute(TaskThread.BG(), progress -> {
             for (EditorWindow v : new ArrayList<>(activeWindows)) {

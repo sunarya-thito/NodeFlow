@@ -180,12 +180,8 @@ public class NodeSkin extends Skin {
         popupContent.setTop(popupTitle);
     }
 
-    public void onParameterAdded(NodeParameter p) {
-        nodeParameterBox.getChildren().add(p.getSkin());
-    }
-
-    public void onParameterRemoved(NodeParameter p) {
-        nodeParameterBox.getChildren().remove(p.getSkin());
+    public VBox getNodeParameterBox() {
+        return nodeParameterBox;
     }
 
     public Node getNode() {

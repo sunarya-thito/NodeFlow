@@ -1,20 +1,21 @@
 package thito.nodeflow.ui.editor;
 
 import javafx.beans.binding.Bindings;
-import javafx.collections.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableSet;
+import javafx.collections.SetChangeListener;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
-import javafx.scene.control.*;
-import javafx.scene.image.ImageView;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TreeItem;
 import javafx.scene.input.MouseEvent;
-import thito.nodeflow.binding.MappedBinding;
-import thito.nodeflow.plugin.PluginManager;
 import thito.nodeflow.project.ProjectContext;
 import thito.nodeflow.project.ProjectManager;
-import thito.nodeflow.project.module.FileModule;
 import thito.nodeflow.resource.Resource;
 import thito.nodeflow.resource.ResourceType;
-import thito.nodeflow.task.TaskThread;
 import thito.nodeflow.ui.Component;
 import thito.nodeflow.ui.Skin;
 import thito.nodeflow.ui.docker.*;
@@ -25,7 +26,6 @@ import thito.nodeflow.ui.resource.ResourceItem;
 import thito.nodeflow.util.Toolkit;
 
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class EditorFilePanelSkin extends Skin {
 
@@ -79,22 +79,22 @@ public class EditorFilePanelSkin extends Skin {
         fileCopy.disableProperty().bind(explorerView.getSelectionModel().selectedItemProperty().isNull());
         fileDelete.disableProperty().bind(explorerView.getSelectionModel().selectedItemProperty().isNull());
         fileRename.disableProperty().bind(Bindings.size(explorerView.getSelectionModel().getSelectedItems()).isEqualTo(1));
-        for (FileModule module : PluginManager.getPluginManager().getModuleList()) {
-            MenuItem menuItem = new MenuItem();
-            ImageView node = new ImageView();
-            node.imageProperty().bind(module.iconProperty());
-            menuItem.setGraphic(node);
-            menuItem.textProperty().bind(module.getDisplayName());
-            menuItem.addEventHandler(ActionEvent.ACTION, event -> {
-                TreeItem<Resource> selected = explorerView.getSelectionModel().getSelectedItem();
-                Resource root = selected != null ? selected.getValue() : null;
-                if (root == null) {
-                    root = projectContext.getProject().getSourceFolder();
-                }
-                EditorSkin.showCreateFileForm(projectContext.getProject(), module, root);
-            });
-            newMenu.getItems().add(menuItem);
-        }
+//        for (FileModule module : PluginManager.getPluginManager().getModuleList()) {
+//            MenuItem menuItem = new MenuItem();
+//            ImageView node = new ImageView();
+//            node.imageProperty().bind(module.iconProperty());
+//            menuItem.setGraphic(node);
+//            menuItem.textProperty().bind(module.getDisplayName());
+//            menuItem.addEventHandler(ActionEvent.ACTION, event -> {
+//                TreeItem<Resource> selected = explorerView.getSelectionModel().getSelectedItem();
+//                Resource root = selected != null ? selected.getValue() : null;
+//                if (root == null) {
+//                    root = projectContext.getProject().getSourceFolder();
+//                }
+//                EditorSkin.showCreateFileForm(projectContext.getProject(), module, root);
+//            });
+//            newMenu.getItems().add(menuItem);
+//        }
         explorerView.sortModeProperty().set(ResourceExplorerView.FILE_TYPE_COMPARATOR.thenComparing(ResourceExplorerView.FILE_NAME_COMPARATOR));
 
         ObservableSet<Resource> selectedFiles = projectContext.getSelectedFiles();

@@ -28,10 +28,10 @@ public class ProjectProperties {
         this.workspace = workspace;
         this.config = config;
         this.directory = directory;
-        name.set(config.getString("name").orElseThrow(() -> new NullPointerException("name")));
-        description.set(config.getString("description").orElse(""));
-        lastModified.set(config.getLong("last-modified").orElse(System.currentTimeMillis()));
-        tags.setAll(config.getList("tags").stream().map(String::valueOf).collect(Collectors.toList()));
+        name.set(config.getString(new Path("name")).orElseThrow(() -> new NullPointerException("name")));
+        description.set(config.getString(new Path("description")).orElse(""));
+        lastModified.set(config.getLong(new Path("last-modified")).orElse(System.currentTimeMillis()));
+        tags.setAll(config.getList(new Path("tags")).stream().map(String::valueOf).collect(Collectors.toList()));
         name.addListener(obs -> save());
         description.addListener(obs -> save());
         lastModified.addListener(obs -> save());
@@ -96,10 +96,10 @@ public class ProjectProperties {
 
     void save() {
         directory.toFile().mkdirs();
-        config.set("name", getName());
-        config.set("description", getDescription());
-        config.set("last-modified", getLastModified());
-        config.set("tags", getTags());
+        config.set(new Path("name"), getName());
+        config.set(new Path("description"), getDescription());
+        config.set(new Path("last-modified"), getLastModified());
+        config.set(new Path("tags"), getTags());
         Settings.saveProjectSettings(this);
         TaskThread.IO().schedule(() -> {
             try (Writer writer = directory.getChild("project.yml").openWriter()) {
@@ -111,6 +111,6 @@ public class ProjectProperties {
     }
 
     void validate() {
-        if (config.getString("name").isEmpty()) throw new IllegalArgumentException("invalid project properties");
+        if (config.getString(new Path("name")).isEmpty()) throw new IllegalArgumentException("invalid project properties");
     }
 }

@@ -2,6 +2,7 @@ package thito.nodeflow.project;
 
 import thito.nodeflow.annotation.IOThread;
 import thito.nodeflow.config.MapSection;
+import thito.nodeflow.config.Path;
 import thito.nodeflow.config.Section;
 import thito.nodeflow.resource.Resource;
 import thito.nodeflow.settings.Settings;
@@ -21,7 +22,7 @@ public class Project {
         this.workspace = workspace;
         this.properties = properties;
         this.directory = properties.getDirectory();
-        configuration = properties.getConfiguration().getMap("configuration").orElse(new MapSection());
+        configuration = properties.getConfiguration().getMap(new Path("configuration")).orElse(new MapSection());
         sourceFolder = properties.getDirectory().getChild("src");
         Settings.loadProjectSettings(properties);
     }
