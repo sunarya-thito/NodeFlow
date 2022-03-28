@@ -604,6 +604,7 @@ body {
 
 .feature-head-description {
     font-size: 1.2em;
+    text-align: justify;
 }
 
  /*Turn on custom 8px wide scrollbar*/
